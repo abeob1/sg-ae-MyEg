@@ -1,0 +1,295 @@
+[06/07/2016 16:28:07][                                  Main()] Starting function
+[06/07/2016 16:28:08][                                  Main()] Initializing public SBO Application object
+[06/07/2016 16:28:08][                                  Main()] Retriving SBO application company handle
+[06/07/2016 16:28:08][                                  Main()] Connecting Company
+[06/07/2016 16:28:08][                                  Main()] Calling ConnectDICompSSO()
+[06/07/2016 16:28:08][                      ConnectDICompSSO()] Starting function
+[06/07/2016 16:28:12][                      ConnectDICompSSO()] Completed with SUCCESS
+[06/07/2016 16:28:12][                                  Main()] Creating Event handler class
+[06/07/2016 16:28:12][                      Class_Initialize()] Starting function
+[06/07/2016 16:28:12][                      Class_Initialize()] Retriving SBO Application handle
+[06/07/2016 16:28:13][                      Class_Initialize()] Completed with SUCCESS
+[06/07/2016 16:28:13][                                  Main()] Calling AddMenuItems()
+[06/07/2016 16:28:13][                                  Main()] Calling LoadFromXML()
+[06/07/2016 16:28:13][                                  Main()] System Initialization
+[06/07/2016 16:28:13][              Get Company Initialization] Company Initialization
+[06/07/2016 16:28:13][              Get Company Initialization] Completed with Success
+[06/07/2016 16:28:13][                                  Main()] Addon started successfully
+[06/07/2016 16:28:19][             SBO_Application_MenuEvent()] Starting function
+[06/07/2016 16:28:19][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[06/07/2016 16:28:19][             SBO_Application_MenuEvent()] Starting function
+[06/07/2016 16:28:20][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[06/07/2016 16:28:25][                          ExecuteQuery()] Starting Function
+[06/07/2016 16:28:27][                          ExecuteQuery()] Completed with SUCCESS
+[06/07/2016 16:28:27][                                  Main()] Calling GetDataTableFromExcel()
+[06/07/2016 16:28:34][                            MyFunction()] Starting Function
+[06/07/2016 16:28:38][                            MyFunction()] Completed with SUCCESS
+[06/07/2016 16:29:44][                                  Main()] Starting function
+[06/07/2016 16:29:44][                                  Main()] Initializing public SBO Application object
+[06/07/2016 16:29:44][                                  Main()] Retriving SBO application company handle
+[06/07/2016 16:29:45][                                  Main()] Connecting Company
+[06/07/2016 16:29:45][                                  Main()] Calling ConnectDICompSSO()
+[06/07/2016 16:29:45][                      ConnectDICompSSO()] Starting function
+[06/07/2016 16:29:48][                      ConnectDICompSSO()] Completed with SUCCESS
+[06/07/2016 16:29:48][                                  Main()] Creating Event handler class
+[06/07/2016 16:29:48][                      Class_Initialize()] Starting function
+[06/07/2016 16:29:48][                      Class_Initialize()] Retriving SBO Application handle
+[06/07/2016 16:29:48][                      Class_Initialize()] Completed with SUCCESS
+[06/07/2016 16:29:48][                                  Main()] Calling AddMenuItems()
+[06/07/2016 16:29:48][                                  Main()] Calling LoadFromXML()
+[06/07/2016 16:29:48][                                  Main()] System Initialization
+[06/07/2016 16:29:48][              Get Company Initialization] Company Initialization
+[06/07/2016 16:29:48][              Get Company Initialization] Completed with Success
+[06/07/2016 16:29:48][                                  Main()] Addon started successfully
+[06/07/2016 16:29:55][             SBO_Application_MenuEvent()] Starting function
+[06/07/2016 16:29:55][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[06/07/2016 16:29:55][             SBO_Application_MenuEvent()] Starting function
+[06/07/2016 16:29:57][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[06/07/2016 16:30:02][                          ExecuteQuery()] Starting Function
+[06/07/2016 16:30:02][                          ExecuteQuery()] Completed with SUCCESS
+[06/07/2016 16:30:02][                                  Main()] Calling GetDataTableFromExcel()
+[06/07/2016 16:30:02][                            MyFunction()] Starting Function
+[06/07/2016 16:30:03][                            MyFunction()] Completed with SUCCESS
+[06/07/2016 16:30:34][                                  Main()] Calling ExecuteSQLNonQuery()
+[06/07/2016 16:30:34][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:30:35][                    ExecuteSQLNonQuery()] Executing SQL INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode,TransactionCode, FileName) VALUES ('', '12010107','MP16060251329','7/6/2016','being credit card collection',  454.24,'','23:56:00','','',  'MP16060251329' , 'C:\Abeo Projects\MyEG\1. Source\Bank Upload Template test2.xlsx' ) 
+[06/07/2016 16:30:35][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:36:34][                                  Main()] Starting function
+[06/07/2016 16:36:34][                                  Main()] Initializing public SBO Application object
+[06/07/2016 16:36:34][                                  Main()] Retriving SBO application company handle
+[06/07/2016 16:36:35][                                  Main()] Connecting Company
+[06/07/2016 16:36:35][                                  Main()] Calling ConnectDICompSSO()
+[06/07/2016 16:36:35][                      ConnectDICompSSO()] Starting function
+[06/07/2016 16:36:39][                      ConnectDICompSSO()] Completed with SUCCESS
+[06/07/2016 16:36:39][                                  Main()] Creating Event handler class
+[06/07/2016 16:36:39][                      Class_Initialize()] Starting function
+[06/07/2016 16:36:39][                      Class_Initialize()] Retriving SBO Application handle
+[06/07/2016 16:36:39][                      Class_Initialize()] Completed with SUCCESS
+[06/07/2016 16:36:39][                                  Main()] Calling AddMenuItems()
+[06/07/2016 16:36:39][                                  Main()] Calling LoadFromXML()
+[06/07/2016 16:36:39][                                  Main()] System Initialization
+[06/07/2016 16:36:39][              Get Company Initialization] Company Initialization
+[06/07/2016 16:36:39][              Get Company Initialization] Completed with Success
+[06/07/2016 16:36:39][                                  Main()] Addon started successfully
+[06/07/2016 16:36:41][             SBO_Application_MenuEvent()] Starting function
+[06/07/2016 16:36:41][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[06/07/2016 16:36:41][             SBO_Application_MenuEvent()] Starting function
+[06/07/2016 16:36:43][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[06/07/2016 16:36:47][                          ExecuteQuery()] Starting Function
+[06/07/2016 16:36:47][                          ExecuteQuery()] Completed with SUCCESS
+[06/07/2016 16:36:47][                                  Main()] Calling GetDataTableFromExcel()
+[06/07/2016 16:36:48][                            MyFunction()] Starting Function
+[06/07/2016 16:36:48][                            MyFunction()] Completed with SUCCESS
+[06/07/2016 16:36:56][                                  Main()] Calling ExecuteSQLNonQuery()
+[06/07/2016 16:36:57][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:36:57][                    ExecuteSQLNonQuery()] Executing SQL INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode,TransactionCode, FileName) VALUES ('', '12010107','MP16060251329','7/6/2016','being credit card collection',  454.24,'','23:56:00','','',  'MP16060251329' , 'C:\Abeo Projects\MyEG\1. Source\Bank Upload Template test2.xlsx' ) 
+[06/07/2016 16:36:57][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:37:06][                                  Main()] Calling ExecuteSQLNonQuery()
+[06/07/2016 16:37:07][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:37:07][                    ExecuteSQLNonQuery()] Executing SQL INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode,TransactionCode, FileName) VALUES ('', '12010107','MP16060251330','2016-06-06','being credit card collection',  152.12,'','','','',  'MP16060251330' , 'C:\Abeo Projects\MyEG\1. Source\Bank Upload Template test2.xlsx' ) 
+[06/07/2016 16:37:07][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:37:15][                                  Main()] Calling ExecuteSQLNonQuery()
+[06/07/2016 16:37:15][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:37:15][                    ExecuteSQLNonQuery()] Executing SQL INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode,TransactionCode, FileName) VALUES ('', '12010107','MP16060251331','5/6/2016','being credit card collection',  2000,'','23:48:00','','',  'MP16060251331' , 'C:\Abeo Projects\MyEG\1. Source\Bank Upload Template test2.xlsx' ) 
+[06/07/2016 16:37:15][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:37:56][                        RP_SBO_ItemEvent] Error occured while inserting values. Deleteing the inserted values
+[06/07/2016 16:37:57][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:37:57][                    ExecuteSQLNonQuery()] Executing SQL DEELTE FROM AB_STATEMENTUPLOAD WHERE FileName = 'C:\Abeo Projects\MyEG\1. Source\Bank Upload Template test2.xlsx'
+[06/07/2016 16:37:57][                    ExecuteSQLNonQuery()] Completed with ERROR.
+[06/07/2016 16:38:12][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:38:28][                    ExecuteSQLNonQuery()] Executing SQL DEELTE FROM AB_STATEMENTUPLOAD WHERE FileName = 'C:\Abeo Projects\MyEG\1. Source\Bank Upload Template test2.xlsx'
+[06/07/2016 16:40:11][                                  Main()] Starting function
+[06/07/2016 16:40:11][                                  Main()] Initializing public SBO Application object
+[06/07/2016 16:40:11][                                  Main()] Retriving SBO application company handle
+[06/07/2016 16:40:12][                                  Main()] Connecting Company
+[06/07/2016 16:40:12][                                  Main()] Calling ConnectDICompSSO()
+[06/07/2016 16:40:12][                      ConnectDICompSSO()] Starting function
+[06/07/2016 16:40:16][                      ConnectDICompSSO()] Completed with SUCCESS
+[06/07/2016 16:40:16][                                  Main()] Creating Event handler class
+[06/07/2016 16:40:16][                      Class_Initialize()] Starting function
+[06/07/2016 16:40:16][                      Class_Initialize()] Retriving SBO Application handle
+[06/07/2016 16:40:16][                      Class_Initialize()] Completed with SUCCESS
+[06/07/2016 16:40:16][                                  Main()] Calling AddMenuItems()
+[06/07/2016 16:40:16][                                  Main()] Calling LoadFromXML()
+[06/07/2016 16:40:16][                                  Main()] System Initialization
+[06/07/2016 16:40:16][              Get Company Initialization] Company Initialization
+[06/07/2016 16:40:16][              Get Company Initialization] Completed with Success
+[06/07/2016 16:40:16][                                  Main()] Addon started successfully
+[06/07/2016 16:40:18][             SBO_Application_MenuEvent()] Starting function
+[06/07/2016 16:40:18][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[06/07/2016 16:40:18][             SBO_Application_MenuEvent()] Starting function
+[06/07/2016 16:40:19][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[06/07/2016 16:40:24][                          ExecuteQuery()] Starting Function
+[06/07/2016 16:40:24][                          ExecuteQuery()] Completed with SUCCESS
+[06/07/2016 16:40:24][                                  Main()] Calling GetDataTableFromExcel()
+[06/07/2016 16:40:24][                            MyFunction()] Starting Function
+[06/07/2016 16:40:25][                            MyFunction()] Completed with SUCCESS
+[06/07/2016 16:40:33][                                  Main()] Calling ExecuteSQLNonQuery()
+[06/07/2016 16:40:33][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:40:33][                    ExecuteSQLNonQuery()] Executing SQL INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode,TransactionCode, FileName) VALUES ('', '12010107','MP16060251329','7/6/2016','being credit card collection',  454.24,'','23:56:00','','',  'MP16060251329' , 'C:\Abeo Projects\MyEG\1. Source\Bank Upload Template test2.xlsx' ) 
+[06/07/2016 16:40:33][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:40:37][                                  Main()] Calling ExecuteSQLNonQuery()
+[06/07/2016 16:40:37][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:40:37][                    ExecuteSQLNonQuery()] Executing SQL INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode,TransactionCode, FileName) VALUES ('', '12010107','MP16060251330','2016-06-06','being credit card collection',  152.12,'','','','',  'MP16060251330' , 'C:\Abeo Projects\MyEG\1. Source\Bank Upload Template test2.xlsx' ) 
+[06/07/2016 16:40:37][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:40:46][                                  Main()] Calling ExecuteSQLNonQuery()
+[06/07/2016 16:40:47][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:40:47][                    ExecuteSQLNonQuery()] Executing SQL INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode,TransactionCode, FileName) VALUES ('', '12010107','MP16060251331','5/6/2016','being credit card collection',  2000,'','23:48:00','','',  'MP16060251331' , 'C:\Abeo Projects\MyEG\1. Source\Bank Upload Template test2.xlsx' ) 
+[06/07/2016 16:40:47][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:41:21][                        RP_SBO_ItemEvent] Error occured while inserting values. Deleteing the inserted values
+[06/07/2016 16:41:22][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:41:22][                    ExecuteSQLNonQuery()] Executing SQL DELETE FROM AB_STATEMENTUPLOAD WHERE FileName = 'C:\Abeo Projects\MyEG\1. Source\Bank Upload Template test2.xlsx'
+[06/07/2016 16:41:22][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:41:34][                        RP_SBO_ItemEvent] Completed with ERROR
+[06/07/2016 16:41:34][             SBO_Application_ItemEvent()] Completed with ERROR
+[06/07/2016 16:43:38][                                  Main()] Starting function
+[06/07/2016 16:43:38][                                  Main()] Initializing public SBO Application object
+[06/07/2016 16:43:38][                                  Main()] Retriving SBO application company handle
+[06/07/2016 16:43:39][                                  Main()] Connecting Company
+[06/07/2016 16:43:39][                                  Main()] Calling ConnectDICompSSO()
+[06/07/2016 16:43:39][                      ConnectDICompSSO()] Starting function
+[06/07/2016 16:43:42][                      ConnectDICompSSO()] Completed with SUCCESS
+[06/07/2016 16:43:42][                                  Main()] Creating Event handler class
+[06/07/2016 16:43:42][                      Class_Initialize()] Starting function
+[06/07/2016 16:43:42][                      Class_Initialize()] Retriving SBO Application handle
+[06/07/2016 16:43:42][                      Class_Initialize()] Completed with SUCCESS
+[06/07/2016 16:43:42][                                  Main()] Calling AddMenuItems()
+[06/07/2016 16:43:42][                                  Main()] Calling LoadFromXML()
+[06/07/2016 16:43:42][                                  Main()] System Initialization
+[06/07/2016 16:43:42][              Get Company Initialization] Company Initialization
+[06/07/2016 16:43:42][              Get Company Initialization] Completed with Success
+[06/07/2016 16:43:42][                                  Main()] Addon started successfully
+[06/07/2016 16:44:02][             SBO_Application_MenuEvent()] Starting function
+[06/07/2016 16:44:02][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[06/07/2016 16:44:02][             SBO_Application_MenuEvent()] Starting function
+[06/07/2016 16:44:04][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[06/07/2016 16:44:10][                          ExecuteQuery()] Starting Function
+[06/07/2016 16:44:10][                          ExecuteQuery()] Completed with SUCCESS
+[06/07/2016 16:44:10][                                  Main()] Calling GetDataTableFromExcel()
+[06/07/2016 16:44:11][                            MyFunction()] Starting Function
+[06/07/2016 16:44:11][                            MyFunction()] Completed with SUCCESS
+[06/07/2016 16:44:47][                                  Main()] Starting function
+[06/07/2016 16:44:47][                                  Main()] Initializing public SBO Application object
+[06/07/2016 16:44:47][                                  Main()] Retriving SBO application company handle
+[06/07/2016 16:44:48][                                  Main()] Connecting Company
+[06/07/2016 16:44:48][                                  Main()] Calling ConnectDICompSSO()
+[06/07/2016 16:44:48][                      ConnectDICompSSO()] Starting function
+[06/07/2016 16:47:04][                                  Main()] Starting function
+[06/07/2016 16:47:05][                                  Main()] Initializing public SBO Application object
+[06/07/2016 16:47:05][                                  Main()] Retriving SBO application company handle
+[06/07/2016 16:47:05][                                  Main()] Connecting Company
+[06/07/2016 16:47:05][                                  Main()] Calling ConnectDICompSSO()
+[06/07/2016 16:47:05][                      ConnectDICompSSO()] Starting function
+[06/07/2016 16:47:09][                      ConnectDICompSSO()] Completed with SUCCESS
+[06/07/2016 16:47:09][                                  Main()] Creating Event handler class
+[06/07/2016 16:47:09][                      Class_Initialize()] Starting function
+[06/07/2016 16:47:09][                      Class_Initialize()] Retriving SBO Application handle
+[06/07/2016 16:47:09][                      Class_Initialize()] Completed with SUCCESS
+[06/07/2016 16:47:09][                                  Main()] Calling AddMenuItems()
+[06/07/2016 16:47:09][                                  Main()] Calling LoadFromXML()
+[06/07/2016 16:47:10][                                  Main()] System Initialization
+[06/07/2016 16:47:10][              Get Company Initialization] Company Initialization
+[06/07/2016 16:47:10][              Get Company Initialization] Completed with Success
+[06/07/2016 16:47:10][                                  Main()] Addon started successfully
+[06/07/2016 16:47:13][             SBO_Application_MenuEvent()] Starting function
+[06/07/2016 16:47:13][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[06/07/2016 16:47:13][             SBO_Application_MenuEvent()] Starting function
+[06/07/2016 16:47:15][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[06/07/2016 16:47:20][                          ExecuteQuery()] Starting Function
+[06/07/2016 16:47:20][                          ExecuteQuery()] Completed with SUCCESS
+[06/07/2016 16:47:20][                                  Main()] Calling GetDataTableFromExcel()
+[06/07/2016 16:47:21][                            MyFunction()] Starting Function
+[06/07/2016 16:47:21][                            MyFunction()] Completed with SUCCESS
+[06/07/2016 16:47:34][                                  Main()] Calling ExecuteSQLNonQuery()
+[06/07/2016 16:47:34][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:47:34][                    ExecuteSQLNonQuery()] Executing SQL INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode,TransactionCode, FileName) VALUES ('', '12010107','MP16060251329','2016-06-07','being credit card collection',  454.24,'','23:56:00','','',  'MP16060251329' , 'C:\Abeo Projects\MyEG\1. Source\Bank Upload Template test2.xlsx' ) 
+[06/07/2016 16:47:34][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:47:40][                                  Main()] Calling ExecuteSQLNonQuery()
+[06/07/2016 16:47:41][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:47:41][                    ExecuteSQLNonQuery()] Executing SQL INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode,TransactionCode, FileName) VALUES ('', '12010107','MP16060251330','2016-06-06','being credit card collection',  152.12,'','','','',  'MP16060251330' , 'C:\Abeo Projects\MyEG\1. Source\Bank Upload Template test2.xlsx' ) 
+[06/07/2016 16:47:41][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:47:50][                                  Main()] Calling ExecuteSQLNonQuery()
+[06/07/2016 16:47:51][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:47:51][                    ExecuteSQLNonQuery()] Executing SQL INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode,TransactionCode, FileName) VALUES ('', '12010107','MP16060251331','2016-06-05','being credit card collection',  2000,'','23:48:00','','',  'MP16060251331' , 'C:\Abeo Projects\MyEG\1. Source\Bank Upload Template test2.xlsx' ) 
+[06/07/2016 16:47:51][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:48:02][                                  Main()] Calling ExecuteSQLNonQuery()
+[06/07/2016 16:48:02][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:48:02][                    ExecuteSQLNonQuery()] Executing SQL INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode,TransactionCode, FileName) VALUES ('', '12010107','MP16060251332','2016-05-31','being credit card collection',  656,'','','','',  'MP16060251332' , 'C:\Abeo Projects\MyEG\1. Source\Bank Upload Template test2.xlsx' ) 
+[06/07/2016 16:48:02][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:48:10][                                  Main()] Calling ExecuteSQLNonQuery()
+[06/07/2016 16:48:10][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:48:10][                    ExecuteSQLNonQuery()] Executing SQL INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode,TransactionCode, FileName) VALUES ('', '12010107','MP16060251333','2017-05-31','being credit card collection',  1000,'','11:48:00','','',  'MP16060251333' , 'C:\Abeo Projects\MyEG\1. Source\Bank Upload Template test2.xlsx' ) 
+[06/07/2016 16:48:10][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:48:56][                                  Main()] Calling ExecuteSQLQuery()
+[06/07/2016 16:48:57][                                        ] Starting Function
+[06/07/2016 16:48:57][                                        ] Starting Function
+[06/07/2016 16:48:57][                                        ] Completed with SUCCESS
+[06/07/2016 16:48:58][                       LoadDatasinMatrix] Starting Function
+[06/07/2016 16:49:09][                                  Main()] Calling IncomingPayment_OnCustomer()
+[06/07/2016 16:49:09][            IncomingPayment_OnCustomer()] Starting Function
+[06/07/2016 16:49:10][            IncomingPayment_OnCustomer()] Calling AR_IncomingPayment()
+[06/07/2016 16:49:10][                      AR_IncomingPayment] Starting Function
+[06/07/2016 16:49:10][                      AR_IncomingPayment] Initializing payment object
+[06/07/2016 16:49:10][                      AR_IncomingPayment] Initializing Invoice object
+[06/07/2016 16:49:10][                      AR_IncomingPayment] Executing SQL SELECT SUM("DocTotal") AS "DocTotal" FROM "OINV" WHERE "NumAtCard" = 'MP16060251329'
+[06/07/2016 16:49:10][                      AR_IncomingPayment] Total invoice sum is 0
+[06/07/2016 16:49:10][                      AR_IncomingPayment] Total Excel amount is 454.24
+[06/07/2016 16:49:10][                      AR_IncomingPayment] Amount in Excel and Invoice total amount does not match
+[06/07/2016 16:49:10][                      AR_IncomingPayment] Completed with ERROR
+[06/07/2016 16:49:10][            IncomingPayment_OnCustomer()] Calling AR_IncomingPayment()
+[06/07/2016 16:49:10][                      AR_IncomingPayment] Starting Function
+[06/07/2016 16:49:10][                      AR_IncomingPayment] Initializing payment object
+[06/07/2016 16:49:10][                      AR_IncomingPayment] Initializing Invoice object
+[06/07/2016 16:49:10][                      AR_IncomingPayment] Executing SQL SELECT SUM("DocTotal") AS "DocTotal" FROM "OINV" WHERE "NumAtCard" = 'MP16060251330'
+[06/07/2016 16:49:10][                      AR_IncomingPayment] Total invoice sum is 0
+[06/07/2016 16:49:10][                      AR_IncomingPayment] Total Excel amount is 152.12
+[06/07/2016 16:49:10][                      AR_IncomingPayment] Amount in Excel and Invoice total amount does not match
+[06/07/2016 16:49:11][                      AR_IncomingPayment] Completed with ERROR
+[06/07/2016 16:49:11][            IncomingPayment_OnCustomer()] Calling AR_IncomingPayment()
+[06/07/2016 16:49:11][                      AR_IncomingPayment] Starting Function
+[06/07/2016 16:49:11][                      AR_IncomingPayment] Initializing payment object
+[06/07/2016 16:49:11][                      AR_IncomingPayment] Initializing Invoice object
+[06/07/2016 16:49:11][                      AR_IncomingPayment] Executing SQL SELECT SUM("DocTotal") AS "DocTotal" FROM "OINV" WHERE "NumAtCard" = 'MP16060251331'
+[06/07/2016 16:49:11][                      AR_IncomingPayment] Total invoice sum is 0
+[06/07/2016 16:49:11][                      AR_IncomingPayment] Total Excel amount is 2000
+[06/07/2016 16:49:11][                      AR_IncomingPayment] Amount in Excel and Invoice total amount does not match
+[06/07/2016 16:49:11][                      AR_IncomingPayment] Completed with ERROR
+[06/07/2016 16:49:12][            IncomingPayment_OnCustomer()] Calling AR_IncomingPayment()
+[06/07/2016 16:49:12][                      AR_IncomingPayment] Starting Function
+[06/07/2016 16:49:12][                      AR_IncomingPayment] Initializing payment object
+[06/07/2016 16:49:12][                      AR_IncomingPayment] Initializing Invoice object
+[06/07/2016 16:49:12][                      AR_IncomingPayment] Executing SQL SELECT SUM("DocTotal") AS "DocTotal" FROM "OINV" WHERE "NumAtCard" = 'MP16060251332'
+[06/07/2016 16:49:12][                      AR_IncomingPayment] Total invoice sum is 0
+[06/07/2016 16:49:12][                      AR_IncomingPayment] Total Excel amount is 656
+[06/07/2016 16:49:12][                      AR_IncomingPayment] Amount in Excel and Invoice total amount does not match
+[06/07/2016 16:49:12][                      AR_IncomingPayment] Completed with ERROR
+[06/07/2016 16:49:12][            IncomingPayment_OnCustomer()] Calling AR_IncomingPayment()
+[06/07/2016 16:49:12][                      AR_IncomingPayment] Starting Function
+[06/07/2016 16:49:12][                      AR_IncomingPayment] Initializing payment object
+[06/07/2016 16:49:12][                      AR_IncomingPayment] Initializing Invoice object
+[06/07/2016 16:49:12][                      AR_IncomingPayment] Executing SQL SELECT SUM("DocTotal") AS "DocTotal" FROM "OINV" WHERE "NumAtCard" = 'MP16060251333'
+[06/07/2016 16:49:13][                      AR_IncomingPayment] Total invoice sum is 0
+[06/07/2016 16:49:13][                      AR_IncomingPayment] Total Excel amount is 1000
+[06/07/2016 16:49:13][                      AR_IncomingPayment] Amount in Excel and Invoice total amount does not match
+[06/07/2016 16:49:13][                      AR_IncomingPayment] Completed with ERROR
+[06/07/2016 16:49:13][            IncomingPayment_OnCustomer()] Calling ExecuteSQLNonQuery()UPDATE AB_STATEMENTUPLOAD SET UploadDate = '2016-06-07',SAPSyncDate = '2016-06-07',  Status = 'FAIL', ErrMsg = 'Amount in Excel and Invoice total amount does not match',LastSyncDate = '2016-06-07',PaymentDocnum = '' WHERE ID = '90' 
+[06/07/2016 16:49:13][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:49:13][                    ExecuteSQLNonQuery()] Executing SQL UPDATE AB_STATEMENTUPLOAD SET UploadDate = '2016-06-07',SAPSyncDate = '2016-06-07',  Status = 'FAIL', ErrMsg = 'Amount in Excel and Invoice total amount does not match',LastSyncDate = '2016-06-07',PaymentDocnum = '' WHERE ID = '90' 
+[06/07/2016 16:49:13][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:49:13][            IncomingPayment_OnCustomer()] Calling ExecuteSQLNonQuery()UPDATE AB_STATEMENTUPLOAD SET UploadDate = '2016-06-07',SAPSyncDate = '2016-06-07',  Status = 'FAIL', ErrMsg = 'Amount in Excel and Invoice total amount does not match',LastSyncDate = '2016-06-07',PaymentDocnum = '' WHERE ID = '91' 
+[06/07/2016 16:49:13][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:49:13][                    ExecuteSQLNonQuery()] Executing SQL UPDATE AB_STATEMENTUPLOAD SET UploadDate = '2016-06-07',SAPSyncDate = '2016-06-07',  Status = 'FAIL', ErrMsg = 'Amount in Excel and Invoice total amount does not match',LastSyncDate = '2016-06-07',PaymentDocnum = '' WHERE ID = '91' 
+[06/07/2016 16:49:13][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:49:13][            IncomingPayment_OnCustomer()] Calling ExecuteSQLNonQuery()UPDATE AB_STATEMENTUPLOAD SET UploadDate = '2016-06-07',SAPSyncDate = '2016-06-07',  Status = 'FAIL', ErrMsg = 'Amount in Excel and Invoice total amount does not match',LastSyncDate = '2016-06-07',PaymentDocnum = '' WHERE ID = '92' 
+[06/07/2016 16:49:13][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:49:13][                    ExecuteSQLNonQuery()] Executing SQL UPDATE AB_STATEMENTUPLOAD SET UploadDate = '2016-06-07',SAPSyncDate = '2016-06-07',  Status = 'FAIL', ErrMsg = 'Amount in Excel and Invoice total amount does not match',LastSyncDate = '2016-06-07',PaymentDocnum = '' WHERE ID = '92' 
+[06/07/2016 16:49:13][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:49:14][            IncomingPayment_OnCustomer()] Calling ExecuteSQLNonQuery()UPDATE AB_STATEMENTUPLOAD SET UploadDate = '2016-06-07',SAPSyncDate = '2016-06-07',  Status = 'FAIL', ErrMsg = 'Amount in Excel and Invoice total amount does not match',LastSyncDate = '2016-06-07',PaymentDocnum = '' WHERE ID = '93' 
+[06/07/2016 16:49:14][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:49:14][                    ExecuteSQLNonQuery()] Executing SQL UPDATE AB_STATEMENTUPLOAD SET UploadDate = '2016-06-07',SAPSyncDate = '2016-06-07',  Status = 'FAIL', ErrMsg = 'Amount in Excel and Invoice total amount does not match',LastSyncDate = '2016-06-07',PaymentDocnum = '' WHERE ID = '93' 
+[06/07/2016 16:49:14][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:49:14][            IncomingPayment_OnCustomer()] Calling ExecuteSQLNonQuery()UPDATE AB_STATEMENTUPLOAD SET UploadDate = '2016-06-07',SAPSyncDate = '2016-06-07',  Status = 'FAIL', ErrMsg = 'Amount in Excel and Invoice total amount does not match',LastSyncDate = '2016-06-07',PaymentDocnum = '' WHERE ID = '94' 
+[06/07/2016 16:49:14][                    ExecuteSQLNonQuery()] Starting Fucntion...
+[06/07/2016 16:49:14][                    ExecuteSQLNonQuery()] Executing SQL UPDATE AB_STATEMENTUPLOAD SET UploadDate = '2016-06-07',SAPSyncDate = '2016-06-07',  Status = 'FAIL', ErrMsg = 'Amount in Excel and Invoice total amount does not match',LastSyncDate = '2016-06-07',PaymentDocnum = '' WHERE ID = '94' 
+[06/07/2016 16:49:14][                    ExecuteSQLNonQuery()] Completed with SUCCESS.
+[06/07/2016 16:49:14][            IncomingPayment_OnCustomer()] Completed with SUCCESS

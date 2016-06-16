@@ -1,0 +1,15 @@
+status will be null and successs
+
+if status is null create ar and ap invoice(ap invoice 1)
+	for ap invoice vendor code is emp_id in the revandcost table
+
+if status is success and passport no is null throw error
+if status is success create ap invoice 2 and gl account in config file --> new passport no.
+	this case vendor is agency in revandcost table
+	then create credit note link is passport no column for ap invoice 1
+
+if eserveice is null remove eserveice in invoice
+
+2. For CDL, LDL, RTX, ETMS, STMS, and JPJ Summons - default the cost center to HQ. Data that populates in ag_code UDF will be stored as info only. 
+3. For Booking service, program to read the ag_code and link to the correct cost center. 
+4. For Roadtax service, no need for insurance to be created in a separate invoice. Also no need to create AP Invoice for insurance linked to roadtax. 
