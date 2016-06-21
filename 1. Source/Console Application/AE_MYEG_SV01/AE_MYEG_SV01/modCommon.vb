@@ -343,7 +343,7 @@ Module modCommon
     End Function
 
     Public Function GetDataView(ByVal sQuery As String) As DataView
-        Dim sFuncName As String = String.Empty
+        Dim sFuncName As String = "GetDataView"
         Dim oPostgreODBC As OdbcConnection = New OdbcConnection
         Dim sConnection As String = "DRIVER={PostgreSQL ANSI};SERVER=" & p_oCompDef.sSQLServer & ";UID=" & p_oCompDef.sSQLUser & ";PWD=" & p_oCompDef.sSQLPwd & ";DATABASE=" & p_oCompDef.sIntegDBName & ";"
 

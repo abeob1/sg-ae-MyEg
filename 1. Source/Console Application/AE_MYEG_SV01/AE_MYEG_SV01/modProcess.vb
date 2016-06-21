@@ -21,7 +21,7 @@ Module modProcess
                    " summon_type,offence_datetime,offender_name,offender_ic,vehicle_no,law_code2,law_code3,jpj_rev_code,replace_type,""user_id"",id_no,comp_no,account_no,bill_date, " & _
                    " car_registration_no,prepaid_acct_no,license_class,revenue_code,veh_owner_name,emp_icno,emp_name,passportno,applicantname,sector,print_status,jpn_amount, " & _
                    " jim_amount,ag_code,pay_mode,agency_account_no,zakat_id,req_id,credit_card_no,contact_no,zakat_agency_id,booking_ID,covernote_number,email,ins_company, " & _
-                   " insurance_type,New_Passport_no,""A/P Invoice No"",Section_code,fw_id,trans_id " & _
+                   " invoiceid,New_Passport_no,""A/P Invoice No"",Section_code,fw_id,trans_id " & _
                    " FROM public.AB_REVENUEANDCOST WHERE COALESCE(Status,'FAIL') = 'FAIL' OR COALESCE(Status,'') = '' " & _
                    " UNION ALL " & _
                    " SELECT ID,Entity,Agency,""Service Type"",Receipt_no,Update_datetime,Tx_amount,eservice_amount,gst_amount,voucher_amount,summons_amount,ppz_amount, " & _
@@ -29,7 +29,7 @@ Module modProcess
                    " summon_type,offence_datetime,offender_name,offender_ic,vehicle_no,law_code2,law_code3,jpj_rev_code,replace_type,""user_id"",id_no,comp_no,account_no,bill_date, " & _
                    " car_registration_no,prepaid_acct_no,license_class,revenue_code,veh_owner_name,emp_icno,emp_name,passportno,applicantname,sector,print_status,jpn_amount, " & _
                    " jim_amount,ag_code,pay_mode,agency_account_no,zakat_id,req_id,credit_card_no,contact_no,zakat_agency_id,booking_ID,covernote_number,email,ins_company, " & _
-                   " insurance_type,New_Passport_no,""A/P Invoice No"",Section_code,fw_id,trans_id " & _
+                   " invoiceid,New_Passport_no,""A/P Invoice No"",Section_code,fw_id,trans_id " & _
                    " FROM public.AB_REVENUEANDCOST WHERE COALESCE(Status,'FAIL') = 'SUCCESS' AND Agency = 'IMMI' AND COALESCE(""A/P Invoice No2"",'0') = '0' ORDER BY ID "
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
@@ -254,7 +254,9 @@ Module modProcess
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting function", sFuncName)
 
             sIntegId = oDv(iLine)(0).ToString.Trim
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data based on id no " & sIntegId, sFuncName)
 
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Creating AR Invoice document", sFuncName)
             Console.WriteLine("Creating AR Invoice document")
 
             sSql = "SELECT ""Code"" FROM ""OVTG"" WHERE ""Code"" = '" & p_oCompDef.sEserviceTax & "'"
@@ -268,6 +270,8 @@ Module modProcess
             sServiceType = oDv(iLine)(3).ToString.Trim
             sMerChantid = oDv(iLine)(24).ToString.Trim
             sAGCode = oDv(iLine)(54).ToString.Trim
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Service Type is " & sServiceType, sFuncName)
 
             sSql = "SELECT ""PrcCode"" FROM ""OPRC"" WHERE UPPER(""U_AGCODE"") = '" & sAGCode.ToUpper() & "' "
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
@@ -306,6 +310,8 @@ Module modProcess
                     End If
                 Next
                 If sCardCode <> "" Then
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Code in Merchant id is " & sCardCode, sFuncName)
+
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking merchant id in merchant table", sFuncName)
                     dtMerchantId.DefaultView.RowFilter = "Code = '" & sCardCode & "'"
                     If dtMerchantId.DefaultView.Count = 0 Then
@@ -357,6 +363,8 @@ Module modProcess
             oArInovice.UserFields.Fields.Item("U_AI_InvRefNo").Value = oDv(iLine)(4).ToString.Trim
             oArInovice.Comments = "From Integration database. Refer id no " & sIntegId
             oArInovice.JournalMemo = "A/R Invoices - " & sCardCode & " " & sMerChantid
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Assigning UDF fields", sFuncName)
 
             If Not (oDv(iLine)(25).ToString.Trim = String.Empty) Then
                 oArInovice.UserFields.Fields.Item("U_AE_PAYMENTTYPE").Value = oDv(iLine)(25).ToString.Trim
@@ -507,6 +515,10 @@ Module modProcess
                         oArInovice.Lines.Add()
                     End If
                     sItemDesc = "eservice_amount" & "-" & sServiceType
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing Datas for Eservice amount", sFuncName)
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for " & sItemDesc, sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                     If dtItemCode.DefaultView.Count = 0 Then
 
@@ -568,6 +580,8 @@ Module modProcess
                 If sAgency.ToUpper = "JPJ" And sServiceType.ToUpper = "BOOKING" Then
 
                 Else        'If sAgency.ToUpper = "JZNK" And sServiceType.ToUpper = "ZAKAT" Then
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Code for GST amount column", sFuncName)
+
                     If dGst > 0.0 And dEservice = 0.0 Then
                         sSql = "SELECT ""Rate"" FROM ""OVTG"" WHERE ""Code"" = '" & p_oCompDef.sEserviceTax & "'"
                         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
@@ -581,6 +595,7 @@ Module modProcess
                                 If iCount > 1 Then
                                     oArInovice.Lines.Add()
                                 End If
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for GST", sFuncName)
 
                                 sItemDesc = "eservice_amount" & "-" & sServiceType
                                 dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
@@ -644,6 +659,8 @@ Module modProcess
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for voucher amount", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'VOUCHER_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'voucher_amount' provided does not exist in SAP(Mapping Table)."
@@ -661,6 +678,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for Voucher amount", sFuncName)
 
                     oArInovice.Lines.ItemCode = sItemCode
                     oArInovice.Lines.Quantity = 1
@@ -699,6 +718,8 @@ Module modProcess
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for summons amount", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'SUMMONS_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'summons_amount' provided does not exist in SAP(Mapping Table)."
@@ -716,6 +737,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for summons amount", sFuncName)
 
                     oArInovice.Lines.ItemCode = sItemCode
                     oArInovice.Lines.Quantity = 1
@@ -754,6 +777,9 @@ Module modProcess
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for PPZ amount", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PPZ_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'ppz_amount' provided does not exist in SAP(Mapping Table)."
@@ -771,6 +797,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for PPZ Amount", sFuncName)
 
                     oArInovice.Lines.ItemCode = sItemCode
                     oArInovice.Lines.Quantity = 1
@@ -809,6 +837,9 @@ Module modProcess
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for JPJ Amount", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'JPJ_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'jpj_amount' provided does not exist in SAP(Mapping Table)."
@@ -826,6 +857,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for JPJ Amount", sFuncName)
 
                     oArInovice.Lines.ItemCode = sItemCode
                     oArInovice.Lines.Quantity = 1
@@ -864,6 +897,9 @@ Module modProcess
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for EHAK amount", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'EHAK_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'ehak_amount' provided does not exist in SAP(Mapping Table)."
@@ -881,6 +917,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for EHAK amount", sFuncName)
 
                     oArInovice.Lines.ItemCode = sItemCode
                     oArInovice.Lines.Quantity = 1
@@ -919,6 +957,9 @@ Module modProcess
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing Data for INQ Amount", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'INQ_AMT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'inq_amt' provided does not exist in SAP(Mapping Table)."
@@ -936,6 +977,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for INQ Amount", sFuncName)
 
                     oArInovice.Lines.ItemCode = sItemCode
                     oArInovice.Lines.Quantity = 1
@@ -983,7 +1026,12 @@ Module modProcess
                     Catch ex As Exception
                         dAmount = 0.0
                     End Try
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for AMOUNT column", sFuncName)
+
                     sItemDesc = "agency_amount" & "-" & sServiceType
+
+
                     If sAgency.ToUpper = "JPJ" And sServiceType.ToUpper = "BOOKING" Then
                         If dAmount > 17 Then
                             If iCount > 1 Then
@@ -1015,6 +1063,9 @@ Module modProcess
                             Else
                                 sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                             End If
+
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for Amount Column, JPJ and BOOKING", sFuncName)
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Item Desc is " & sItemDesc, sFuncName)
 
                             oArInovice.Lines.ItemCode = sItemCode
                             oArInovice.Lines.Quantity = 1
@@ -1065,6 +1116,8 @@ Module modProcess
                             Else
                                 sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                             End If
+
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for Amount Column, JPJ and BOOKING - Including computer_test", sFuncName)
 
                             oArInovice.Lines.ItemCode = sItemCode
                             oArInovice.Lines.Quantity = 1
@@ -1147,6 +1200,8 @@ Module modProcess
                             If iCount > 1 Then
                                 oArInovice.Lines.Add()
                             End If
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for Amount Column, JPJ and BOOKING", sFuncName)
+
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'COMPUTER_TEST'"
                             If dtItemCode.DefaultView.Count = 0 Then
                                 sErrDesc = "ItemCode ::'computer_test' provided does not exist in SAP(Mapping Table)."
@@ -1164,6 +1219,8 @@ Module modProcess
                             Else
                                 sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                             End If
+
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for Amount Column, JPJ and BOOKING - Computer Test", sFuncName)
 
                             oArInovice.Lines.ItemCode = sItemCode
                             oArInovice.Lines.Quantity = 1
@@ -1274,6 +1331,8 @@ Module modProcess
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                         End If
 
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for Amount Column, JPJ and CDL", sFuncName)
+
                         oArInovice.Lines.ItemCode = sItemCode
                         oArInovice.Lines.Quantity = 1
                         oArInovice.Lines.UnitPrice = CDbl(dAmount)
@@ -1340,7 +1399,7 @@ Module modProcess
                         If iCount > 1 Then
                             oArInovice.Lines.Add()
                         End If
-                        
+
                         dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                         If dtItemCode.DefaultView.Count = 0 Then
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
@@ -1367,6 +1426,8 @@ Module modProcess
                         Else
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                         End If
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for Amount Column, JPJ and JPJSUMMONS", sFuncName)
 
                         oArInovice.Lines.ItemCode = sItemCode
                         oArInovice.Lines.Quantity = 1
@@ -1398,6 +1459,8 @@ Module modProcess
                         iCount = iCount + 1
 
                         If dEservice = 0.0 Then
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Eservice Item for Amount Column, JPJ and JPJSUMMONS", sFuncName)
+
                             If iCount > 1 Then
                                 oArInovice.Lines.Add()
                             End If
@@ -1420,7 +1483,6 @@ Module modProcess
                             Else
                                 sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
                             End If
-
 
                             oArInovice.Lines.ItemCode = sItemCode
                             oArInovice.Lines.Quantity = 1
@@ -1481,6 +1543,8 @@ Module modProcess
                         Else
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                         End If
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for Amount Column, JPJ and LDL", sFuncName)
 
                         oArInovice.Lines.ItemCode = sItemCode
                         oArInovice.Lines.Quantity = 1
@@ -1599,6 +1663,8 @@ Module modProcess
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                         End If
 
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for Amount Column, JPJ and JPN", sFuncName)
+
                         oArInovice.Lines.ItemCode = sItemCode
                         oArInovice.Lines.Quantity = 1
                         oArInovice.Lines.UnitPrice = CDbl(dInvValue)
@@ -1677,6 +1743,7 @@ Module modProcess
                         '    iCount = iCount + 1
                         'End If
                     Else
+
                         If iCount > 1 Then
                             oArInovice.Lines.Add()
                         End If
@@ -1707,6 +1774,8 @@ Module modProcess
                         Else
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                         End If
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for Amount Column Not JPJ", sFuncName)
 
                         oArInovice.Lines.ItemCode = sItemCode
                         oArInovice.Lines.Quantity = 1
@@ -1744,6 +1813,8 @@ Module modProcess
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for DELAMOUNT ", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'DELAMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'delamount' provided does not exist in SAP(Mapping Table)."
@@ -1761,6 +1832,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for DELAMOUNT", sFuncName)
 
                     oArInovice.Lines.ItemCode = sItemCode
                     oArInovice.Lines.Quantity = 1
@@ -1795,6 +1868,8 @@ Module modProcess
             If Not (oDv(iLine)(17).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(17).ToString.Trim() <> 0)) Then
                     If sAgency = "IMMI" Then
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("PRocessing data for LEVIFEE Amount and IMMI Agency", sFuncName)
+
                         If iCount > 1 Then
                             oArInovice.Lines.Add()
                         End If
@@ -1815,6 +1890,8 @@ Module modProcess
                         Else
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                         End If
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting data for LEVIFEE Amount and IMMI", sFuncName)
 
                         oArInovice.Lines.ItemCode = sItemCode
                         oArInovice.Lines.Quantity = 1
@@ -1893,6 +1970,8 @@ Module modProcess
                         '    iCount = iCount + 1
                         'End If
                     Else
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for LEVIFEE Amount", sFuncName)
+
                         If iCount > 1 Then
                             oArInovice.Lines.Add()
                         End If
@@ -1913,6 +1992,8 @@ Module modProcess
                         Else
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                         End If
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting data for LEVIFEE Amount", sFuncName)
 
                         oArInovice.Lines.ItemCode = sItemCode
                         oArInovice.Lines.Quantity = 1
@@ -1950,6 +2031,8 @@ Module modProcess
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing Data for DELIVERYFEE", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'DELIVERYFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'deliveryfee' provided does not exist in SAP(Mapping Table)."
@@ -1967,6 +2050,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting data for DELIVERYFEE", sFuncName)
 
                     oArInovice.Lines.ItemCode = sItemCode
                     oArInovice.Lines.Quantity = 1
@@ -2003,6 +2088,8 @@ Module modProcess
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Pocessing data for PROCESSFEE", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PROCESSFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'processfee' provided does not exist in SAP(Mapping Table)."
@@ -2020,6 +2107,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting data for PROCESSFEE", sFuncName)
 
                     oArInovice.Lines.ItemCode = sItemCode
                     oArInovice.Lines.Quantity = 1
@@ -2056,6 +2145,8 @@ Module modProcess
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for PASSFFEE", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PASSFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'passfee' provided does not exist in SAP(Mapping Table)."
@@ -2073,6 +2164,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting data for PASSFEE", sFuncName)
 
                     oArInovice.Lines.ItemCode = sItemCode
                     oArInovice.Lines.Quantity = 1
@@ -2109,6 +2202,8 @@ Module modProcess
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for VISAFEE", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'VISAFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'visafee' provided does not exist in SAP(Mapping Table)."
@@ -2126,6 +2221,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting data for VISAFEE", sFuncName)
 
                     oArInovice.Lines.ItemCode = sItemCode
                     oArInovice.Lines.Quantity = 1
@@ -2162,6 +2259,9 @@ Module modProcess
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for FOMAFEE", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'FOMAFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'fomafee' provided does not exist in SAP(Mapping Table)."
@@ -2179,6 +2279,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for FOMAFEE", sFuncName)
 
                     oArInovice.Lines.ItemCode = sItemCode
                     oArInovice.Lines.Quantity = 1
@@ -2215,6 +2317,8 @@ Module modProcess
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for INSFEE", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'INSFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'insfee' provided does not exist in SAP(Mapping Table)."
@@ -2232,6 +2336,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for INSFEE", sFuncName)
 
                     oArInovice.Lines.ItemCode = sItemCode
                     oArInovice.Lines.Quantity = 1
@@ -2272,6 +2378,8 @@ Module modProcess
                 sErrDesc = sErrDesc & " in funct. " & sFuncName
                 Throw New ArgumentException(sErrDesc)
             Else
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("A/R invoice created successfully", sFuncName)
+
                 Dim iDocNo, iDocEntry As Integer
                 iDocEntry = p_oCompany.GetNewObjectKey()
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(oArInovice)
@@ -2342,6 +2450,8 @@ Module modProcess
             sServiceType = oDv(iLine)(3).ToString.Trim
             sAGCode = oDv(iLine)(54).ToString.Trim
 
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data based on id no " & sIntegId, sFuncName)
+
             sSql = "SELECT ""PrcCode"" FROM ""OPRC"" WHERE UPPER(""U_AGCODE"") = '" & sAGCode.ToUpper() & "' "
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
             sCostCenter5 = GetStringValue(sSql)
@@ -2394,6 +2504,8 @@ Module modProcess
             oAPInvoice.DocDueDate = CDate(oDv(iLine)(5).ToString.Trim)
             oAPInvoice.BPL_IDAssignedToInvoice = "1"
             oAPInvoice.Comments = "From Integration database/Refer id No " & sIntegId
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Assigning values to UDF", sFuncName)
 
             If Not (oDv(iLine)(25).ToString.Trim = String.Empty) Then
                 oAPInvoice.UserFields.Fields.Item("U_AE_PAYMENTTYPE").Value = oDv(iLine)(25).ToString.Trim
@@ -2534,6 +2646,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Process datas for LEVIFEE_AMOUNT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'levifee_amount' provided does not exist in SAP(Mapping Table)."
@@ -2551,6 +2665,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for LEVIFEE_AMOUNT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -2588,6 +2704,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for SUMMONS_AMOUNT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'SUMMONS_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'summons_amount' provided does not exist in SAP(Mapping Table)."
@@ -2605,6 +2723,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for SUMMONS_AMOUNT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -2641,6 +2761,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for PPZ_AMOUNT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PPZ_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'ppz_amount' provided does not exist in SAP(Mapping Table)."
@@ -2658,6 +2780,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for PPZ_AMOUNT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -2694,6 +2818,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("processing data for JPJ_AMOUNT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'JPJ_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'jpj_amount' provided does not exist in SAP(Mapping Table)."
@@ -2711,6 +2837,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for JPJ_AMOUNT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -2747,6 +2875,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for EHAK_AMOUNT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'EHAK_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'ehak_amount' provided does not exist in SAP(Mapping Table)."
@@ -2764,6 +2894,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for EHAK_AMOUNT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -2800,6 +2932,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for INQ_AMT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'INQ_AMT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'inq_amt' provided does not exist in SAP(Mapping Table)."
@@ -2817,6 +2951,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for INQ_AMT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -2863,6 +2999,8 @@ Module modProcess
                     End Try
                     sItemDesc = "agency_amount" & "-" & sServiceType
                     If sCardCode.ToUpper = "JPJ" And sServiceType.ToUpper = "BOOKING" Then 'And dAmount = 27
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for AMOUNT,JPJ and BOOKING", sFuncName)
+
                         If iCount > 1 Then
                             oAPInvoice.Lines.Add()
                         End If
@@ -2892,6 +3030,8 @@ Module modProcess
                         Else
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                         End If
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for AMOUNT,JPJ and BOOKING", sFuncName)
 
                         oAPInvoice.Lines.ItemCode = sItemCode
                         oAPInvoice.Lines.Quantity = 1
@@ -2925,6 +3065,8 @@ Module modProcess
                         If iCount > 1 Then
                             oAPInvoice.Lines.Add()
                         End If
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for AMOUNT,JPJ and CDL", sFuncName)
+
                         dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                         If dtItemCode.DefaultView.Count = 0 Then
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
@@ -2951,6 +3093,8 @@ Module modProcess
                         Else
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                         End If
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for AMOUNT,JPJ and CDL", sFuncName)
 
                         oAPInvoice.Lines.ItemCode = sItemCode
                         oAPInvoice.Lines.Quantity = 1
@@ -2995,6 +3139,8 @@ Module modProcess
                         If iCount > 1 Then
                             oAPInvoice.Lines.Add()
                         End If
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for AMOUNT,JPJ and JPJSUMMONS", sFuncName)
+
                         dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                         If dtItemCode.DefaultView.Count = 0 Then
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
@@ -3021,6 +3167,8 @@ Module modProcess
                         Else
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                         End If
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for AMOUNT,JPJ and JPJSUMMONS", sFuncName)
 
                         oAPInvoice.Lines.ItemCode = sItemCode
                         oAPInvoice.Lines.Quantity = 1
@@ -3054,6 +3202,8 @@ Module modProcess
                         If iCount > 1 Then
                             oAPInvoice.Lines.Add()
                         End If
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for AMOUNT,JPJ and LDL", sFuncName)
+
                         dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                         If dtItemCode.DefaultView.Count = 0 Then
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
@@ -3080,6 +3230,7 @@ Module modProcess
                         Else
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                         End If
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for AMOUNT,JPJ and LDL", sFuncName)
 
                         oAPInvoice.Lines.ItemCode = sItemCode
                         oAPInvoice.Lines.Quantity = 1
@@ -3125,7 +3276,9 @@ Module modProcess
                         If iCount > 1 Then
                             oAPInvoice.Lines.Add()
                         End If
-                        
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for AMOUNT,JPJ and JPN", sFuncName)
+
                         dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                         If dtItemCode.DefaultView.Count = 0 Then
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
@@ -3152,6 +3305,8 @@ Module modProcess
                         Else
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                         End If
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for AMOUNT,JPJ and JPN", sFuncName)
 
                         oAPInvoice.Lines.ItemCode = sItemCode
                         oAPInvoice.Lines.Quantity = 1
@@ -3182,10 +3337,12 @@ Module modProcess
                         End If
                         iCount = iCount + 1
                     Else
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for AMOUNT", sFuncName)
+
                         If iCount > 1 Then
                             oAPInvoice.Lines.Add()
                         End If
-                       
+
                         dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                         If dtItemCode.DefaultView.Count = 0 Then
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
@@ -3212,6 +3369,8 @@ Module modProcess
                         Else
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                         End If
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for AMOUNT", sFuncName)
 
                         oAPInvoice.Lines.ItemCode = sItemCode
                         oAPInvoice.Lines.Quantity = 1
@@ -3257,6 +3416,8 @@ Module modProcess
                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Error while adding A/p invoice document", sFuncName)
                 Throw New ArgumentException(sErrDesc)
             Else
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("1 A/P invoice created successfully", sFuncName)
+
                 Dim iDocNo, iDocEntry As Integer
                 iDocEntry = p_oCompany.GetNewObjectKey()
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(oAPInvoice)
@@ -3325,6 +3486,9 @@ Module modProcess
             sIntegId = oDv(iLine)(0).ToString.Trim
             sCardCode = oDv(iLine)(46).ToString.Trim
             sCardName = oDv(iLine)(47).ToString.Trim
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data based on id no " & sIntegId, sFuncName)
+
             If sCardCode <> "" Then
                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking cardcode " & sCardCode & " in BP Master", sFuncName)
                 dtBP.DefaultView.RowFilter = "CardCode = '" & sCardCode & "'"
@@ -3384,6 +3548,8 @@ Module modProcess
             oAPInvoice.DocDueDate = CDate(oDv(iLine)(5).ToString.Trim)
             oAPInvoice.BPL_IDAssignedToInvoice = "1"
             oAPInvoice.Comments = "From Integration database/Refer id No " & sIntegId
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Assigning values to UDF", sFuncName)
 
             If Not (oDv(iLine)(25).ToString.Trim = String.Empty) Then
                 oAPInvoice.UserFields.Fields.Item("U_AE_PAYMENTTYPE").Value = oDv(iLine)(25).ToString.Trim
@@ -3524,6 +3690,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for LEVIFEE_AMOUNT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'levifee_amount' provided does not exist in SAP(Mapping Table)."
@@ -3541,6 +3709,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for LEVIFEE_AMOUNT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -3571,6 +3741,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for PROCESSFEE", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PROCESSFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'processfee' provided does not exist in SAP(Mapping Table)."
@@ -3588,6 +3760,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for PROCESSFEE", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -3618,6 +3792,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for PASSFEE", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PASSFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'passfee' provided does not exist in SAP(Mapping Table)."
@@ -3635,6 +3811,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for PASSFEE", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -3665,6 +3843,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for VISAFEE", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'VISAFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'visafee' provided does not exist in SAP(Mapping Table)."
@@ -3682,6 +3862,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for VISAFEE", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -3712,6 +3894,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for SUMMONS_AMOUNT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'SUMMONS_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'summons_amount' provided does not exist in SAP(Mapping Table)."
@@ -3729,6 +3913,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for SUMMONS_AMOUNT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -3759,6 +3945,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for PPZ_AMOUNT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PPZ_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'ppz_amount' provided does not exist in SAP(Mapping Table)."
@@ -3776,6 +3964,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for PPZ_AMOUNT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -3806,6 +3996,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for JPJ_AMOUNT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'JPJ_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'jpj_amount' provided does not exist in SAP(Mapping Table)."
@@ -3823,6 +4015,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for JPJ_AMOUNT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -3853,6 +4047,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for EHAK_AMOUNT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'EHAK_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'ehak_amount' provided does not exist in SAP(Mapping Table)."
@@ -3870,6 +4066,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for EHAK_AMOUNT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -3900,6 +4098,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for INQ_AMT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'INQ_AMT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'inq_amt' provided does not exist in SAP(Mapping Table)."
@@ -3917,6 +4117,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for INQ_AMT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -3957,6 +4159,8 @@ Module modProcess
                     End Try
                     sItemDesc = "agency_amount" & "-" & sServiceType
                     If sCardCode.ToUpper = "JPJ" And sServiceType.ToUpper = "BOOKING" Then 'And dAmount = 27
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for AMOUNT,JPJ and BOOKING", sFuncName)
+
                         If iCount > 1 Then
                             oAPInvoice.Lines.Add()
                         End If
@@ -3986,6 +4190,8 @@ Module modProcess
                         Else
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                         End If
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for AMOUNT,JPJ and BOOKING", sFuncName)
 
                         oAPInvoice.Lines.ItemCode = sItemCode
                         oAPInvoice.Lines.Quantity = 1
@@ -4013,6 +4219,8 @@ Module modProcess
                         If iCount > 1 Then
                             oAPInvoice.Lines.Add()
                         End If
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data AMOUNT,JPJ and CDL", sFuncName)
+
                         dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                         If dtItemCode.DefaultView.Count = 0 Then
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
@@ -4039,6 +4247,8 @@ Module modProcess
                         Else
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                         End If
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for AMOUNT,JPJ and CDL", sFuncName)
 
                         oAPInvoice.Lines.ItemCode = sItemCode
                         oAPInvoice.Lines.Quantity = 1
@@ -4077,6 +4287,8 @@ Module modProcess
                         If iCount > 1 Then
                             oAPInvoice.Lines.Add()
                         End If
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data AMOUNT,JPJ and JPJSUMMONS", sFuncName)
+
                         dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                         If dtItemCode.DefaultView.Count = 0 Then
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
@@ -4103,6 +4315,8 @@ Module modProcess
                         Else
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                         End If
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for AMOUNT,JPJ and JPJSUMMONS", sFuncName)
 
                         oAPInvoice.Lines.ItemCode = sItemCode
                         oAPInvoice.Lines.Quantity = 1
@@ -4130,6 +4344,8 @@ Module modProcess
                         If iCount > 1 Then
                             oAPInvoice.Lines.Add()
                         End If
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data AMOUNT,JPJ and LDL", sFuncName)
+
                         dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                         If dtItemCode.DefaultView.Count = 0 Then
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
@@ -4156,6 +4372,8 @@ Module modProcess
                         Else
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                         End If
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item AMOUNT,JPJ and LDL", sFuncName)
 
                         oAPInvoice.Lines.ItemCode = sItemCode
                         oAPInvoice.Lines.Quantity = 1
@@ -4195,6 +4413,8 @@ Module modProcess
                         If iCount > 1 Then
                             oAPInvoice.Lines.Add()
                         End If
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data AMOUNT,JPJ and JPN", sFuncName)
+
                         dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                         If dtItemCode.DefaultView.Count = 0 Then
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
@@ -4221,6 +4441,8 @@ Module modProcess
                         Else
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                         End If
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for AMOUNT,JPJ and JPN", sFuncName)
 
                         oAPInvoice.Lines.ItemCode = sItemCode
                         oAPInvoice.Lines.Quantity = 1
@@ -4248,6 +4470,8 @@ Module modProcess
                         If iCount > 1 Then
                             oAPInvoice.Lines.Add()
                         End If
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data AMOUNT", sFuncName)
+
                         dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                         If dtItemCode.DefaultView.Count = 0 Then
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
@@ -4274,6 +4498,8 @@ Module modProcess
                         Else
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                         End If
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for AMOUNT", sFuncName)
 
                         oAPInvoice.Lines.ItemCode = sItemCode
                         oAPInvoice.Lines.Quantity = 1
@@ -4313,6 +4539,8 @@ Module modProcess
                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Error while adding A/p invoice document", sFuncName)
                 Throw New ArgumentException(sErrDesc)
             Else
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("A/P invoice -IMMI created successfully", sFuncName)
+
                 Dim iDocNo, iDocEntry As Integer
                 iDocEntry = p_oCompany.GetNewObjectKey()
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(oAPInvoice)
@@ -4385,6 +4613,8 @@ Module modProcess
             sServiceType = oDv(iLine)(3).ToString.Trim
             sAGCode = oDv(iLine)(54).ToString.Trim
 
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data based on id no " & sIntegId, sFuncName)
+
             sPassPortNo = oDv(iLine)(48).ToString.Trim
             If sPassPortNo = "" Then
                 sErrDesc = "Passport No. column value should not be null"
@@ -4435,6 +4665,8 @@ Module modProcess
             oAPInvoice.DocDueDate = CDate(oDv(iLine)(5).ToString.Trim)
             oAPInvoice.BPL_IDAssignedToInvoice = "1"
             oAPInvoice.Comments = "From Integration database/Refer id No " & sIntegId
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Assinging values to UDF", sFuncName)
 
             If Not (oDv(iLine)(25).ToString.Trim = String.Empty) Then
                 oAPInvoice.UserFields.Fields.Item("U_AE_PAYMENTTYPE").Value = oDv(iLine)(25).ToString.Trim
@@ -4578,6 +4810,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for LEVIFEE_AMOUNT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'levifee_amount' provided does not exist in SAP(Mapping Table)."
@@ -4595,6 +4829,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for LEVIFEE_AMOUNT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -4629,6 +4865,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for SUMMONS_AMOUNT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'SUMMONS_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'summons_amount' provided does not exist in SAP(Mapping Table)."
@@ -4646,6 +4884,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for SUMMONS_AMOUNT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -4679,6 +4919,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for PPZ_AMOUNT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PPZ_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'ppz_amount' provided does not exist in SAP(Mapping Table)."
@@ -4696,6 +4938,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for PPZ_AMOUNT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -4729,6 +4973,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for JPJ_AMOUNT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'JPJ_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'jpj_amount' provided does not exist in SAP(Mapping Table)."
@@ -4746,6 +4992,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for JPJ_AMOUNT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -4779,6 +5027,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for EHAK_AMOUNT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'EHAK_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'ehak_amount' provided does not exist in SAP(Mapping Table)."
@@ -4796,6 +5046,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for EHAK_AMOUNT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -4829,6 +5081,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for INQ_AMT", sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'INQ_AMT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::'inq_amt' provided does not exist in SAP(Mapping Table)."
@@ -4846,6 +5100,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting for INQ_AMT", sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -4880,6 +5136,8 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for " & sItemDesc, sFuncName)
+
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
@@ -4906,6 +5164,8 @@ Module modProcess
                     Else
                         sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for " & sItemDesc, sFuncName)
 
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
@@ -4947,6 +5207,8 @@ Module modProcess
                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Error while adding A/p invoice document", sFuncName)
                 Throw New ArgumentException(sErrDesc)
             Else
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("A/P invoice 2 created successfully", sFuncName)
+
                 Dim iDocNo, iDocEntry As Integer
                 iDocEntry = p_oCompany.GetNewObjectKey()
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(oAPInvoice)
@@ -5055,6 +5317,7 @@ Module modProcess
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting Function", sFuncName)
 
             sIntegId = oDv(iLine)(0).ToString.Trim
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas based on id no " & sIntegId, sFuncName)
 
             sSQL = "SELECT ""A/P Invoice No"",passportno,new_passport_no FROM public.AB_REVENUEANDCOST WHERE ID = '" & sIntegId & "'"
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL into Dataset" & sSQL, sFuncName)
@@ -5069,9 +5332,12 @@ Module modProcess
 
             'sSQL = "SELECT * FROM ""OPCH"" WHERE ""DocNum"" = '" & sApInvNo & "' AND ""U_PASSPORTNO"" = '" & sPassportNo & "'"
             sSQL = "SELECT * FROM ""OPCH"" A INNER JOIN ""PCH1"" B ON B.""DocEntry"" = A.""DocEntry"" WHERE A.""DocNum"" = '" & sApInvNo & "' AND ""U_PASSPORTNO"" = '" & sPassportNo & "'"
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+
             oRecordSet = p_oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
             oRecordSet.DoQuery(sSQL)
             If Not (oRecordSet.BoF And oRecordSet.EoF) Then
+                oRecordSet.MoveFirst()
 
                 oCreditNote.CardCode = oRecordSet.Fields.Item("CardCode").Value
                 oCreditNote.NumAtCard = oRecordSet.Fields.Item("NumAtCard").Value
@@ -5121,7 +5387,8 @@ Module modProcess
                 oCreditNote.UserFields.Fields.Item("U_FWID").Value = oRecordSet.Fields.Item("U_FWID").Value
                 oCreditNote.UserFields.Fields.Item("U_TRANS_ID").Value = oRecordSet.Fields.Item("U_TRANS_ID").Value
 
-                oRecordSet.MoveFirst()
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Assigning line item", sFuncName)
+
                 Do Until oRecordSet.EoF
                     If iCount > 1 Then
                         oCreditNote.Lines.Add()
@@ -5153,6 +5420,8 @@ Module modProcess
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Error while adding Credit Note", sFuncName)
                     Throw New ArgumentException(sErrDesc)
                 Else
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Credit Note created successfully", sFuncName)
+
                     Dim iDocNo, iDocEntry As Integer
                     p_oCompany.GetNewObjectCode(iDocEntry)
 
