@@ -528,7 +528,7 @@ Module modProcess
                         dtItemCode.DefaultView.RowFilter = Nothing
                         dtItemCode.DefaultView.RowFilter = "RevCostCode = 'ESERVICE_AMOUNT'"
                         If dtItemCode.DefaultView.Count = 0 Then
-                            sErrDesc = "ItemCode ::'eservice_amount' provided does not exist in SAP(Mapping Table)."
+                            sErrDesc = "ItemCode ::''eservice_amount'' provided does not exist in SAP(Mapping Table)."
                             Call WriteToLogFile(sErrDesc, sFuncName)
                             Throw New ArgumentException(sErrDesc)
                         Else
@@ -607,7 +607,7 @@ Module modProcess
                                     dtItemCode.DefaultView.RowFilter = Nothing
                                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'ESERVICE_AMOUNT'"
                                     If dtItemCode.DefaultView.Count = 0 Then
-                                        sErrDesc = "ItemCode ::'eservice_amount' provided does not exist in SAP(Mapping Table)."
+                                        sErrDesc = "ItemCode ::''eservice_amount'' provided does not exist in SAP(Mapping Table)."
                                         Call WriteToLogFile(sErrDesc, sFuncName)
                                         Throw New ArgumentException(sErrDesc)
                                     Else
@@ -663,7 +663,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'VOUCHER_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'voucher_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''voucher_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -722,7 +722,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'SUMMONS_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'summons_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''summons_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -782,7 +782,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PPZ_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'ppz_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''ppz_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -842,7 +842,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'JPJ_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'jpj_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''jpj_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -902,7 +902,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'EHAK_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'ehak_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''ehak_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -962,7 +962,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'INQ_AMT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'inq_amt' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''inq_amt'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -1045,7 +1045,7 @@ Module modProcess
                                 dtItemCode.DefaultView.RowFilter = Nothing
                                 dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                                 If dtItemCode.DefaultView.Count = 0 Then
-                                    sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                    sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                     Call WriteToLogFile(sErrDesc, sFuncName)
                                     Throw New ArgumentException(sErrDesc)
                                 Else
@@ -1101,7 +1101,7 @@ Module modProcess
                             End If
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'COMPUTER_TEST'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'computer_test' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''computer_test'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -1162,7 +1162,7 @@ Module modProcess
                             '        dtItemCode.DefaultView.RowFilter = Nothing
                             '        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'ESERVICE_AMOUNT'"
                             '        If dtItemCode.DefaultView.Count = 0 Then
-                            '            sErrDesc = "ItemCode ::'eservice_amount' provided does not exist in SAP(Mapping Table)."
+                            '            sErrDesc = "ItemCode ::''eservice_amount'' provided does not exist in SAP(Mapping Table)."
                             '            Call WriteToLogFile(sErrDesc, sFuncName)
                             '            Throw New ArgumentException(sErrDesc)
                             '        Else
@@ -1204,7 +1204,7 @@ Module modProcess
 
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'COMPUTER_TEST'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'computer_test' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''computer_test'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -1265,7 +1265,7 @@ Module modProcess
                             '        dtItemCode.DefaultView.RowFilter = Nothing
                             '        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'ESERVICE_AMOUNT'"
                             '        If dtItemCode.DefaultView.Count = 0 Then
-                            '            sErrDesc = "ItemCode ::'eservice_amount' provided does not exist in SAP(Mapping Table)."
+                            '            sErrDesc = "ItemCode ::''eservice_amount'' provided does not exist in SAP(Mapping Table)."
                             '            Call WriteToLogFile(sErrDesc, sFuncName)
                             '            Throw New ArgumentException(sErrDesc)
                             '        Else
@@ -1312,7 +1312,7 @@ Module modProcess
                             dtItemCode.DefaultView.RowFilter = Nothing
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -1365,7 +1365,7 @@ Module modProcess
                         '    End If
                         '    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'eservice_amount'"
                         '    If dtItemCode.DefaultView.Count = 0 Then
-                        '        sErrDesc = "ItemCode ::'eservice' provided does not exist in SAP(Mapping Table)."
+                        '        sErrDesc = "ItemCode ::''eservice'' provided does not exist in SAP(Mapping Table)."
                         '        Call WriteToLogFile(sErrDesc, sFuncName)
                         '        Throw New ArgumentException(sErrDesc)
                         '    Else
@@ -1408,7 +1408,7 @@ Module modProcess
                             dtItemCode.DefaultView.RowFilter = Nothing
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -1474,7 +1474,7 @@ Module modProcess
                                 dtItemCode.DefaultView.RowFilter = Nothing
                                 dtItemCode.DefaultView.RowFilter = "RevCostCode = 'ESERVICE_AMOUNT'"
                                 If dtItemCode.DefaultView.Count = 0 Then
-                                    sErrDesc = "ItemCode ::'eservice_amount' provided does not exist in SAP(Mapping Table)."
+                                    sErrDesc = "ItemCode ::''eservice_amount'' provided does not exist in SAP(Mapping Table)."
                                     Call WriteToLogFile(sErrDesc, sFuncName)
                                     Throw New ArgumentException(sErrDesc)
                                 Else
@@ -1525,7 +1525,7 @@ Module modProcess
                             dtItemCode.DefaultView.RowFilter = Nothing
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -1589,7 +1589,7 @@ Module modProcess
                         '        dtItemCode.DefaultView.RowFilter = Nothing
                         '        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'ESERVICE_AMOUNT'"
                         '        If dtItemCode.DefaultView.Count = 0 Then
-                        '            sErrDesc = "ItemCode ::'eservice_amount' provided does not exist in SAP(Mapping Table)."
+                        '            sErrDesc = "ItemCode ::''eservice_amount'' provided does not exist in SAP(Mapping Table)."
                         '            Call WriteToLogFile(sErrDesc, sFuncName)
                         '            Throw New ArgumentException(sErrDesc)
                         '        Else
@@ -1644,7 +1644,7 @@ Module modProcess
                             dtItemCode.DefaultView.RowFilter = Nothing
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -1708,7 +1708,7 @@ Module modProcess
                         '        dtItemCode.DefaultView.RowFilter = Nothing
                         '        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'ESERVICE_AMOUNT'"
                         '        If dtItemCode.DefaultView.Count = 0 Then
-                        '            sErrDesc = "ItemCode ::'eservice_amount' provided does not exist in SAP(Mapping Table)."
+                        '            sErrDesc = "ItemCode ::''eservice_amount'' provided does not exist in SAP(Mapping Table)."
                         '            Call WriteToLogFile(sErrDesc, sFuncName)
                         '            Throw New ArgumentException(sErrDesc)
                         '        Else
@@ -1756,7 +1756,7 @@ Module modProcess
                             dtItemCode.DefaultView.RowFilter = Nothing
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -1817,7 +1817,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'DELAMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'delamount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''delamount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -1875,7 +1875,7 @@ Module modProcess
                         End If
                         dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
                         If dtItemCode.DefaultView.Count = 0 Then
-                            sErrDesc = "ItemCode ::'levifee_amount' provided does not exist in SAP(Mapping Table)."
+                            sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
                             Call WriteToLogFile(sErrDesc, sFuncName)
                             Throw New ArgumentException(sErrDesc)
                         Else
@@ -1936,7 +1936,7 @@ Module modProcess
                         '        dtItemCode.DefaultView.RowFilter = Nothing
                         '        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'ESERVICE_AMOUNT'"
                         '        If dtItemCode.DefaultView.Count = 0 Then
-                        '            sErrDesc = "ItemCode ::'eservice_amount' provided does not exist in SAP(Mapping Table)."
+                        '            sErrDesc = "ItemCode ::''eservice_amount'' provided does not exist in SAP(Mapping Table)."
                         '            Call WriteToLogFile(sErrDesc, sFuncName)
                         '            Throw New ArgumentException(sErrDesc)
                         '        Else
@@ -1977,7 +1977,7 @@ Module modProcess
                         End If
                         dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
                         If dtItemCode.DefaultView.Count = 0 Then
-                            sErrDesc = "ItemCode ::'levifee_amount' provided does not exist in SAP(Mapping Table)."
+                            sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
                             Call WriteToLogFile(sErrDesc, sFuncName)
                             Throw New ArgumentException(sErrDesc)
                         Else
@@ -2035,7 +2035,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'DELIVERYFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'deliveryfee' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''deliveryfee'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -2092,7 +2092,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PROCESSFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'processfee' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''processfee'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -2149,7 +2149,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PASSFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'passfee' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''passfee'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -2206,7 +2206,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'VISAFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'visafee' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''visafee'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -2264,7 +2264,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'FOMAFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'fomafee' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''fomafee'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -2321,7 +2321,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'INSFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'insfee' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''insfee'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -2650,7 +2650,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'levifee_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -2708,7 +2708,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'SUMMONS_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'summons_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''summons_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -2765,7 +2765,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PPZ_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'ppz_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''ppz_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -2822,7 +2822,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'JPJ_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'jpj_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''jpj_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -2879,7 +2879,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'EHAK_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'ehak_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''ehak_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -2936,7 +2936,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'INQ_AMT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'inq_amt' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''inq_amt'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -3012,7 +3012,7 @@ Module modProcess
                             dtItemCode.DefaultView.RowFilter = Nothing
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -3075,7 +3075,7 @@ Module modProcess
                             dtItemCode.DefaultView.RowFilter = Nothing
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -3149,7 +3149,7 @@ Module modProcess
                             dtItemCode.DefaultView.RowFilter = Nothing
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -3212,7 +3212,7 @@ Module modProcess
                             dtItemCode.DefaultView.RowFilter = Nothing
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -3287,7 +3287,7 @@ Module modProcess
                             dtItemCode.DefaultView.RowFilter = Nothing
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -3351,7 +3351,7 @@ Module modProcess
                             dtItemCode.DefaultView.RowFilter = Nothing
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -3694,7 +3694,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'levifee_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -3745,7 +3745,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PROCESSFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'processfee' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''processfee'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -3796,7 +3796,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PASSFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'passfee' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''passfee'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -3847,7 +3847,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'VISAFEE'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'visafee' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''visafee'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -3898,7 +3898,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'SUMMONS_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'summons_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''summons_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -3949,7 +3949,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PPZ_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'ppz_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''ppz_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -4000,7 +4000,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'JPJ_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'jpj_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''jpj_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -4051,7 +4051,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'EHAK_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'ehak_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''ehak_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -4102,7 +4102,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'INQ_AMT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'inq_amt' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''inq_amt'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -4172,7 +4172,7 @@ Module modProcess
                             dtItemCode.DefaultView.RowFilter = Nothing
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -4229,7 +4229,7 @@ Module modProcess
                             dtItemCode.DefaultView.RowFilter = Nothing
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -4297,7 +4297,7 @@ Module modProcess
                             dtItemCode.DefaultView.RowFilter = Nothing
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -4354,7 +4354,7 @@ Module modProcess
                             dtItemCode.DefaultView.RowFilter = Nothing
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -4423,7 +4423,7 @@ Module modProcess
                             dtItemCode.DefaultView.RowFilter = Nothing
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -4480,7 +4480,7 @@ Module modProcess
                             dtItemCode.DefaultView.RowFilter = Nothing
                             dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                             If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                                 Call WriteToLogFile(sErrDesc, sFuncName)
                                 Throw New ArgumentException(sErrDesc)
                             Else
@@ -4814,7 +4814,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'levifee_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -4869,7 +4869,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'SUMMONS_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'summons_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''summons_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -4923,7 +4923,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PPZ_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'ppz_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''ppz_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -4977,7 +4977,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'JPJ_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'jpj_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''jpj_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -5031,7 +5031,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'EHAK_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'ehak_amount' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''ehak_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -5085,7 +5085,7 @@ Module modProcess
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'INQ_AMT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::'inq_amt' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''inq_amt'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -5146,7 +5146,7 @@ Module modProcess
                         dtItemCode.DefaultView.RowFilter = Nothing
                         dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
                         If dtItemCode.DefaultView.Count = 0 Then
-                            sErrDesc = "ItemCode ::'agency_amount' provided does not exist in SAP(Mapping Table)."
+                            sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
                             Call WriteToLogFile(sErrDesc, sFuncName)
                             Throw New ArgumentException(sErrDesc)
                         Else
