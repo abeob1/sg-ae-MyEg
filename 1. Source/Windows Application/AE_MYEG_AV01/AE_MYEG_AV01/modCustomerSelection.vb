@@ -402,12 +402,13 @@ Module modCustomerSelection
         Next
 
         Dim oForm As SAPbouiCOM.Form
+        Dim oGrid As SAPbouiCOM.Grid
         oForm = p_oSBOApplication.Forms.Item("EXPL")
-        oMatrix = oForm.Items.Item("10").Specific
-        oMatrix.Columns.Item("V_19").Editable = True
-        oMatrix.Columns.Item("V_19").Cells.Item(iLine).Specific.value = sDocNo
+        oGrid = oForm.Items.Item("19").Specific
+        oGrid.Columns.Item("SelectedCustomer").Editable = True
+        oGrid.DataTable.SetValue("SelectedCustomer", iLine, sDocNo)
         oForm.Items.Item("12").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
-        oMatrix.Columns.Item("V_19").Editable = False
+        oGrid.Columns.Item("SelectedCustomer").Editable = False
     End Sub
 #End Region
     

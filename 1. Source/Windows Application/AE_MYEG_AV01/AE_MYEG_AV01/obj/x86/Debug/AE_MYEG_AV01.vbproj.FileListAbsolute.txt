@@ -18,3 +18,19 @@ C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\AE_MYEG_AV01\AE_MYE
 C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\AE_MYEG_AV01\AE_MYEG_AV01\bin\Debug\AE_MYEG_AV01.pdb
 C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.frmOpenFileDialog.resources
 C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.vbproj.GenerateResource.Cache
+C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\To Grid\AE_MYEG_AV01\AE_MYEG_AV01\bin\Debug\AE_MYEG_AV01.exe.config
+C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\To Grid\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\Interop.SAPbobsCOM.dll
+C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\To Grid\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\Interop.SAPbouiCOM.dll
+C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\To Grid\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.vbproj.ResolveComReference.cache
+C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\To Grid\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.exe
+C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\To Grid\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.pdb
+C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\To Grid\AE_MYEG_AV01\AE_MYEG_AV01\bin\Debug\AE_MYEG_AV01.exe
+C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\To Grid\AE_MYEG_AV01\AE_MYEG_AV01\bin\Debug\AE_MYEG_AV01.pdb
+C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\To Grid\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.frmOpenFileDialog.resources
+C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\To Grid\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.vbproj.GenerateResource.Cache
+D:\J\Myeg\Source\AE_MYEG_AV01\AE_MYEG_AV01\bin\Debug\AE_MYEG_AV01.exe.config
+D:\J\Myeg\Source\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\Interop.SAPbobsCOM.dll
+D:\J\Myeg\Source\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\Interop.SAPbouiCOM.dll
+D:\J\Myeg\Source\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.vbproj.ResolveComReference.cache
+D:\J\Myeg\Source\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.exe
+D:\J\Myeg\Source\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.pdb

@@ -1,6 +1,6 @@
 ﻿------ Build started: Project: AE_MYEG_AV01, Configuration: Debug x86 ------
-C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\AE_MYEG_AV01\AE_MYEG_AV01\clsEventHandler.vb(2) : warning BC40056: Namespace or type specified in the Imports 'SAPbouiCOM.Framework' doesn't contain any public member or cannot be found. Make sure the namespace or the type is defined and contains at least one public member. Make sure the imported element name doesn't use any aliases.
-C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\AE_MYEG_AV01\AE_MYEG_AV01\clsEventHandler.vb(107) : warning BC42024: Unused local variable: 'oFilter'.
-C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\AE_MYEG_AV01\AE_MYEG_AV01\modExceptionList.vb(367) : warning BC42104: Variable 'sCustSelDocNo' is used before it has been assigned a value. A null reference exception could result at runtime.
-  AE_MYEG_AV01 -> C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\AE_MYEG_AV01\AE_MYEG_AV01\bin\Debug\AE_MYEG_AV01.exe
+C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\To Grid\AE_MYEG_AV01\AE_MYEG_AV01\clsEventHandler.vb(2) : warning BC40056: Namespace or type specified in the Imports 'SAPbouiCOM.Framework' doesn't contain any public member or cannot be found. Make sure the namespace or the type is defined and contains at least one public member. Make sure the imported element name doesn't use any aliases.
+C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\To Grid\AE_MYEG_AV01\AE_MYEG_AV01\clsEventHandler.vb(107) : warning BC42024: Unused local variable: 'oFilter'.
+C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\To Grid\AE_MYEG_AV01\AE_MYEG_AV01\modExceptionList.vb(496) : warning BC42104: Variable 'sCustSelDocNo' is used before it has been assigned a value. A null reference exception could result at runtime.
+  AE_MYEG_AV01 -> C:\Abeo Projects\MyEG\1. Source\Windows Applicaiton - Add on\To Grid\AE_MYEG_AV01\AE_MYEG_AV01\bin\Debug\AE_MYEG_AV01.exe
 ========== Build: 1 succeeded or up-to-date, 0 failed, 0 skipped ==========

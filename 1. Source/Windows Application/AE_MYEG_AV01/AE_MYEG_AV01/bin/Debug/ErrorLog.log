@@ -1,9 +1,87 @@
-[06/07/2016 16:37:57][                    ExecuteSQLNonQuery()] ERROR [42601] ERROR: syntax error at or near "DEELTE";
+[07/26/2016 18:44:56][                   ExpList_SBO_ItemEvent] Collection - Out of boundaries  [66000-34]
+[07/26/2016 18:44:56][             SBO_Application_ItemEvent()] Collection - Out of boundaries  [66000-34]
+[07/26/2016 19:41:44][                   ExpList_SBO_ItemEvent] Object reference not set to an instance of an object.
+[07/26/2016 19:41:44][             SBO_Application_ItemEvent()] Object reference not set to an instance of an object.
+[07/26/2016 19:43:41][                   ExpList_SBO_ItemEvent] Object reference not set to an instance of an object.
+[07/26/2016 19:43:41][             SBO_Application_ItemEvent()] Object reference not set to an instance of an object.
+[07/28/2016 12:21:58][                   ExpList_SBO_ItemEvent] Row - Invalid index  [66000-31]
+[07/28/2016 12:21:58][             SBO_Application_ItemEvent()] Row - Invalid index  [66000-31]
+[07/28/2016 12:22:00][                   ExpList_SBO_ItemEvent] Row - Invalid index  [66000-31]
+[07/28/2016 12:22:00][             SBO_Application_ItemEvent()] Row - Invalid index  [66000-31]
+[07/28/2016 12:22:17][                   ExpList_SBO_ItemEvent] Row - Invalid index  [66000-31]
+[07/28/2016 12:22:17][             SBO_Application_ItemEvent()] Row - Invalid index  [66000-31]
+[07/28/2016 12:32:33][                   ExpList_SBO_ItemEvent] Conversion from string "" to type 'Date' is not valid.
+[07/28/2016 12:32:33][             SBO_Application_ItemEvent()] Conversion from string "" to type 'Date' is not valid.
+[07/28/2016 12:43:38][                                  Main()] Invoice Not Found
+[07/28/2016 13:06:05][                                  Main()] Reconciliation date must be on or after the last posting date for transactions selected for reconciliation   [الرسالة 3821-3]
+[07/28/2016 13:06:42][                   ExpList_SBO_ItemEvent] Unable to cast COM object of type 'System.__ComObject' to interface type 'SAPbouiCOM.Grid'. This operation failed because the QueryInterface call on the COM component for the interface with IID '{856B9291-F296-4A2E-8EB8-FF9189E23425}' failed due to the following error: No such interface supported (Exception from HRESULT: 0x80004002 (E_NOINTERFACE)).
+[07/28/2016 13:06:42][             SBO_Application_ItemEvent()] Unable to cast COM object of type 'System.__ComObject' to interface type 'SAPbouiCOM.Grid'. This operation failed because the QueryInterface call on the COM component for the interface with IID '{856B9291-F296-4A2E-8EB8-FF9189E23425}' failed due to the following error: No such interface supported (Exception from HRESULT: 0x80004002 (E_NOINTERFACE)).
+[07/28/2016 14:19:50][             ArIncomingPayment_onAccount] Invoice Not Found
+[07/28/2016 14:21:27][             ArIncomingPayment_onAccount] Invoice Not Found
+[07/28/2016 14:22:52][                                  Main()] Invoice Not Found
+[07/28/2016 14:24:58][             ArIncomingPayment_onAccount] Reconciliation date must be on or after the last posting date for transactions selected for reconciliation   [الرسالة 3821-3]
+[07/28/2016 14:30:44][             ArIncomingPayment_onAccount] Reconciliation date must be on or after the last posting date for transactions selected for reconciliation   [الرسالة 3821-3]
+[07/28/2016 15:37:53][             CustSelection_SBO_ItemEvent] Row - Invalid index  [66000-31]
+[07/28/2016 15:37:53][             SBO_Application_ItemEvent()] Row - Invalid index  [66000-31]
+[07/28/2016 15:38:07][             CustSelection_SBO_ItemEvent] Row - Invalid index  [66000-31]
+[07/28/2016 15:38:07][             SBO_Application_ItemEvent()] Row - Invalid index  [66000-31]
+[07/28/2016 15:39:41][             CustSelection_SBO_ItemEvent] Row - Invalid index  [66000-31]
+[07/28/2016 15:39:41][             SBO_Application_ItemEvent()] Row - Invalid index  [66000-31]
+[07/28/2016 15:42:13][             CustSelection_SBO_ItemEvent] Row - Invalid index  [66000-31]
+[07/28/2016 15:42:13][             SBO_Application_ItemEvent()] Row - Invalid index  [66000-31]
+[07/28/2016 15:54:28][                   ExpList_SBO_ItemEvent] Conversion from string "" to type 'Date' is not valid.
+[07/28/2016 15:54:28][             SBO_Application_ItemEvent()] Conversion from string "" to type 'Date' is not valid.
+[07/28/2016 16:40:40][                      ConnectDICompSSO()] Value does not fall within the expected range.
+[07/28/2016 16:40:40][                                  Main()] Value does not fall within the expected range.
+[07/28/2016 16:41:08][                   ExpList_SBO_ItemEvent] Object reference not set to an instance of an object.
+[07/28/2016 16:41:08][             SBO_Application_ItemEvent()] Object reference not set to an instance of an object.
+[07/29/2016 10:10:20][                                  Main()] Connection - Could not find SBO that match the connection string
+[07/29/2016 16:12:12][             SBO_Application_ItemEvent()] System call failed. (Exception from HRESULT: 0x80010100 (RPC_E_SYS_CALL_FAILED))
+[07/29/2016 16:12:12][                               ShowErr()] Unable to cast COM object of type 'System.__ComObject' to interface type 'SAPbouiCOM.IApplication'. This operation failed because the QueryInterface call on the COM component for the interface with IID '{D1F75D47-137C-4335-AC2A-3FE209831B6A}' failed due to the following error: System call failed. (Exception from HRESULT: 0x80010100 (RPC_E_SYS_CALL_FAILED)).
+[07/29/2016 16:18:32][                                  Main()] Argument 'Prompt' cannot be converted to type 'String'.
+[07/29/2016 16:18:32][             SBO_Application_MenuEvent()] Argument 'Prompt' cannot be converted to type 'String'.
+[07/29/2016 16:19:11][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[07/29/2016 16:19:11][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[07/29/2016 16:19:12][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[07/29/2016 16:19:12][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[07/29/2016 16:19:12][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[07/29/2016 16:19:12][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[07/29/2016 16:19:12][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[07/29/2016 16:19:12][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[07/29/2016 16:19:12][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[07/29/2016 16:19:12][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[07/29/2016 16:19:12][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[07/29/2016 16:19:13][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[07/29/2016 16:19:13][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[07/29/2016 16:19:14][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[07/29/2016 16:19:14][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[07/29/2016 16:19:14][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[08/04/2016 16:50:22][                                  Main()] Connection - Could not find SBO that match the connection string
+[08/04/2016 16:58:40][                        RP_SBO_ItemEvent] Column 'TransactionCode' does not belong to table Table.
+[08/04/2016 16:58:40][             SBO_Application_ItemEvent()] Column 'TransactionCode' does not belong to table Table.
+[08/04/2016 17:02:32][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[08/04/2016 17:02:32][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[08/04/2016 17:02:32][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[08/04/2016 17:02:32][                 AR_IncomingPayment_Grid] Amount in Excel and Invoice total amount does not match
+[08/04/2016 17:05:31][                 AR_IncomingPayment_Grid] Invoice not found
+[08/04/2016 17:05:31][                 AR_IncomingPayment_Grid] Invoice not found
+[08/04/2016 17:05:31][                 AR_IncomingPayment_Grid] Invoice not found
+[08/04/2016 17:05:32][                 AR_IncomingPayment_Grid] Invoice not found
+[08/04/2016 17:08:02][                 AR_IncomingPayment_Grid] Invoice not found
+[08/04/2016 17:08:03][                 AR_IncomingPayment_Grid] Invoice not found
+[08/04/2016 17:08:03][                 AR_IncomingPayment_Grid] Invoice not found
+[08/04/2016 17:08:03][                 AR_IncomingPayment_Grid] Invoice not found
+[08/04/2016 17:10:44][                                        ] ERROR [42703] ERROR: column "transactioncode" does not exist;
 Error while executing the query
-[06/07/2016 16:41:32][                        RP_SBO_ItemEvent] Conversion from string "31/5/2016" to type 'Date' is not valid.
-[06/07/2016 16:41:34][             SBO_Application_ItemEvent()] Conversion from string "31/5/2016" to type 'Date' is not valid.
-[06/07/2016 16:49:10][                      AR_IncomingPayment] Amount in Excel and Invoice total amount does not match
-[06/07/2016 16:49:11][                      AR_IncomingPayment] Amount in Excel and Invoice total amount does not match
-[06/07/2016 16:49:11][                      AR_IncomingPayment] Amount in Excel and Invoice total amount does not match
-[06/07/2016 16:49:12][                      AR_IncomingPayment] Amount in Excel and Invoice total amount does not match
-[06/07/2016 16:49:13][                      AR_IncomingPayment] Amount in Excel and Invoice total amount does not match
+[08/04/2016 17:10:44][                                        ] ERROR [42703] ERROR: column "transactioncode" does not exist;
+Error while executing the query
+[08/04/2016 17:10:44][                   ExpList_SBO_ItemEvent] Cannot find table 0.
+[08/04/2016 17:10:44][             SBO_Application_ItemEvent()] Cannot find table 0.
+[08/04/2016 17:14:12][                 AR_IncomingPayment_Grid] Invoice not found
+[08/04/2016 17:14:12][                 AR_IncomingPayment_Grid] Invoice not found
+[08/04/2016 17:14:12][                 AR_IncomingPayment_Grid] Invoice not found
+[08/04/2016 17:35:50][                                  Main()] Invoice Not Found
+[08/04/2016 17:36:57][             ArIncomingPayment_onAccount] Invoice Not Found
+[08/04/2016 17:40:09][             ArIncomingPayment_onAccount] Invoice Not Found
+[08/04/2016 17:43:24][                   ExpList_SBO_ItemEvent] Data Table - invalid column Unique Id  [66000-135]
+[08/04/2016 17:43:24][             SBO_Application_ItemEvent()] Data Table - invalid column Unique Id  [66000-135]
