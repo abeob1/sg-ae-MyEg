@@ -253,6 +253,7 @@ Module modCommon
 
             oDbcCmd.CommandType = CommandType.Text
             oDbcCmd.CommandText = sQuery
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
             oDbcCmd.Connection = oPostgreODBC
             oDbcCmd.CommandTimeout = 0
             Dim da As New OdbcDataAdapter(oDbcCmd)

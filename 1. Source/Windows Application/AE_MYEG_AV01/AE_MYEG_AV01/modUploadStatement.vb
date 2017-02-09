@@ -157,56 +157,92 @@ Module modUploadStatement
         newColumn.DefaultValue = sFileName
         oDT_Bankstat.Columns.Add(newColumn)
 
-        For Each Datarows As DataRow In oDT_Bankstat.Rows
-            Dim dt_tmp As DateTime
-            ' dDate = CDate(Datarows(3).ToString.Trim())
+        p_oSBOApplication.StatusBar.SetText("Inserting values into Database please wait...", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Warning)
+        sSQL = String.Empty
+        Try
+            For Each Datarows As DataRow In oDT_Bankstat.Rows
+                Dim dt_tmp As DateTime
+                ' dDate = CDate(Datarows(3).ToString.Trim())
 
-            Dim sDate As String = Datarows(3).ToString.Trim()
-            Dim iIndex As Integer = sDate.IndexOf(" ")
-            Dim sDate_Trimmed As String
-            If iIndex > 1 Then
-                sDate_Trimmed = sDate.Substring(0, sDate.IndexOf(" "))
-            Else
-                sDate_Trimmed = sDate
+                Dim sDate As String = Datarows(3).ToString.Trim()
+                Dim iIndex As Integer = sDate.IndexOf(" ")
+                Dim sDate_Trimmed As String
+                If iIndex > 1 Then
+                    sDate_Trimmed = sDate.Substring(0, sDate.IndexOf(" "))
+                Else
+                    sDate_Trimmed = sDate
+                End If
+                Dim dDate As Date
+                Dim format() = {"dd/MM/yyyy", "dd/MM/yy", "d/M/yyyy", "M/d/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", "yyyyMMdd", "MMddYYYY", "M/dd/yyyy", "MM/dd/YYYY", "d-M-yyyy", "d.M.yyyy"}
+                Date.TryParseExact(sDate_Trimmed, format, System.Globalization.DateTimeFormatInfo.InvariantInfo, Globalization.DateTimeStyles.None, dDate)
+
+                'dt_tmp = Datarows(7)
+
+                'sSQL = "INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode,TransactionCode, FileName) " & _
+                '          "VALUES ('', '" & Datarows(1).ToString.Trim() & "','" & Datarows(2).ToString.Trim() & "','" & Replace(Datarows(3).ToString.Trim(), "'", "''") & "','" & Datarows(4).ToString.Trim() & "', " & _
+                '          " " & Datarows(5).ToString.Trim() & ",'" & Datarows(6).ToString.Trim() & "','" & dt_tmp.ToString("HH:mm:ss") & "','" & Datarows(8).ToString.Trim() & "','" & Datarows(9).ToString.Trim() & "', " & _
+                '          " '" & Datarows(10).ToString.Trim() & "' , '" & Datarows(11).ToString.Trim() & "' ) "
+
+                If IsDBNull(Datarows(7)) Then
+                    If sSQL = "" Then
+                        sSQL = "INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode, FileName) " & _
+                               " VALUES ('', '" & Datarows(1).ToString.Trim() & "','" & Datarows(2).ToString.Trim() & "','" & dDate.ToString("yyyy-MM-dd") & "','" & Datarows(4).ToString.Trim() & "', " & _
+                               " " & Datarows(5).ToString.Trim() & ",'" & Datarows(6).ToString.Trim() & "','','" & Datarows(8).ToString.Trim() & "','" & Datarows(9).ToString.Trim() & "', " & _
+                               " '" & Datarows(10).ToString.Trim() & "' ); "
+                    Else
+                        sSQL = sSQL & " INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode, FileName) " & _
+                                      " VALUES ('', '" & Datarows(1).ToString.Trim() & "','" & Datarows(2).ToString.Trim() & "','" & dDate.ToString("yyyy-MM-dd") & "','" & Datarows(4).ToString.Trim() & "', " & _
+                                      " " & Datarows(5).ToString.Trim() & ",'" & Datarows(6).ToString.Trim() & "','','" & Datarows(8).ToString.Trim() & "','" & Datarows(9).ToString.Trim() & "', " & _
+                                      " '" & Datarows(10).ToString.Trim() & "' ); "
+                    End If
+                    
+                Else
+                    dt_tmp = Datarows(7)
+
+                    If sSQL = "" Then
+                        sSQL = "INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode, FileName) " & _
+                               " VALUES ('', '" & Datarows(1).ToString.Trim() & "','" & Datarows(2).ToString.Trim() & "','" & dDate.ToString("yyyy-MM-dd") & "','" & Datarows(4).ToString.Trim() & "', " & _
+                               " " & Datarows(5).ToString.Trim() & ",'" & Datarows(6).ToString.Trim() & "','" & dt_tmp.ToString("HH:mm:ss") & "','" & Datarows(8).ToString.Trim() & "','" & Datarows(9).ToString.Trim() & "', " & _
+                               " '" & Datarows(10).ToString.Trim() & "' ); "
+                    Else
+                        sSQL = sSQL & " INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode, FileName) " & _
+                                      " VALUES ('', '" & Datarows(1).ToString.Trim() & "','" & Datarows(2).ToString.Trim() & "','" & dDate.ToString("yyyy-MM-dd") & "','" & Datarows(4).ToString.Trim() & "', " & _
+                                      " " & Datarows(5).ToString.Trim() & ",'" & Datarows(6).ToString.Trim() & "','" & dt_tmp.ToString("HH:mm:ss") & "','" & Datarows(8).ToString.Trim() & "','" & Datarows(9).ToString.Trim() & "', " & _
+                                      " '" & Datarows(10).ToString.Trim() & "' ); "
+                    End If
+                    
+                End If
+            Next
+
+            If sSQL <> "" Then
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()", sFuncName)
+                If ExecuteSQLNonQuery(sSQL, sErrDesc) <> RTN_SUCCESS Then
+                    sSQL = "DELETE FROM AB_STATEMENTUPLOAD WHERE FileName = '" & sFileName & "'"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Error occured while inserting values. Deleteing the inserted values", sFuncName)
+                    If ExecuteSQLNonQuery(sSQL, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                    Throw New ArgumentException("Error occured while inserting values in excel/File is '" & sFileName & "' ")
+                End If
             End If
-            Dim dDate As Date
-            Dim format() = {"dd/MM/yyyy", "d/M/yyyy", "M/d/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", "yyyyMMdd", "MMddYYYY", "M/dd/yyyy", "MM/dd/YYYY", "d-M-yyyy", "d.M.yyyy"}
-            Date.TryParseExact(sDate_Trimmed, format, System.Globalization.DateTimeFormatInfo.InvariantInfo, Globalization.DateTimeStyles.None, dDate)
+        Catch ex As Exception
+            oEdit = objForm.Items.Item("6").Specific
+            sFileName = oEdit.Value
+            'Dim sSQL As String
+            Call WriteToLogFile("Error while inserting rows to postgre SQL/File Name is " & sFileName, sFuncName)
 
-            'dt_tmp = Datarows(7)
-
-            'sSQL = "INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode,TransactionCode, FileName) " & _
-            '          "VALUES ('', '" & Datarows(1).ToString.Trim() & "','" & Datarows(2).ToString.Trim() & "','" & Replace(Datarows(3).ToString.Trim(), "'", "''") & "','" & Datarows(4).ToString.Trim() & "', " & _
-            '          " " & Datarows(5).ToString.Trim() & ",'" & Datarows(6).ToString.Trim() & "','" & dt_tmp.ToString("HH:mm:ss") & "','" & Datarows(8).ToString.Trim() & "','" & Datarows(9).ToString.Trim() & "', " & _
-            '          " '" & Datarows(10).ToString.Trim() & "' , '" & Datarows(11).ToString.Trim() & "' ) "
-
-            If IsDBNull(Datarows(7)) Then
-
-                sSQL = "INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode, FileName) " & _
-                       "VALUES ('', '" & Datarows(1).ToString.Trim() & "','" & Datarows(2).ToString.Trim() & "','" & dDate.ToString("yyyy-MM-dd") & "','" & Datarows(4).ToString.Trim() & "', " & _
-                       " " & Datarows(5).ToString.Trim() & ",'" & Datarows(6).ToString.Trim() & "','','" & Datarows(8).ToString.Trim() & "','" & Datarows(9).ToString.Trim() & "', " & _
-                       " '" & Datarows(10).ToString.Trim() & "' , '" & Datarows(11).ToString.Trim() & "' ) "
-            Else
-                dt_tmp = Datarows(7)
-
-                sSQL = "INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode, FileName) " & _
-                       "VALUES ('', '" & Datarows(1).ToString.Trim() & "','" & Datarows(2).ToString.Trim() & "','" & dDate.ToString("yyyy-MM-dd") & "','" & Datarows(4).ToString.Trim() & "', " & _
-                       " " & Datarows(5).ToString.Trim() & ",'" & Datarows(6).ToString.Trim() & "','" & dt_tmp.ToString("HH:mm:ss") & "','" & Datarows(8).ToString.Trim() & "','" & Datarows(9).ToString.Trim() & "', " & _
-                       " '" & Datarows(10).ToString.Trim() & "' ) "
-            End If
-
-
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()", sFuncName)
+            sSQL = "DELETE FROM AB_STATEMENTUPLOAD WHERE FileName = '" & sFileName & "'"
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Error occured while inserting values. Deleteing the inserted values", sFuncName)
             If ExecuteSQLNonQuery(sSQL, sErrDesc) <> RTN_SUCCESS Then
-                sSQL = "DELETE FROM AB_STATEMENTUPLOAD WHERE FileName = '" & sFileName & "'"
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Error occured while inserting values. Deleteing the inserted values", sFuncName)
-                If ExecuteSQLNonQuery(sSQL, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
-                Throw New ArgumentException("Error occured while inserting values in excel/File is '" & sFileName & "' ")
+                Call WriteToLogFile("Unable to delete old values in DB/Delete it manually for file " & sFileName, sFuncName)
             End If
-        Next
+
+            v_Check = False
+            sErrDesc = "Error while inserting rows"
+            Return v_Check
+            Exit Function
+        End Try
 
         sSQL = "SELECT ID ,Entity ,AcctCode ,InvoiceRef ,to_char(DueDate, 'dd/MM/yyyy') DueDate ,Memo ,Amount,PaymentRef,Time,Source,BranchCode  " & _
-              " FROM AB_STATEMENTUPLOAD WHERE COALESCE(Status,'') = '' ORDER BY ID "
+              " FROM AB_STATEMENTUPLOAD WHERE COALESCE(Status,'') = '' AND filename = '" & sFileName & "' ORDER BY ID "
 
         oDT_Bankstat = New DataTable
         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLQuery()", sFuncName)
@@ -459,11 +495,11 @@ Module modUploadStatement
                 End Try
                 If sStatus = "SUCCESS" Then
                     sQuery = "UPDATE AB_STATEMENTUPLOAD SET UploadDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "', " & _
-                             " Status = '" & sStatus & "', ErrMsg = '" & sErrorMessage & "',LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '0'" & _
+                             " Status = '" & sStatus & "', ErrMsg = '" & sErrorMessage.Replace("'", "") & "',LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '0'" & _
                              " WHERE ID = '" & sID & "' "
                 Else
                     sQuery = "UPDATE AB_STATEMENTUPLOAD SET UploadDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "', " & _
-                             " Status = '" & sStatus & "', ErrMsg = '" & sErrorMessage & "',LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "'" & _
+                             " Status = '" & sStatus & "', ErrMsg = '" & sErrorMessage.Replace("'", "") & "',LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "'" & _
                              " WHERE ID = '" & sID & "' "
                 End If
                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
@@ -621,7 +657,7 @@ Module modUploadStatement
     End Function
 #End Region
 #Region "AR Incoming payment based on Grid"
-    Private Function AR_IncomingPayment_Grid(ByVal objForm As SAPbouiCOM.Form, ByVal iLine As Integer, ByRef sErrDesc As String) As Long
+    Private Function AR_IncomingPayment_Grid(ByVal objForm As SAPbouiCOM.Form, ByVal iLine As Integer, ByRef sErrDesc As String) As Boolean
         Dim bCheck As Boolean
         bCheck = True
         Dim sFuncName As String = "AR_IncomingPayment_Grid"
@@ -651,8 +687,9 @@ Module modUploadStatement
             sNumAtCard = oGrid.DataTable.GetValue("Merchant Id", iLine)
             Dim sDocDate As String
             sDocDate = oGrid.DataTable.GetValue("Posting Date", iLine)
-            Dim format() = {"dd/MM/yyyy", "d/M/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", "yyyyMMdd", "MMddYYYY", "M/dd/yyyy", "MM/dd/YYYY"}
+            Dim format() = {"dd/MM/yyyy", "dd/MM/yy", "d/M/yyyy", "M/d/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", "yyyyMMdd", "MMddYYYY", "M/dd/yyyy", "MM/dd/YYYY", "d-M-yyyy", "d.M.yyyy"}
             Date.TryParseExact(sDocDate, format, System.Globalization.DateTimeFormatInfo.InvariantInfo, Globalization.DateTimeStyles.None, dtDocDate)
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Date is " & dtDocDate.ToString("yyyy-MM-dd"), sFuncName)
             'dtDocDate = GetDateTimeValue(oGrid.DataTable.GetValue("Posting Date", iLine))
 
             Dim dXcelAmount As Double = 0.0
@@ -705,9 +742,11 @@ Module modUploadStatement
                     If oARInvoice.GetByKey(sARDocEntry) Then
                         oIncomingPayment.DocType = SAPbobsCOM.BoRcptTypes.rCustomer
                         oIncomingPayment.CardCode = oARInvoice.CardCode
-                        oIncomingPayment.DocDate = dtDocDate
-                        oIncomingPayment.DueDate = dtDocDate
-                        oIncomingPayment.TaxDate = dtDocDate
+                        oIncomingPayment.DocDate = dtDocDate.ToString("dd/MM/yyyy")
+                        oIncomingPayment.DueDate = dtDocDate.ToString("dd/MM/yyyy")
+                        oIncomingPayment.TaxDate = dtDocDate.ToString("dd/MM/yyyy")
+                        oIncomingPayment.JournalRemarks = sNumAtCard
+                        oIncomingPayment.Remarks = "Based on upload id " & oGrid.DataTable.GetValue("ID", iLine)
                         'oIncomingPayment.UserFields.Fields.Item("U_AB_STNO").Value = oGrid.DataTable.GetValue("Transaction Code", iLine)
                         oIncomingPayment.UserFields.Fields.Item("U_AB_TIME").Value = oGrid.DataTable.GetValue("Time", iLine)
                         oIncomingPayment.UserFields.Fields.Item("U_AB_SOURCE").Value = oGrid.DataTable.GetValue("Source", iLine)
@@ -724,7 +763,7 @@ Module modUploadStatement
 
                 'Bank Transfer
                 oIncomingPayment.TransferAccount = oGrid.DataTable.GetValue("Account Code", iLine)
-                oIncomingPayment.TransferDate = oGrid.DataTable.GetValue("Posting Date", iLine)
+                oIncomingPayment.TransferDate = dtDocDate.ToString("dd/MM/yyyy")  'oGrid.DataTable.GetValue("Posting Date", iLine)
                 oIncomingPayment.TransferSum = oGrid.DataTable.GetValue("Amount", iLine)
                 oIncomingPayment.CashSum = 0
 
@@ -769,7 +808,7 @@ Module modUploadStatement
             sErrDesc = ex.Message
             Call WriteToLogFile(sErrDesc, sFuncName)
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
-            AR_IncomingPayment_Grid = RTN_ERROR
+            Return False
         End Try
     End Function
 #End Region
@@ -813,8 +852,17 @@ Module modUploadStatement
                             End If
                         End If
 
-                    Case SAPbouiCOM.BoEventTypes.et_COMBO_SELECT
-                        objForm = p_oSBOApplication.Forms.GetForm(pval.FormTypeEx, pval.FormTypeCount)
+                        'Case SAPbouiCOM.BoEventTypes.et_KEY_DOWN
+                        '    objForm = p_oSBOApplication.Forms.GetForm(pval.FormTypeEx, pval.FormTypeCount)
+                        '    If pval.CharPressed = "9" Then
+                        '        If pval.ItemUID = "6" Then
+                        '            oEdit = objForm.Items.Item("6").Specific
+                        '            Dim sText As String
+                        '            sText = oEdit.Value
+                        '            sText = sText.Replace("'", "")
+                        '            MsgBox(sText)
+                        '        End If
+                        '    End If
 
                     Case SAPbouiCOM.BoEventTypes.et_FORM_RESIZE
                         objForm = p_oSBOApplication.Forms.GetForm(pval.FormTypeEx, pval.FormTypeCount)
@@ -839,15 +887,6 @@ Module modUploadStatement
         Catch ex As Exception
             objForm.Freeze(False)
             objForm.Update()
-            'oEdit = objForm.Items.Item("6").Specific
-            'sFileName = oEdit.Value
-            'Dim sSQL As String
-            'sSQL = "DELETE FROM AB_STATEMENTUPLOAD WHERE FileName = '" & sFileName & "'"
-            'If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Error occured while inserting values. Deleteing the inserted values", sFuncName)
-            'If ExecuteSQLNonQuery(sSQL, sErrDesc) <> RTN_SUCCESS Then
-            '    Call WriteToLogFile("Unable to delete old values in DB/Delete it manually for file " & sFileName, sFuncName)
-            'End If
-
             sErrDesc = ex.Message
             Call WriteToLogFile(sErrDesc, sFuncName)
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
