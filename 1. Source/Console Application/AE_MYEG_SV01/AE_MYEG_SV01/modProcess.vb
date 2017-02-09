@@ -6,6 +6,8 @@ Module modProcess
     Private dtItemCode As DataTable
     Private dtMerchantId As DataTable
     Private dtVatGroup As DataTable
+    Private dtValidation As DataTable
+    Private sCostCenter5, sCostCenter4, sCostCenter3, sCostCenter2, sCostCenter As String
 
 #Region "Start"
     Public Sub Start()
@@ -16,21 +18,44 @@ Module modProcess
         Try
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting Function", sFuncName)
 
-            sSql = "SELECT ID,Entity,Agency,""Service Type"",Receipt_no,Update_datetime,Tx_amount,eservice_amount,gst_amount,voucher_amount,summons_amount,ppz_amount, " & _
-                   " jpj_amount,ehak_amount,inq_amt,agency_amount,delamount,levifee_amount,deliveryfee,processfee,passfee,visafee,fomafee,insfee,merchant_tx_id,payment_type_id,summons_id, " & _
-                   " summon_type,offence_datetime,offender_name,offender_ic,vehicle_no,law_code2,law_code3,jpj_rev_code,replace_type,""user_id"",id_no,comp_no,account_no,bill_date, " & _
-                   " car_registration_no,prepaid_acct_no,license_class,revenue_code,veh_owner_name,emp_icno,emp_name,passportno,applicantname,sector,print_status,jpn_amount, " & _
-                   " jim_amount,ag_code,pay_mode,agency_account_no,zakat_id,req_id,credit_card_no,contact_no,zakat_agency_id,booking_ID,covernote_number,email,ins_company, " & _
-                   " invoiceid,New_Passport_no,""A/P Invoice No"",Section_code,fw_id,trans_id " & _
+            'sSql = "SELECT ID,Entity,Agency,""Service Type"",Receipt_no,Update_datetime,Tx_amount,eservice_amount,gst_amount,voucher_amount,summons_amount,ppz_amount, " & _
+            '       " jpj_amount,comptest_amount,inq_amt,agency_amount,delamount,levifee_amount,deliveryfee,processfee,passfee,visafee,fomafee,insfee,merchant_tx_id,payment_type_id,summons_id, " & _
+            '       " summon_type,offence_datetime,offender_name,offender_ic,vehicle_no,law_code2,law_code3,jpj_rev_code,replace_type,""user_id"",id_no,comp_no,account_no,bill_date, " & _
+            '       " car_registration_no,prepaid_acct_no,license_class,revenue_code,veh_owner_name,emp_icno,emp_name,passportno,applicantname,sector,print_status,fis_amount, " & _
+            '       " photo_amount,ag_code,pay_mode,agency_account_no,zakat_id,req_id,credit_card_no,contact_no,zakat_agency_id,booking_ID,covernote_number,email,ins_company, " & _
+            '       " invoiceid,New_Passport_no,""A/P Invoice No"",Section_code,fw_id,trans_id " & _
+            '       " FROM public.AB_REVENUEANDCOST WHERE COALESCE(Status,'FAIL') = 'FAIL' OR COALESCE(Status,'') = ''  " & _
+            '       " UNION ALL " & _
+            '       " SELECT ID,Entity,Agency,""Service Type"",Receipt_no,Update_datetime,Tx_amount,eservice_amount,gst_amount,voucher_amount,summons_amount,ppz_amount, " & _
+            '       " jpj_amount,comptest_amount,inq_amt,agency_amount,delamount,levifee_amount,deliveryfee,processfee,passfee,visafee,fomafee,insfee,merchant_tx_id,payment_type_id,summons_id, " & _
+            '       " summon_type,offence_datetime,offender_name,offender_ic,vehicle_no,law_code2,law_code3,jpj_rev_code,replace_type,""user_id"",id_no,comp_no,account_no,bill_date, " & _
+            '       " car_registration_no,prepaid_acct_no,license_class,revenue_code,veh_owner_name,emp_icno,emp_name,passportno,applicantname,sector,print_status,fis_amount, " & _
+            '       " photo_amount,ag_code,pay_mode,agency_account_no,zakat_id,req_id,credit_card_no,contact_no,zakat_agency_id,booking_ID,covernote_number,email,ins_company, " & _
+            '       " invoiceid,New_Passport_no,""A/P Invoice No"",Section_code,fw_id,trans_id " & _
+            '       " FROM public.AB_REVENUEANDCOST WHERE COALESCE(Status,'FAIL') = 'SUCCESS' AND Agency = 'IMMI' AND COALESCE(""A/P Invoice No2"",'0') = '0' AND print_status = 'SUCCESS' " & _
+            '       " ORDER BY ID "
+            sSql = "SELECT ID,Entity,Agency,""Service Type"",Receipt_no,Update_datetime,Tx_amount,eservice_amount,gst_amount,voucher_amount,summons_amount,ppz_amount,  " & _
+                   " jpj_amount,comptest_amount,inq_amt,agency_amount,delamount,levifee_amount,deliveryfee,processfee,passfee,visafee,fomafee,insfee,merchant_tx_id,payment_type_id, " & _
+                   " summons_id,  summon_type,offence_datetime,offender_name,offender_ic,vehicle_no,law_code2,law_code3,jpj_rev_code,replace_type,""user_id"",id_no,comp_no,account_no,bill_date,  " & _
+                   " car_registration_no,prepaid_acct_no,license_class,revenue_code,veh_owner_name,emp_icno,emp_name,passportno,applicantname,sector,print_status,fis_amount, " & _
+                   " photo_amount,ag_code,pay_mode,agency_account_no,zakat_id,req_id,credit_card_no,contact_no,zakat_agency_id,booking_ID,covernote_number,email,ins_company,  " & _
+                   " invoiceid,New_Passport_no,""A/P Invoice No"",Section_code,fw_id,trans_id FROM ( " & _
+                   " SELECT ROW_NUMBER() OVER (PARTITION BY Entity) SNO, * FROM (SELECT ID,Entity,Agency,""Service Type"",Receipt_no,Update_datetime,Tx_amount,eservice_amount,gst_amount,voucher_amount,summons_amount,ppz_amount,  " & _
+                   " jpj_amount,comptest_amount,inq_amt,agency_amount,delamount,levifee_amount,deliveryfee,processfee,passfee,visafee,fomafee,insfee,merchant_tx_id,payment_type_id, " & _
+                   " summons_id,  summon_type,offence_datetime,offender_name,offender_ic,vehicle_no,law_code2,law_code3,jpj_rev_code,replace_type,""user_id"",id_no,comp_no,account_no,bill_date,  " & _
+                   " car_registration_no,prepaid_acct_no,license_class,revenue_code,veh_owner_name,emp_icno,emp_name,passportno,applicantname,sector,print_status,fis_amount,  " & _
+                   " photo_amount,ag_code,pay_mode,agency_account_no,zakat_id,req_id,credit_card_no,contact_no,zakat_agency_id,booking_ID,covernote_number,email,ins_company,  " & _
+                   " invoiceid,New_Passport_no,""A/P Invoice No"",Section_code,fw_id,trans_id  " & _
                    " FROM public.AB_REVENUEANDCOST WHERE COALESCE(Status,'FAIL') = 'FAIL' OR COALESCE(Status,'') = '' " & _
-                   " UNION ALL " & _
-                   " SELECT ID,Entity,Agency,""Service Type"",Receipt_no,Update_datetime,Tx_amount,eservice_amount,gst_amount,voucher_amount,summons_amount,ppz_amount, " & _
-                   " jpj_amount,ehak_amount,inq_amt,agency_amount,delamount,levifee_amount,deliveryfee,processfee,passfee,visafee,fomafee,insfee,merchant_tx_id,payment_type_id,summons_id, " & _
-                   " summon_type,offence_datetime,offender_name,offender_ic,vehicle_no,law_code2,law_code3,jpj_rev_code,replace_type,""user_id"",id_no,comp_no,account_no,bill_date, " & _
-                   " car_registration_no,prepaid_acct_no,license_class,revenue_code,veh_owner_name,emp_icno,emp_name,passportno,applicantname,sector,print_status,jpn_amount, " & _
-                   " jim_amount,ag_code,pay_mode,agency_account_no,zakat_id,req_id,credit_card_no,contact_no,zakat_agency_id,booking_ID,covernote_number,email,ins_company, " & _
-                   " invoiceid,New_Passport_no,""A/P Invoice No"",Section_code,fw_id,trans_id " & _
-                   " FROM public.AB_REVENUEANDCOST WHERE COALESCE(Status,'FAIL') = 'SUCCESS' AND Agency = 'IMMI' AND COALESCE(""A/P Invoice No2"",'0') = '0' ORDER BY ID "
+                   " UNION ALL  " & _
+                   " SELECT ID,Entity,Agency,""Service Type"",Receipt_no,Update_datetime,Tx_amount,eservice_amount,gst_amount,voucher_amount,summons_amount,ppz_amount,  " & _
+                   " jpj_amount,comptest_amount,inq_amt,agency_amount,delamount,levifee_amount,deliveryfee,processfee,passfee,visafee,fomafee,insfee,merchant_tx_id,payment_type_id,summons_id,  " & _
+                   " summon_type,offence_datetime,offender_name,offender_ic,vehicle_no,law_code2,law_code3,jpj_rev_code,replace_type,""user_id"",id_no,comp_no,account_no,bill_date,  " & _
+                   " car_registration_no,prepaid_acct_no,license_class,revenue_code,veh_owner_name,emp_icno,emp_name,passportno,applicantname,sector,print_status,fis_amount,  " & _
+                   " photo_amount,ag_code,pay_mode,agency_account_no,zakat_id,req_id,credit_card_no,contact_no,zakat_agency_id,booking_ID,covernote_number,email,ins_company,  " & _
+                   " invoiceid,New_Passport_no,""A/P Invoice No"",Section_code,fw_id,trans_id  " & _
+                   " FROM public.AB_REVENUEANDCOST WHERE COALESCE(Status,'FAIL') = 'SUCCESS' AND Agency = 'IMMI' AND print_status = 'SUCCESS' AND COALESCE(""A/P Invoice No2"",'0') = '0'  ) as fin ) AS TAB " & _
+                   " WHERE TAB.sno <= 5000 ORDER BY ID"
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
             oDataView = GetDataView(sSql)
@@ -92,6 +117,7 @@ Module modProcess
     Private Function CategorizeInvoice(ByVal oDv As DataView, ByRef sErrDesc As String) As Long
         Dim sFuncName As String = "CategorizeInvoice"
         Dim sEntity, sAgency, sPrintStatus, sSQL, sIntegId, sApinvNo As String
+        Dim sAGCode As String = String.Empty
 
         Try
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting Function", sFuncName)
@@ -104,117 +130,162 @@ Module modProcess
             Console.WriteLine("Company Connection Successful")
 
             If p_oCompany.Connected Then
+
                 For i As Integer = 0 To oDv.Count - 1
-                    sIntegId = oDv(i)(0).ToString.Trim
-                    sAgency = oDv(i)(2).ToString.Trim
-                    sPrintStatus = oDv(i)(51).ToString.Trim
-                    sApinvNo = oDv(i)(68).ToString.Trim
 
-                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for ID " & sIntegId, sFuncName)
-
-                    sSQL = "SELECT ""Code"",""Name"",""U_ServiceType"" ""ServiceType"",UPPER(""U_REVCOSTCODE"") ""RevCostCode"" FROM ""@AE_ITEMCODEMAPPING"" "
+                    sSQL = "SELECT DISTINCT UPPER(""NumAtCard"") AS ""MERCHANTID"", UPPER(""U_AI_InvRefNo"") AS ""RECEIPTNO"",UPPER(""U_TRANS_ID"") AS ""TRANSID"", " & _
+                       " UPPER(""U_FWID"") AS ""FWID"",UPPER(""U_SUMMONSID"") AS ""SUMMONSID"",UPPER(""U_COMPNO"") AS ""COMPOUNDNO"",UPPER(""U_COVERNOTENO"") AS ""COVERNOTENO"" " & _
+                       " FROM ""OINV"" "
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING SQL :" & sSQL, sFuncName)
-                    dtItemCode = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
+                    dtValidation = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
 
-                    sSQL = "SELECT ""CardCode"" FROM ""OCRD"" "
-                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING SQL :" & sSQL, sFuncName)
-                    dtBP = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling Validation()", sFuncName)
+                    If Validation(oDv, i, sErrDesc) = RTN_SUCCESS Then
 
-                    sSQL = "SELECT * FROM ""@AE_MERCHANT_ID"" "
-                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING SQL :" & sSQL, sFuncName)
-                    dtMerchantId = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
+                        sIntegId = oDv(i)(0).ToString.Trim
+                        sAgency = oDv(i)(2).ToString.Trim
+                        sPrintStatus = oDv(i)(51).ToString.Trim
+                        sApinvNo = oDv(i)(68).ToString.Trim
+                        sAGCode = oDv(i)(54).ToString.Trim
 
-                    sSQL = "SELECT ""ItemCode"",""VatGourpSa"",""VatGroupPu"" FROM ""OITM"" WHERE ""frozenFor""='N'"
-                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING  SQL :" & sSQL, sFuncName)
-                    dtVatGroup = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
+                        sCostCenter = String.Empty
+                        sCostCenter2 = String.Empty
+                        sCostCenter3 = String.Empty
+                        sCostCenter4 = String.Empty
+                        sCostCenter5 = String.Empty
 
-                    If sPrintStatus = "" Then
-                        Console.WriteLine("Agency is " & sAgency)
-                    Else
-                        Console.WriteLine("Agency is " & sAgency & " and Print Status is " & sPrintStatus)
-                    End If
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for ID " & sIntegId, sFuncName)
 
-                    'If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling StartTransaction", sFuncName)
-                    'If StartTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                        sSQL = "SELECT ""Code"",""Name"",""U_ServiceType"" ""ServiceType"",UPPER(""U_REVCOSTCODE"") ""RevCostCode"" FROM ""@AE_ITEMCODEMAPPING"" "
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING SQL :" & sSQL, sFuncName)
+                        dtItemCode = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
 
-                    'If sAgency = "IMMI" And sPrintStatus.ToUpper = "PENDING" Then
-                    '    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CreateARInvoice()", sFuncName)
-                    '    CreateARInvoice(oDv, i, sErrDesc)
-                    'ElseIf sAgency = "IMMI" And sPrintStatus.ToUpper = "PRINTED" Then
-                    '    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CreateAPInvoice()", sFuncName)
-                    '    CreateAPInvoice(oDv, i, sErrDesc)
-                    'Else
-                    '    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CreateARinvoice followed by CreateAPInvoice", sFuncName)
-                    '    If CreateARInvoice(oDv, i, sErrDesc) = RTN_SUCCESS Then
-                    '        CreateAPInvoice(oDv, i, sErrDesc)
-                    '    End If
-                    'End If
+                        sSQL = "SELECT ""CardCode"" FROM ""OCRD"" "
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING SQL :" & sSQL, sFuncName)
+                        dtBP = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
 
-                    If sAgency = "IMMI" Then
-                        If sPrintStatus = "" And sApinvNo = "" Then
-                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CreateARinvoice followed by CreateAPInvoice", sFuncName)
-                            p_oCompany.StartTransaction()
-                            If CreateARInvoice(oDv, i, sErrDesc) = RTN_ERROR Then
-                                If p_oCompany.InTransaction = True Then
-                                    p_oCompany.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack)
-                                Else
-                                    p_oCompany.StartTransaction()
-                                    p_oCompany.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack)
-                                End If
-                            ElseIf CreateAPInvoice_IMMI(oDv, i, sPrintStatus, sErrDesc) = RTN_ERROR Then
-                                If p_oCompany.InTransaction = True Then
-                                    p_oCompany.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack)
-                                Else
-                                    p_oCompany.StartTransaction()
-                                    p_oCompany.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack)
-                                End If
-                            Else
-                                p_oCompany.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit)
-                            End If
-                        ElseIf sPrintStatus.ToUpper() = "SUCCESS" And sApinvNo <> "" Then
-                            p_oCompany.StartTransaction()
-                            If CreateAPInvoice_Second(oDv, i, sErrDesc) = RTN_ERROR Then
-                                If p_oCompany.InTransaction = True Then
-                                    p_oCompany.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack)
-                                Else
-                                    p_oCompany.StartTransaction()
-                                    p_oCompany.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack)
-                                End If
-                            ElseIf CreateCreditNote(oDv, i, sErrDesc) = RTN_ERROR Then
-                                If p_oCompany.InTransaction = True Then
-                                    p_oCompany.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack)
-                                Else
-                                    p_oCompany.StartTransaction()
-                                    p_oCompany.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack)
-                                End If
-                            Else
-                                p_oCompany.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit)
-                            End If
+                        sSQL = "SELECT * FROM ""@AE_MERCHANT_ID"" "
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING SQL :" & sSQL, sFuncName)
+                        dtMerchantId = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
+
+                        sSQL = "SELECT ""ItemCode"",""VatGourpSa"",""VatGroupPu"" FROM ""OITM"" WHERE ""frozenFor""='N'"
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING  SQL :" & sSQL, sFuncName)
+                        dtVatGroup = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
+
+                        If sPrintStatus = "" Then
+                            Console.WriteLine("Agency is " & sAgency)
+                        Else
+                            Console.WriteLine("Agency is " & sAgency & " and Print Status is " & sPrintStatus)
                         End If
-                    Else
-                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CreateARinvoice followed by CreateAPInvoice", sFuncName)
-                        p_oCompany.StartTransaction()
-                        If CreateARInvoice(oDv, i, sErrDesc) = RTN_ERROR Then
-                            If p_oCompany.InTransaction = True Then
-                                p_oCompany.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack)
-                            Else
-                                p_oCompany.StartTransaction()
-                                p_oCompany.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack)
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Ag Code is " & sAGCode, sFuncName)
+
+                        If sAGCode <> "" Then
+                            sSQL = "SELECT ""PrcCode"" FROM ""OPRC"" WHERE UPPER(""U_AGCODE"") = '" & sAGCode.ToUpper() & "' "
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                            sCostCenter5 = GetStringValue(sSQL)
+
+                            If sCostCenter5 <> "" Then
+                                sSQL = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter5 & "' "
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                                sCostCenter4 = GetStringValue(sSQL)
+
+                                sSQL = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter4 & "' "
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                                sCostCenter3 = GetStringValue(sSQL)
+
+                                sSQL = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter3 & "' "
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                                sCostCenter2 = GetStringValue(sSQL)
+
+                                sSQL = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter2.ToUpper() & "' "
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                                sCostCenter = GetStringValue(sSQL)
                             End If
-                        ElseIf CreateAPInvoice(oDv, i, sErrDesc) = RTN_ERROR Then
-                            If p_oCompany.InTransaction = True Then
-                                p_oCompany.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack)
-                            Else
-                                p_oCompany.StartTransaction()
-                                p_oCompany.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_RollBack)
+
+                        Else
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Ag Code is null/Not getting Cost Center" & sAGCode, sFuncName)
+                        End If
+
+                        'If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling StartTransaction", sFuncName)
+                        'If StartTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                        'If sAgency = "IMMI" And sPrintStatus.ToUpper = "PENDING" Then
+                        '    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CreateARInvoice()", sFuncName)
+                        '    CreateARInvoice(oDv, i, sErrDesc)
+                        'ElseIf sAgency = "IMMI" And sPrintStatus.ToUpper = "PRINTED" Then
+                        '    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CreateAPInvoice()", sFuncName)
+                        '    CreateAPInvoice(oDv, i, sErrDesc)
+                        'Else
+                        '    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CreateARinvoice followed by CreateAPInvoice", sFuncName)
+                        '    If CreateARInvoice(oDv, i, sErrDesc) = RTN_SUCCESS Then
+                        '        CreateAPInvoice(oDv, i, sErrDesc)
+                        '    End If
+                        'End If
+
+                        If sAgency = "IMMI" Then
+                            If sPrintStatus = "" And sApinvNo = "" Then
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CreateARinvoice followed by CreateAPInvoice", sFuncName)
+
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling StartTransaction()", sFuncName)
+                                If StartTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                                If CreateARInvoice(oDv, i, sErrDesc) = RTN_ERROR Then
+                                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling RollbackTransaction()", sFuncName)
+                                    If RollbackTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                                    Continue For
+                                ElseIf CreateAPInvoice_IMMI(oDv, i, sPrintStatus, sErrDesc) = RTN_ERROR Then
+                                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ", sFuncName)
+                                    If RollbackTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                                    Continue For
+                                Else
+                                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CommitTransaction()", sFuncName)
+                                    If CommitTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                                End If
+                            ElseIf sPrintStatus.ToUpper() = "SUCCESS" And sApinvNo <> "" Then
+
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling StartTransaction()", sFuncName)
+                                If StartTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                                If CreateAPInvoice_Second(oDv, i, sErrDesc) = RTN_ERROR Then
+                                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling RollbackTransaction()", sFuncName)
+                                    If RollbackTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                                    Continue For
+                                ElseIf CreateCreditNote(oDv, i, sErrDesc) = RTN_ERROR Then
+                                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling RollbackTransaction()", sFuncName)
+                                    If RollbackTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                                    Continue For
+                                Else
+                                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CommitTransaction()", sFuncName)
+                                    If CommitTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                                End If
                             End If
                         Else
-                            p_oCompany.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit)
-                        End If
-                    End If
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CreateARinvoice followed by CreateAPInvoice", sFuncName)
 
-                    'If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CommitTransaction", sFuncName)
-                    'If CommitTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling StartTransaction()", sFuncName)
+                            If StartTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                            If CreateARInvoice(oDv, i, sErrDesc) = RTN_ERROR Then
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling RollbackTransaction()", sFuncName)
+                                If RollbackTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                                Continue For
+                            ElseIf CreateAPInvoice(oDv, i, sErrDesc) = RTN_ERROR Then
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling RollbackTransaction()", sFuncName)
+                                If RollbackTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                                Continue For
+                            Else
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CommitTransaction()", sFuncName)
+                                If CommitTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                            End If
+                        End If
+
+                        'If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CommitTransaction", sFuncName)
+                        'If CommitTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                    Else
+                        Continue For
+                    End If
                 Next
             End If
 
@@ -227,8 +298,201 @@ Module modProcess
         Catch ex As Exception
             sErrDesc = ex.Message
             Call WriteToLogFile(sErrDesc, sFuncName)
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling RollbackTransaction()", sFuncName)
+            If RollbackTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
             CategorizeInvoice = RTN_ERROR
+        End Try
+    End Function
+#End Region
+#Region "Validation"
+    Private Function Validation(ByVal oDv As DataView, ByVal iLine As Integer, ByRef sErrDesc As String) As Long
+        Dim sFuncName As String = "Validation"
+        Dim sSQL As String = String.Empty
+        Dim sIntegId As String = String.Empty
+        Dim sAgency As String = String.Empty
+        Dim sServiceType As String = String.Empty
+        Dim sMerChantid As String = String.Empty
+        Dim sReceiptNo As String = String.Empty
+        Dim sTransId As String = String.Empty
+        Dim sFwId As String = String.Empty
+        Dim sSummonsID As String = String.Empty
+        Dim sCompoundNo As String = String.Empty
+        Dim sCoverNoteNo As String = String.Empty
+        Dim sApinvNo As String = String.Empty
+
+        Try
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting Function ", sFuncName)
+
+            sIntegId = oDv(iLine)(0).ToString.Trim.ToUpper()
+            sAgency = oDv(iLine)(2).ToString.Trim.ToUpper()
+            sServiceType = oDv(iLine)(3).ToString.Trim.ToUpper()
+            sReceiptNo = oDv(iLine)(4).ToString.Trim.ToUpper()
+            sMerChantid = oDv(iLine)(24).ToString.Trim.ToUpper()
+            sSummonsID = oDv(iLine)(26).ToString.Trim.ToUpper()
+            sCompoundNo = oDv(iLine)(38).ToString.Trim.ToUpper()
+            sCoverNoteNo = oDv(iLine)(63).ToString.Trim.ToUpper()
+            sApinvNo = oDv(iLine)(68).ToString.Trim.ToUpper()
+            sFwId = oDv(iLine)(70).ToString.Trim.ToUpper()
+            sTransId = oDv(iLine)(71).ToString.Trim.ToUpper()
+
+            dtValidation.DefaultView.RowFilter = Nothing
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Service type is " & sServiceType.ToUpper(), sFuncName)
+
+            Select Case sServiceType.ToUpper()
+                Case "BOOKING", "CDL", "LDL", "RTX", "STMS", "ETMS"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Receipt No " & sReceiptNo.ToUpper(), sFuncName)
+                    dtValidation.DefaultView.RowFilter = "RECEIPTNO = '" & sReceiptNo.ToUpper() & "'"
+                    If dtValidation.DefaultView.Count > 0 Then
+                        sErrDesc = "RECEIPTNO ::" & sReceiptNo & " already exist in SAP. Function " & sFuncName
+
+                        Dim sQuery As String
+                        sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
+                                 " WHERE ID = '" & sIntegId & "'"
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
+                        If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    End If
+                Case "JPJSUMMONS"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper() & " and Transid " & sTransId, sFuncName)
+                    dtValidation.DefaultView.RowFilter = "MERCHANTID = '" & sMerChantid.ToUpper() & "' AND TRANSID = '" & sTransId.ToUpper() & "'"
+                    If dtValidation.DefaultView.Count > 0 Then
+                        sErrDesc = "MERCHANTID ::" & sMerChantid & " and TRANSID ::" & sTransId & " already exist in SAP. Function " & sFuncName
+
+                        Dim sQuery As String
+                        sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
+                                 " WHERE ID = '" & sIntegId & "'"
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
+                        If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    End If
+                Case "ZAKAT", "ASSESSMENT", "JIM", "JPN", "ZAKATPPZ", "ZAKATLZS", "ZAKATPKZP", "ZAKATMAIJ", "ZAKATPZNS", "ZAKATMAIP", "ZAKATJZNK"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper(), sFuncName)
+                    dtValidation.DefaultView.RowFilter = "MERCHANTID = '" & sMerChantid.ToUpper() & "' "
+                    If dtValidation.DefaultView.Count > 0 Then
+                        sErrDesc = "MERCHANTID ::" & sMerChantid & " already exist in SAP. Function " & sFuncName
+
+                        Dim sQuery As String
+                        sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
+                                 " WHERE ID = '" & sIntegId & "'"
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
+                        If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    End If
+                Case "MAIDPR"
+                    If sAgency.ToUpper() = "IMMI" And sApinvNo = "" Then
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper(), sFuncName)
+                        dtValidation.DefaultView.RowFilter = "MERCHANTID = '" & sMerChantid.ToUpper() & "' "
+                        If dtValidation.DefaultView.Count > 0 Then
+                            sErrDesc = "MERCHANTID ::" & sMerChantid & " already exist in SAP. Function " & sFuncName
+
+                            Dim sQuery As String
+                            sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
+                                     " WHERE ID = '" & sIntegId & "'"
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
+                            If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                            Call WriteToLogFile(sErrDesc, sFuncName)
+                            Throw New ArgumentException(sErrDesc)
+                        End If
+                    End If
+                Case "PDRM"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper() & " and SummonsId " & sSummonsID.ToUpper(), sFuncName)
+                    dtValidation.DefaultView.RowFilter = "MERCHANTID = '" & sMerChantid.ToUpper() & "' AND SUMMONSID = '" & sSummonsID.ToUpper() & "' "
+                    If dtValidation.DefaultView.Count > 0 Then
+                        sErrDesc = "MERCHANTID ::" & sMerChantid & " and SUMMONSID ::" & sSummonsID & " already exist in SAP. Function " & sFuncName
+
+                        Dim sQuery As String
+                        sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
+                                 " WHERE ID = '" & sIntegId & "'"
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
+                        If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    End If
+                Case "COMPOUND"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper() & " and Compound no " & sCompoundNo.ToUpper(), sFuncName)
+                    dtValidation.DefaultView.RowFilter = "MERCHANTID = '" & sMerChantid.ToUpper() & "' AND COMPOUNDNO = '" & sCompoundNo.ToUpper() & "' "
+                    If dtValidation.DefaultView.Count > 0 Then
+                        sErrDesc = "MERCHANTID ::" & sMerChantid & " and COMPOUNDNO ::" & sCompoundNo & " already exist in SAP. Function " & sFuncName
+
+                        Dim sQuery As String
+                        sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
+                                 " WHERE ID = '" & sIntegId & "'"
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
+                        If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    End If
+                Case "FOREIGN WORKER", "PATI"
+                    If sAgency.ToUpper() = "IMMI" Then
+                        If sApinvNo = "" Then
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper() & " and fwid " & sFwId.ToUpper(), sFuncName)
+                            dtValidation.DefaultView.RowFilter = "MERCHANTID = '" & sMerChantid.ToUpper() & "' AND FWID = '" & sFwId.ToUpper() & "' "
+                            If dtValidation.DefaultView.Count > 0 Then
+                                sErrDesc = "MERCHANTID ::" & sMerChantid & " and FWID ::" & sFwId & " already exist in SAP. Function " & sFuncName
+
+                                Dim sQuery As String
+                                sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
+                                         " WHERE ID = '" & sIntegId & "'"
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
+                                If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                                Call WriteToLogFile(sErrDesc, sFuncName)
+                                Throw New ArgumentException(sErrDesc)
+                            End If
+                        End If
+                    Else
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper() & " and fwid " & sFwId.ToUpper(), sFuncName)
+                        dtValidation.DefaultView.RowFilter = "MERCHANTID = '" & sMerChantid.ToUpper() & "' AND FWID = '" & sFwId.ToUpper() & "' "
+                        If dtValidation.DefaultView.Count > 0 Then
+                            sErrDesc = "MERCHANTID ::" & sMerChantid & " and FWID ::" & sFwId & " already exist in SAP. Function " & sFuncName
+
+                            Dim sQuery As String
+                            sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
+                                     " WHERE ID = '" & sIntegId & "'"
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
+                            If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                            Call WriteToLogFile(sErrDesc, sFuncName)
+                            Throw New ArgumentException(sErrDesc)
+                        End If
+                    End If
+                Case "VEHICLE INSURANCE"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper() & " and CoverNote NO " & sCoverNoteNo.ToUpper(), sFuncName)
+                    dtValidation.DefaultView.RowFilter = "MERCHANTID = '" & sMerChantid.ToUpper() & "' AND COVERNOTENO = '" & sCoverNoteNo.ToUpper() & "' "
+                    If dtValidation.DefaultView.Count > 0 Then
+                        sErrDesc = "MERCHANTID ::" & sMerChantid & " and COVERNOTENO ::" & sCoverNoteNo & " already exist in SAP. Function " & sFuncName
+
+                        Dim sQuery As String
+                        sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
+                                 " WHERE ID = '" & sIntegId & "'"
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
+                        If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    End If
+            End Select
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS", sFuncName)
+            Validation = RTN_SUCCESS
+        Catch ex As Exception
+            sErrDesc = ex.Message
+            Call WriteToLogFile(sErrDesc, sFuncName)
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
+            Validation = RTN_ERROR
         End Try
     End Function
 #End Region
@@ -247,8 +511,9 @@ Module modProcess
         Dim sSql, sEservice_Taxcode As String
         Dim sServiceType As String = String.Empty
         Dim sItemDesc As String = String.Empty
-        Dim sAGCode As String = String.Empty
-        Dim sCostCenter5, sCostCenter4, sCostCenter3, sCostCenter2, sCostCenter As String
+        Dim bLineAdded As Boolean = False
+        ' Dim sAGCode As String = String.Empty
+        'Dim sCostCenter5, sCostCenter4, sCostCenter3, sCostCenter2, sCostCenter As String
 
         Try
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting function", sFuncName)
@@ -269,29 +534,16 @@ Module modProcess
             sAgency = oDv(iLine)(2).ToString.Trim
             sServiceType = oDv(iLine)(3).ToString.Trim
             sMerChantid = oDv(iLine)(24).ToString.Trim
-            sAGCode = oDv(iLine)(54).ToString.Trim
+            'sAGCode = oDv(iLine)(54).ToString.Trim
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Service Type is " & sServiceType, sFuncName)
 
-            sSql = "SELECT ""PrcCode"" FROM ""OPRC"" WHERE UPPER(""U_AGCODE"") = '" & sAGCode.ToUpper() & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter5 = GetStringValue(sSql)
-
-            sSql = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter5 & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter4 = GetStringValue(sSql)
-
-            sSql = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter4 & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter3 = GetStringValue(sSql)
-
-            sSql = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter3 & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter2 = GetStringValue(sSql)
-
-            sSql = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter2.ToUpper() & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter = GetStringValue(sSql)
+            If sServiceType.ToUpper() = "BOOKING" Then
+                If sCostCenter5 = String.Empty Then
+                    sErrDesc = "Cost center for dimension 5 is mandatory for booking type"
+                    Throw New ArgumentException(sErrDesc)
+                End If
+            End If
 
             If sMerChantid = "" Then
                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Merchant id is null so getting account no as cardcode", sFuncName)
@@ -310,14 +562,19 @@ Module modProcess
                     End If
                 Next
                 If sCardCode <> "" Then
-                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Code in Merchant id is " & sCardCode, sFuncName)
-
-                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking merchant id in merchant table", sFuncName)
-                    dtMerchantId.DefaultView.RowFilter = "Code = '" & sCardCode & "'"
-                    If dtMerchantId.DefaultView.Count = 0 Then
-
+                    If sCardCode.Substring(0, 2) = "PP" Then
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Merchant id starts with PP", sFuncName)
+                        sCardCode = oDv(iLine)(39).ToString.Trim
                     Else
-                        sCardCode = dtMerchantId.DefaultView.Item(0)(1).ToString().Trim()
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Code in Merchant id is " & sCardCode, sFuncName)
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking merchant id in merchant table", sFuncName)
+                        dtMerchantId.DefaultView.RowFilter = "Code = '" & sCardCode & "'"
+                        If dtMerchantId.DefaultView.Count = 0 Then
+
+                        Else
+                            sCardCode = dtMerchantId.DefaultView.Item(0)(1).ToString().Trim()
+                        End If
                     End If
                 Else
                     sCardCode = oDv(iLine)(39).ToString.Trim
@@ -511,6 +768,7 @@ Module modProcess
             '*****ESERVICE AMOUNT COLUMN
             If Not (oDv(iLine)(7).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(7).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
@@ -544,7 +802,7 @@ Module modProcess
                     If sEservice_Taxcode <> "" Then
                         oArInovice.Lines.VatGroup = sEservice_Taxcode
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -592,6 +850,7 @@ Module modProcess
                             Dim dEserv_Amount As Double
                             dEserv_Amount = Math.Round(CDbl(dGst / dRate), 2)
                             If dEserv_Amount > 0.0 Then
+                                bLineAdded = True
                                 If iCount > 1 Then
                                     oArInovice.Lines.Add()
                                 End If
@@ -623,7 +882,7 @@ Module modProcess
                                 If sEservice_Taxcode <> "" Then
                                     oArInovice.Lines.VatGroup = sEservice_Taxcode
                                 End If
-                                If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                                If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                                     If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                                         oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                                     End If
@@ -656,6 +915,7 @@ Module modProcess
             '*****VOUCHER AMOUNT COLUMN
             If Not (oDv(iLine)(9).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(9).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
@@ -687,7 +947,7 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oArInovice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -715,6 +975,7 @@ Module modProcess
             '*****SUMMONS AMOUNT COLUMN
             If Not (oDv(iLine)(10).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(10).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
@@ -746,7 +1007,7 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oArInovice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -774,6 +1035,7 @@ Module modProcess
             '*****PPZ AMOUNT COLUMN
             If Not (oDv(iLine)(11).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(11).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
@@ -806,7 +1068,7 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oArInovice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -834,6 +1096,7 @@ Module modProcess
             '*****JPJ AMOUNT COLUMN
             If Not (oDv(iLine)(12).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(12).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
@@ -866,7 +1129,7 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oArInovice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -891,20 +1154,30 @@ Module modProcess
                 End If
             End If
 
-            '*****EHAK AMOUNT COLUMN
+            '*****COMPTEST_AMOUNT COLUMN
             If Not (oDv(iLine)(13).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(13).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
-
+                    sItemDesc = "comptest_amount" & "-" & sServiceType
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for EHAK amount", sFuncName)
 
-                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'EHAK_AMOUNT'"
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::''ehak_amount'' provided does not exist in SAP(Mapping Table)."
-                        Call WriteToLogFile(sErrDesc, sFuncName)
-                        Throw New ArgumentException(sErrDesc)
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for comptest_amount", sFuncName)
+
+                        dtItemCode.DefaultView.RowFilter = Nothing
+                        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'COMPTEST_AMOUNT'"
+                        If dtItemCode.DefaultView.Count = 0 Then
+                            sErrDesc = "ItemCode ::''comptest_amount'' provided does not exist in SAP(Mapping Table)."
+                            Call WriteToLogFile(sErrDesc, sFuncName)
+                            Throw New ArgumentException(sErrDesc)
+                        Else
+                            sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                        End If
                     Else
                         sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
                     End If
@@ -926,26 +1199,20 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oArInovice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
-                        If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
-                            oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
-                        End If
-                    Else
-                        If Not (sCostCenter = String.Empty) Then
-                            oArInovice.Lines.CostingCode = sCostCenter
-                        End If
-                        If Not (sCostCenter2 = String.Empty) Then
-                            oArInovice.Lines.CostingCode2 = sCostCenter2
-                        End If
-                        If Not (sCostCenter3 = String.Empty) Then
-                            oArInovice.Lines.CostingCode3 = sCostCenter3
-                        End If
-                        If Not (sCostCenter4 = String.Empty) Then
-                            oArInovice.Lines.CostingCode4 = sCostCenter4
-                        End If
-                        If Not (sCostCenter5 = String.Empty) Then
-                            oArInovice.Lines.CostingCode5 = sCostCenter5
-                        End If
+                    If Not (sCostCenter = String.Empty) Then
+                        oArInovice.Lines.CostingCode = sCostCenter
+                    End If
+                    If Not (sCostCenter2 = String.Empty) Then
+                        oArInovice.Lines.CostingCode2 = sCostCenter2
+                    End If
+                    If Not (sCostCenter3 = String.Empty) Then
+                        oArInovice.Lines.CostingCode3 = sCostCenter3
+                    End If
+                    If Not (sCostCenter4 = String.Empty) Then
+                        oArInovice.Lines.CostingCode4 = sCostCenter4
+                    End If
+                    If Not (sCostCenter5 = String.Empty) Then
+                        oArInovice.Lines.CostingCode5 = sCostCenter5
                     End If
                     iCount = iCount + 1
                 End If
@@ -954,6 +1221,7 @@ Module modProcess
             '*****INQ AMOUNT COLUMN
             If Not (oDv(iLine)(14).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(14).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
@@ -986,7 +1254,7 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oArInovice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -1014,6 +1282,7 @@ Module modProcess
             '*****AMOUNT COLUMN
             If Not (oDv(iLine)(15).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(15).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     Dim dTxAmount As Double
                     Try
                         dTxAmount = CDbl(oDv(iLine)(6).ToString.Trim())
@@ -1031,359 +1300,7 @@ Module modProcess
 
                     sItemDesc = "agency_amount" & "-" & sServiceType
 
-
-                    If sAgency.ToUpper = "JPJ" And sServiceType.ToUpper = "BOOKING" Then
-                        If dAmount > 17 Then
-                            If iCount > 1 Then
-                                oArInovice.Lines.Add()
-                            End If
-                            dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
-                            If dtItemCode.DefaultView.Count = 0 Then
-                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
-                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for agency_amount", sFuncName)
-
-                                dtItemCode.DefaultView.RowFilter = Nothing
-                                dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
-                                If dtItemCode.DefaultView.Count = 0 Then
-                                    sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
-                                    Call WriteToLogFile(sErrDesc, sFuncName)
-                                    Throw New ArgumentException(sErrDesc)
-                                Else
-                                    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                                End If
-                            Else
-                                sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                            End If
-
-                            dtVatGroup.DefaultView.RowFilter = "ItemCode = '" & sItemCode & "'"
-                            If dtVatGroup.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode :: " & sItemCode & " provided does not exist in SAP."
-                                Call WriteToLogFile(sErrDesc, sFuncName)
-                                Throw New ArgumentException(sErrDesc)
-                            Else
-                                sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
-                            End If
-
-                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for Amount Column, JPJ and BOOKING", sFuncName)
-                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Item Desc is " & sItemDesc, sFuncName)
-
-                            oArInovice.Lines.ItemCode = sItemCode
-                            oArInovice.Lines.Quantity = 1
-                            oArInovice.Lines.UnitPrice = (dAmount - 17)
-                            If sVatGroup <> "" Then
-                                oArInovice.Lines.VatGroup = sVatGroup
-                            End If
-                            If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
-                                If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
-                                    oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
-                                End If
-                            Else
-                                If Not (sCostCenter = String.Empty) Then
-                                    oArInovice.Lines.CostingCode = sCostCenter
-                                End If
-                                If Not (sCostCenter2 = String.Empty) Then
-                                    oArInovice.Lines.CostingCode2 = sCostCenter2
-                                End If
-                                If Not (sCostCenter3 = String.Empty) Then
-                                    oArInovice.Lines.CostingCode3 = sCostCenter3
-                                End If
-                                If Not (sCostCenter4 = String.Empty) Then
-                                    oArInovice.Lines.CostingCode4 = sCostCenter4
-                                End If
-                                If Not (sCostCenter5 = String.Empty) Then
-                                    oArInovice.Lines.CostingCode5 = sCostCenter5
-                                End If
-                            End If
-                            iCount = iCount + 1
-
-                            If iCount > 1 Then
-                                oArInovice.Lines.Add()
-                            End If
-                            dtItemCode.DefaultView.RowFilter = "RevCostCode = 'COMPUTER_TEST'"
-                            If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::''computer_test'' provided does not exist in SAP(Mapping Table)."
-                                Call WriteToLogFile(sErrDesc, sFuncName)
-                                Throw New ArgumentException(sErrDesc)
-                            Else
-                                sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                            End If
-
-                            dtVatGroup.DefaultView.RowFilter = "ItemCode = '" & sItemCode & "'"
-                            If dtVatGroup.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode :: " & sItemCode & " provided does not exist in SAP."
-                                Call WriteToLogFile(sErrDesc, sFuncName)
-                                Throw New ArgumentException(sErrDesc)
-                            Else
-                                sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
-                            End If
-
-                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for Amount Column, JPJ and BOOKING - Including computer_test", sFuncName)
-
-                            oArInovice.Lines.ItemCode = sItemCode
-                            oArInovice.Lines.Quantity = 1
-                            oArInovice.Lines.UnitPrice = CDbl(15)
-                            If sVatGroup <> "" Then
-                                oArInovice.Lines.VatGroup = sVatGroup
-                            End If
-                            If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
-                                If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
-                                    oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
-                                End If
-                            Else
-                                If Not (sCostCenter = String.Empty) Then
-                                    oArInovice.Lines.CostingCode = sCostCenter
-                                End If
-                                If Not (sCostCenter2 = String.Empty) Then
-                                    oArInovice.Lines.CostingCode2 = sCostCenter2
-                                End If
-                                If Not (sCostCenter3 = String.Empty) Then
-                                    oArInovice.Lines.CostingCode3 = sCostCenter3
-                                End If
-                                If Not (sCostCenter4 = String.Empty) Then
-                                    oArInovice.Lines.CostingCode4 = sCostCenter4
-                                End If
-                                If Not (sCostCenter5 = String.Empty) Then
-                                    oArInovice.Lines.CostingCode5 = sCostCenter5
-                                End If
-                            End If
-                            iCount = iCount + 1
-
-                            'If dEservice = 0.0 Then
-                            '    If iCount > 1 Then
-                            '        oArInovice.Lines.Add()
-                            '    End If
-                            '    sItemDesc = "eservice_amount" & "-" & sServiceType
-                            '    dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
-                            '    If dtItemCode.DefaultView.Count = 0 Then
-
-                            '        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode in item mapping table for " & sItemDesc, sFuncName)
-                            '        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for eservice_amount", sFuncName)
-
-                            '        dtItemCode.DefaultView.RowFilter = Nothing
-                            '        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'ESERVICE_AMOUNT'"
-                            '        If dtItemCode.DefaultView.Count = 0 Then
-                            '            sErrDesc = "ItemCode ::''eservice_amount'' provided does not exist in SAP(Mapping Table)."
-                            '            Call WriteToLogFile(sErrDesc, sFuncName)
-                            '            Throw New ArgumentException(sErrDesc)
-                            '        Else
-                            '            sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                            '        End If
-                            '    Else
-                            '        sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                            '    End If
-
-
-                            '    oArInovice.Lines.ItemCode = sItemCode
-                            '    oArInovice.Lines.Quantity = 1
-                            '    oArInovice.Lines.UnitPrice = CDbl(2)
-                            '    If sEservice_Taxcode <> "" Then
-                            '        oArInovice.Lines.VatGroup = sEservice_Taxcode
-                            '    End If
-                            '    If Not (sCostCenter = String.Empty) Then
-                            '        oArInovice.Lines.CostingCode = sCostCenter
-                            '    End If
-                            '    If Not (sCostCenter2 = String.Empty) Then
-                            '        oArInovice.Lines.CostingCode2 = sCostCenter2
-                            '    End If
-                            '    If Not (sCostCenter3 = String.Empty) Then
-                            '        oArInovice.Lines.CostingCode3 = sCostCenter3
-                            '    End If
-                            '    If Not (sCostCenter4 = String.Empty) Then
-                            '        oArInovice.Lines.CostingCode4 = sCostCenter4
-                            '    End If
-                            '    If Not (sCostCenter5 = String.Empty) Then
-                            '        oArInovice.Lines.CostingCode5 = sCostCenter5
-                            '    End If
-                            '    iCount = iCount + 1
-                            'End If
-                        ElseIf dAmount = 17 Then
-                            If iCount > 1 Then
-                                oArInovice.Lines.Add()
-                            End If
-                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for Amount Column, JPJ and BOOKING", sFuncName)
-
-                            dtItemCode.DefaultView.RowFilter = "RevCostCode = 'COMPUTER_TEST'"
-                            If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::''computer_test'' provided does not exist in SAP(Mapping Table)."
-                                Call WriteToLogFile(sErrDesc, sFuncName)
-                                Throw New ArgumentException(sErrDesc)
-                            Else
-                                sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                            End If
-
-                            dtVatGroup.DefaultView.RowFilter = "ItemCode = '" & sItemCode & "'"
-                            If dtVatGroup.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode :: " & sItemCode & " provided does not exist in SAP."
-                                Call WriteToLogFile(sErrDesc, sFuncName)
-                                Throw New ArgumentException(sErrDesc)
-                            Else
-                                sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
-                            End If
-
-                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for Amount Column, JPJ and BOOKING - Computer Test", sFuncName)
-
-                            oArInovice.Lines.ItemCode = sItemCode
-                            oArInovice.Lines.Quantity = 1
-                            oArInovice.Lines.UnitPrice = CDbl(15)
-                            If sVatGroup <> "" Then
-                                oArInovice.Lines.VatGroup = sVatGroup
-                            End If
-                            If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
-                                If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
-                                    oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
-                                End If
-                            Else
-                                If Not (sCostCenter = String.Empty) Then
-                                    oArInovice.Lines.CostingCode = sCostCenter
-                                End If
-                                If Not (sCostCenter2 = String.Empty) Then
-                                    oArInovice.Lines.CostingCode2 = sCostCenter2
-                                End If
-                                If Not (sCostCenter3 = String.Empty) Then
-                                    oArInovice.Lines.CostingCode3 = sCostCenter3
-                                End If
-                                If Not (sCostCenter4 = String.Empty) Then
-                                    oArInovice.Lines.CostingCode4 = sCostCenter4
-                                End If
-                                If Not (sCostCenter5 = String.Empty) Then
-                                    oArInovice.Lines.CostingCode5 = sCostCenter5
-                                End If
-                            End If
-                            iCount = iCount + 1
-
-                            'If dEservice = 0.0 Then
-                            '    If iCount > 1 Then
-                            '        oArInovice.Lines.Add()
-                            '    End If
-                            '    sItemDesc = "eservice_amount" & "-" & sServiceType
-                            '    dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
-                            '    If dtItemCode.DefaultView.Count = 0 Then
-
-                            '        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode in item mapping table for " & sItemDesc, sFuncName)
-                            '        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for eservice_amount", sFuncName)
-
-                            '        dtItemCode.DefaultView.RowFilter = Nothing
-                            '        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'ESERVICE_AMOUNT'"
-                            '        If dtItemCode.DefaultView.Count = 0 Then
-                            '            sErrDesc = "ItemCode ::''eservice_amount'' provided does not exist in SAP(Mapping Table)."
-                            '            Call WriteToLogFile(sErrDesc, sFuncName)
-                            '            Throw New ArgumentException(sErrDesc)
-                            '        Else
-                            '            sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                            '        End If
-                            '    Else
-                            '        sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                            '    End If
-
-
-                            '    oArInovice.Lines.ItemCode = sItemCode
-                            '    oArInovice.Lines.Quantity = 1
-                            '    oArInovice.Lines.UnitPrice = CDbl(2)
-                            '    If sEservice_Taxcode <> "" Then
-                            '        oArInovice.Lines.VatGroup = sEservice_Taxcode
-                            '    End If
-                            '    If Not (sCostCenter = String.Empty) Then
-                            '        oArInovice.Lines.CostingCode = sCostCenter
-                            '    End If
-                            '    If Not (sCostCenter2 = String.Empty) Then
-                            '        oArInovice.Lines.CostingCode2 = sCostCenter2
-                            '    End If
-                            '    If Not (sCostCenter3 = String.Empty) Then
-                            '        oArInovice.Lines.CostingCode3 = sCostCenter3
-                            '    End If
-                            '    If Not (sCostCenter4 = String.Empty) Then
-                            '        oArInovice.Lines.CostingCode4 = sCostCenter4
-                            '    End If
-                            '    If Not (sCostCenter5 = String.Empty) Then
-                            '        oArInovice.Lines.CostingCode5 = sCostCenter5
-                            '    End If
-                            '    iCount = iCount + 1
-                            'End If
-                        End If
-                    ElseIf sAgency.ToUpper = "JPJ" And sServiceType.ToUpper = "CDL" Then
-                        If iCount > 1 Then
-                            oArInovice.Lines.Add()
-                        End If
-                        dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
-                        If dtItemCode.DefaultView.Count = 0 Then
-                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
-                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for agency_amount", sFuncName)
-
-                            dtItemCode.DefaultView.RowFilter = Nothing
-                            dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
-                            If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
-                                Call WriteToLogFile(sErrDesc, sFuncName)
-                                Throw New ArgumentException(sErrDesc)
-                            Else
-                                sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                            End If
-                        Else
-                            sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                        End If
-
-                        dtVatGroup.DefaultView.RowFilter = "ItemCode = '" & sItemCode & "'"
-                        If dtVatGroup.DefaultView.Count = 0 Then
-                            sErrDesc = "ItemCode :: " & sItemCode & " provided does not exist in SAP."
-                            Call WriteToLogFile(sErrDesc, sFuncName)
-                            Throw New ArgumentException(sErrDesc)
-                        Else
-                            sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
-                        End If
-
-                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for Amount Column, JPJ and CDL", sFuncName)
-
-                        oArInovice.Lines.ItemCode = sItemCode
-                        oArInovice.Lines.Quantity = 1
-                        oArInovice.Lines.UnitPrice = CDbl(dAmount)
-                        If sVatGroup <> "" Then
-                            oArInovice.Lines.VatGroup = sVatGroup
-                        End If
-                        If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
-                            oArInovice.Lines.CostingCode = sCostCenter
-                        End If
-                        'If Not (sCostCenter = String.Empty) Then
-                        '    oArInovice.Lines.CostingCode = sCostCenter
-                        'End If
-                        'If Not (sCostCenter2 = String.Empty) Then
-                        '    oArInovice.Lines.CostingCode2 = sCostCenter2
-                        'End If
-                        'If Not (sCostCenter3 = String.Empty) Then
-                        '    oArInovice.Lines.CostingCode3 = sCostCenter3
-                        'End If
-                        'If Not (sCostCenter4 = String.Empty) Then
-                        '    oArInovice.Lines.CostingCode4 = sCostCenter4
-                        'End If
-                        'If Not (sCostCenter5 = String.Empty) Then
-                        '    oArInovice.Lines.CostingCode5 = sCostCenter5
-                        'End If
-                        iCount = iCount + 1
-
-                        'If dEservice = 0.0 Then
-                        '    If iCount > 1 Then
-                        '        oArInovice.Lines.Add()
-                        '    End If
-                        '    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'eservice_amount'"
-                        '    If dtItemCode.DefaultView.Count = 0 Then
-                        '        sErrDesc = "ItemCode ::''eservice'' provided does not exist in SAP(Mapping Table)."
-                        '        Call WriteToLogFile(sErrDesc, sFuncName)
-                        '        Throw New ArgumentException(sErrDesc)
-                        '    Else
-                        '        sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                        '    End If
-
-                        '    oArInovice.Lines.ItemCode = sItemCode
-                        '    oArInovice.Lines.Quantity = 1
-                        '    oArInovice.Lines.UnitPrice = CDbl(2)
-                        '    If sEservice_Taxcode <> "" Then
-                        '        oArInovice.Lines.VatGroup = sEservice_Taxcode
-                        '    End If
-                        '    If Not (sCostCenter5 = String.Empty) Then
-                        '        oArInovice.Lines.CostingCode5 = sCostCenter5
-                        '    End If
-                        '    iCount = iCount + 1
-                        'End If
-                    ElseIf sAgency.ToUpper = "JPJ" And sServiceType.ToUpper = "JPJSUMMONS" Then
+                    If sAgency.ToUpper = "JPJ" And sServiceType.ToUpper = "JPJSUMMONS" Then
                         Dim dInvValue As Double
                         If dAmount > 0 Then
                             dInvValue = dAmount
@@ -1435,26 +1352,8 @@ Module modProcess
                         If sVatGroup <> "" Then
                             oArInovice.Lines.VatGroup = sVatGroup
                         End If
-                        If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
-                            If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
-                                oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
-                            End If
-                        Else
-                            If Not (sCostCenter = String.Empty) Then
-                                oArInovice.Lines.CostingCode = sCostCenter
-                            End If
-                            If Not (sCostCenter2 = String.Empty) Then
-                                oArInovice.Lines.CostingCode2 = sCostCenter2
-                            End If
-                            If Not (sCostCenter3 = String.Empty) Then
-                                oArInovice.Lines.CostingCode3 = sCostCenter3
-                            End If
-                            If Not (sCostCenter4 = String.Empty) Then
-                                oArInovice.Lines.CostingCode4 = sCostCenter4
-                            End If
-                            If Not (sCostCenter5 = String.Empty) Then
-                                oArInovice.Lines.CostingCode5 = sCostCenter5
-                            End If
+                        If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
+                            oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
                         iCount = iCount + 1
 
@@ -1490,26 +1389,8 @@ Module modProcess
                             If sEservice_Taxcode <> "" Then
                                 oArInovice.Lines.VatGroup = sEservice_Taxcode
                             End If
-                            If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
-                                If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
-                                    oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
-                                End If
-                            Else
-                                If Not (sCostCenter = String.Empty) Then
-                                    oArInovice.Lines.CostingCode = sCostCenter
-                                End If
-                                If Not (sCostCenter2 = String.Empty) Then
-                                    oArInovice.Lines.CostingCode2 = sCostCenter2
-                                End If
-                                If Not (sCostCenter3 = String.Empty) Then
-                                    oArInovice.Lines.CostingCode3 = sCostCenter3
-                                End If
-                                If Not (sCostCenter4 = String.Empty) Then
-                                    oArInovice.Lines.CostingCode4 = sCostCenter4
-                                End If
-                                If Not (sCostCenter5 = String.Empty) Then
-                                    oArInovice.Lines.CostingCode5 = sCostCenter5
-                                End If
+                            If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
+                                oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                             End If
                             iCount = iCount + 1
                         End If
@@ -1552,26 +1433,8 @@ Module modProcess
                         If sVatGroup <> "" Then
                             oArInovice.Lines.VatGroup = sVatGroup
                         End If
-                        If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
-                            If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
-                                oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
-                            End If
-                        Else
-                            If Not (sCostCenter = String.Empty) Then
-                                oArInovice.Lines.CostingCode = sCostCenter
-                            End If
-                            If Not (sCostCenter2 = String.Empty) Then
-                                oArInovice.Lines.CostingCode2 = sCostCenter2
-                            End If
-                            If Not (sCostCenter3 = String.Empty) Then
-                                oArInovice.Lines.CostingCode3 = sCostCenter3
-                            End If
-                            If Not (sCostCenter4 = String.Empty) Then
-                                oArInovice.Lines.CostingCode4 = sCostCenter4
-                            End If
-                            If Not (sCostCenter5 = String.Empty) Then
-                                oArInovice.Lines.CostingCode5 = sCostCenter5
-                            End If
+                        If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
+                            oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
                         iCount = iCount + 1
 
@@ -1671,26 +1534,20 @@ Module modProcess
                         If sVatGroup <> "" Then
                             oArInovice.Lines.VatGroup = sVatGroup
                         End If
-                        If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
-                            If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
-                                oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
-                            End If
-                        Else
-                            If Not (sCostCenter = String.Empty) Then
-                                oArInovice.Lines.CostingCode = sCostCenter
-                            End If
-                            If Not (sCostCenter2 = String.Empty) Then
-                                oArInovice.Lines.CostingCode2 = sCostCenter2
-                            End If
-                            If Not (sCostCenter3 = String.Empty) Then
-                                oArInovice.Lines.CostingCode3 = sCostCenter3
-                            End If
-                            If Not (sCostCenter4 = String.Empty) Then
-                                oArInovice.Lines.CostingCode4 = sCostCenter4
-                            End If
-                            If Not (sCostCenter5 = String.Empty) Then
-                                oArInovice.Lines.CostingCode5 = sCostCenter5
-                            End If
+                        If Not (sCostCenter = String.Empty) Then
+                            oArInovice.Lines.CostingCode = sCostCenter
+                        End If
+                        If Not (sCostCenter2 = String.Empty) Then
+                            oArInovice.Lines.CostingCode2 = sCostCenter2
+                        End If
+                        If Not (sCostCenter3 = String.Empty) Then
+                            oArInovice.Lines.CostingCode3 = sCostCenter3
+                        End If
+                        If Not (sCostCenter4 = String.Empty) Then
+                            oArInovice.Lines.CostingCode4 = sCostCenter4
+                        End If
+                        If Not (sCostCenter5 = String.Empty) Then
+                            oArInovice.Lines.CostingCode5 = sCostCenter5
                         End If
                         iCount = iCount + 1
 
@@ -1783,7 +1640,7 @@ Module modProcess
                         If sVatGroup <> "" Then
                             oArInovice.Lines.VatGroup = sVatGroup
                         End If
-                        If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                        If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                             If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                                 oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                             End If
@@ -1808,18 +1665,43 @@ Module modProcess
                     End If
                 End If
             End If
+            '**************DELAMOUNT
             If Not (oDv(iLine)(16).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(16).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
-                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for DELAMOUNT ", sFuncName)
 
-                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'DELAMOUNT'"
+                    'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'DELAMOUNT'"
+                    'If dtItemCode.DefaultView.Count = 0 Then
+                    '    sErrDesc = "ItemCode ::''delamount'' provided does not exist in SAP(Mapping Table)."
+                    '    Call WriteToLogFile(sErrDesc, sFuncName)
+                    '    Throw New ArgumentException(sErrDesc)
+                    'Else
+                    '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    'End If
+
+                    sItemDesc = "delamount" & "-" & sServiceType
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for DELAMOUNT ", sFuncName)
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for " & sItemDesc, sFuncName)
+
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::''delamount'' provided does not exist in SAP(Mapping Table)."
-                        Call WriteToLogFile(sErrDesc, sFuncName)
-                        Throw New ArgumentException(sErrDesc)
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode in item mapping table for " & sItemDesc, sFuncName)
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for delamount", sFuncName)
+
+                        dtItemCode.DefaultView.RowFilter = Nothing
+                        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'DELAMOUNT'"
+                        If dtItemCode.DefaultView.Count = 0 Then
+                            sErrDesc = "ItemCode ::''delamount'' provided does not exist in SAP(Mapping Table)."
+                            Call WriteToLogFile(sErrDesc, sFuncName)
+                            Throw New ArgumentException(sErrDesc)
+                        Else
+                            sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                        End If
                     Else
                         sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
                     End If
@@ -1841,7 +1723,7 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oArInovice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -1865,8 +1747,10 @@ Module modProcess
                     iCount = iCount + 1
                 End If
             End If
+            '************LEVIFEE_AMOUNT
             If Not (oDv(iLine)(17).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(17).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If sAgency = "IMMI" Then
                         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("PRocessing data for LEVIFEE Amount and IMMI Agency", sFuncName)
 
@@ -1899,7 +1783,7 @@ Module modProcess
                         If sVatGroup <> "" Then
                             oArInovice.Lines.VatGroup = sVatGroup
                         End If
-                        If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                        If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                             If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                                 oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                             End If
@@ -2001,7 +1885,7 @@ Module modProcess
                         If sVatGroup <> "" Then
                             oArInovice.Lines.VatGroup = sVatGroup
                         End If
-                        If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                        If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                             If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                                 oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                             End If
@@ -2026,8 +1910,10 @@ Module modProcess
                     End If
                 End If
             End If
+            '*************DELIVERYFEE
             If Not (oDv(iLine)(18).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(18).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
@@ -2059,7 +1945,7 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oArInovice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -2083,8 +1969,11 @@ Module modProcess
                     iCount = iCount + 1
                 End If
             End If
+
+            '**********PROCESSFEE
             If Not (oDv(iLine)(19).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(19).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
@@ -2116,7 +2005,7 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oArInovice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -2140,8 +2029,11 @@ Module modProcess
                     iCount = iCount + 1
                 End If
             End If
+
+            '**************PASSFEE
             If Not (oDv(iLine)(20).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(20).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
@@ -2173,7 +2065,7 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oArInovice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -2197,8 +2089,11 @@ Module modProcess
                     iCount = iCount + 1
                 End If
             End If
+
+            '**************VISA FEE
             If Not (oDv(iLine)(21).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(21).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
@@ -2230,7 +2125,7 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oArInovice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -2254,8 +2149,11 @@ Module modProcess
                     iCount = iCount + 1
                 End If
             End If
+
+            '************FOMAFEE
             If Not (oDv(iLine)(22).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(22).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
@@ -2288,7 +2186,7 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oArInovice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -2312,18 +2210,41 @@ Module modProcess
                     iCount = iCount + 1
                 End If
             End If
+
+            '**********INSFEE
             If Not (oDv(iLine)(23).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(23).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for INSFEE", sFuncName)
 
-                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'INSFEE'"
+                    'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'INSFEE'"
+                    'If dtItemCode.DefaultView.Count = 0 Then
+                    '    sErrDesc = "ItemCode ::''insfee'' provided does not exist in SAP(Mapping Table)."
+                    '    Call WriteToLogFile(sErrDesc, sFuncName)
+                    '    Throw New ArgumentException(sErrDesc)
+                    'Else
+                    '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    'End If
+
+                    sItemDesc = "insfee" & "-" & sServiceType
+
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::''insfee'' provided does not exist in SAP(Mapping Table)."
-                        Call WriteToLogFile(sErrDesc, sFuncName)
-                        Throw New ArgumentException(sErrDesc)
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for insfee", sFuncName)
+
+                        dtItemCode.DefaultView.RowFilter = Nothing
+                        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'INSFEE'"
+                        If dtItemCode.DefaultView.Count = 0 Then
+                            sErrDesc = "ItemCode ::''insfee'' provided does not exist in SAP(Mapping Table)."
+                            Call WriteToLogFile(sErrDesc, sFuncName)
+                            Throw New ArgumentException(sErrDesc)
+                        Else
+                            sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                        End If
                     Else
                         sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
                     End If
@@ -2345,7 +2266,7 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oArInovice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -2370,38 +2291,187 @@ Module modProcess
                 End If
             End If
 
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Adding A/R Invoice Document", sFuncName)
-            If oArInovice.Add() <> 0 Then
-                sErrDesc = p_oCompany.GetLastErrorDescription
-                sErrDesc = sErrDesc.Replace("'", " ")
-                Console.WriteLine("Error while adding A/R invoice document/ " & sErrDesc)
-                sErrDesc = sErrDesc & " in funct. " & sFuncName
-                Throw New ArgumentException(sErrDesc)
-            Else
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("A/R invoice created successfully", sFuncName)
+            '*************FIS AMOUNT
+            If Not (oDv(iLine)(52).ToString.Trim = String.Empty) Then
+                If (CDbl(oDv(iLine)(52).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
+                    If iCount > 1 Then
+                        oArInovice.Lines.Add()
+                    End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for fis_amount", sFuncName)
 
-                Dim iDocNo, iDocEntry As Integer
-                iDocEntry = p_oCompany.GetNewObjectKey()
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(oArInovice)
+                    'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'FIS_AMOUNT'"
+                    'If dtItemCode.DefaultView.Count = 0 Then
+                    '    sErrDesc = "ItemCode ::''fis_amount'' provided does not exist in SAP(Mapping Table)."
+                    '    Call WriteToLogFile(sErrDesc, sFuncName)
+                    '    Throw New ArgumentException(sErrDesc)
+                    'Else
+                    '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    'End If
 
-                Dim sQuery As String
+                    sItemDesc = "fis_amount" & "-" & sServiceType
 
-                Dim oRecordSet As SAPbobsCOM.Recordset
-                sQuery = "SELECT ""DocNum"" FROM ""OINV"" WHERE ""DocEntry"" = '" & iDocEntry & "'"
-                oRecordSet = p_oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
-                oRecordSet.DoQuery(sQuery)
-                If oRecordSet.RecordCount > 0 Then
-                    iDocNo = oRecordSet.Fields.Item("DocNum").Value
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
+                    If dtItemCode.DefaultView.Count = 0 Then
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for fis_amount", sFuncName)
+
+                        dtItemCode.DefaultView.RowFilter = Nothing
+                        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'FIS_AMOUNT'"
+                        If dtItemCode.DefaultView.Count = 0 Then
+                            sErrDesc = "ItemCode ::''fis_amount'' provided does not exist in SAP(Mapping Table)."
+                            Call WriteToLogFile(sErrDesc, sFuncName)
+                            Throw New ArgumentException(sErrDesc)
+                        Else
+                            sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                        End If
+                    Else
+                        sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    End If
+
+                    dtVatGroup.DefaultView.RowFilter = "ItemCode = '" & sItemCode & "'"
+                    If dtVatGroup.DefaultView.Count = 0 Then
+                        sErrDesc = "ItemCode :: " & sItemCode & " provided does not exist in SAP."
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    Else
+                        sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
+                    End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for FISAMOUNT ", sFuncName)
+
+                    oArInovice.Lines.ItemCode = sItemCode
+                    oArInovice.Lines.Quantity = 1
+                    oArInovice.Lines.UnitPrice = CDbl(oDv(iLine)(52).ToString.Trim)
+                    If sVatGroup <> "" Then
+                        oArInovice.Lines.VatGroup = sVatGroup
+                    End If
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
+                        If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
+                            oArInovice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
+                        End If
+                    Else
+                        If Not (sCostCenter = String.Empty) Then
+                            oArInovice.Lines.CostingCode = sCostCenter
+                        End If
+                        If Not (sCostCenter2 = String.Empty) Then
+                            oArInovice.Lines.CostingCode2 = sCostCenter2
+                        End If
+                        If Not (sCostCenter3 = String.Empty) Then
+                            oArInovice.Lines.CostingCode3 = sCostCenter3
+                        End If
+                        If Not (sCostCenter4 = String.Empty) Then
+                            oArInovice.Lines.CostingCode4 = sCostCenter4
+                        End If
+                        If Not (sCostCenter5 = String.Empty) Then
+                            oArInovice.Lines.CostingCode5 = sCostCenter5
+                        End If
+                    End If
+                    iCount = iCount + 1
                 End If
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(oRecordSet)
+            End If
 
-                Console.WriteLine("Document Created successfully :: " & iDocNo)
+            '****************PHOTO AMOUNT
+            If Not (oDv(iLine)(53).ToString.Trim = String.Empty) Then
+                If (CDbl(oDv(iLine)(53).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
+                    If iCount > 1 Then
+                        oArInovice.Lines.Add()
+                    End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for PHOTO_AMOUNT", sFuncName)
 
-                sQuery = "UPDATE public.AB_REVENUEANDCOST SET ""A/R Invoice No"" = '" & iDocNo & "', " & _
-                         " SyncDate = NOW(),Status = 'SUCCESS',""Error Message"" = NULL WHERE ID = '" & sIntegId & "'"
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
-                If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                    sItemDesc = "photo_amount" & "-" & sServiceType
 
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
+                    If dtItemCode.DefaultView.Count = 0 Then
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for comptest_amount", sFuncName)
+
+                        dtItemCode.DefaultView.RowFilter = Nothing
+                        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PHOTO_AMOUNT'"
+                        If dtItemCode.DefaultView.Count = 0 Then
+                            sErrDesc = "ItemCode ::''photo_amount'' provided does not exist in SAP(Mapping Table)."
+                            Call WriteToLogFile(sErrDesc, sFuncName)
+                            Throw New ArgumentException(sErrDesc)
+                        Else
+                            sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                        End If
+                    Else
+                        sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    End If
+
+                    dtVatGroup.DefaultView.RowFilter = "ItemCode = '" & sItemCode & "'"
+                    If dtVatGroup.DefaultView.Count = 0 Then
+                        sErrDesc = "ItemCode :: " & sItemCode & " provided does not exist in SAP."
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    Else
+                        sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
+                    End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for PHOTO_AMOUNT", sFuncName)
+
+                    oArInovice.Lines.ItemCode = sItemCode
+                    oArInovice.Lines.Quantity = 1
+                    oArInovice.Lines.UnitPrice = CDbl(oDv(iLine)(53).ToString.Trim)
+                    If sVatGroup <> "" Then
+                        oArInovice.Lines.VatGroup = sVatGroup
+                    End If
+                    If Not (sCostCenter = String.Empty) Then
+                        oArInovice.Lines.CostingCode = sCostCenter
+                    End If
+                    If Not (sCostCenter2 = String.Empty) Then
+                        oArInovice.Lines.CostingCode2 = sCostCenter2
+                    End If
+                    If Not (sCostCenter3 = String.Empty) Then
+                        oArInovice.Lines.CostingCode3 = sCostCenter3
+                    End If
+                    If Not (sCostCenter4 = String.Empty) Then
+                        oArInovice.Lines.CostingCode4 = sCostCenter4
+                    End If
+                    If Not (sCostCenter5 = String.Empty) Then
+                        oArInovice.Lines.CostingCode5 = sCostCenter5
+                    End If
+                    iCount = iCount + 1
+                End If
+            End If
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Line Added " & bLineAdded, sFuncName)
+
+            If bLineAdded = True Then
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Adding A/R Invoice Document", sFuncName)
+                If oArInovice.Add() <> 0 Then
+                    sErrDesc = p_oCompany.GetLastErrorDescription
+                    sErrDesc = sErrDesc.Replace("'", " ")
+                    Console.WriteLine("Error while adding A/R invoice document/ " & sErrDesc)
+                    sErrDesc = sErrDesc & " in funct. " & sFuncName
+                    Throw New ArgumentException(sErrDesc)
+                Else
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("A/R invoice created successfully", sFuncName)
+
+                    Dim iDocNo, iDocEntry As Integer
+                    iDocEntry = p_oCompany.GetNewObjectKey()
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(oArInovice)
+
+                    Dim sQuery As String
+
+                    Dim oRecordSet As SAPbobsCOM.Recordset
+                    sQuery = "SELECT ""DocNum"" FROM ""OINV"" WHERE ""DocEntry"" = '" & iDocEntry & "'"
+                    oRecordSet = p_oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+                    oRecordSet.DoQuery(sQuery)
+                    If oRecordSet.RecordCount > 0 Then
+                        iDocNo = oRecordSet.Fields.Item("DocNum").Value
+                    End If
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(oRecordSet)
+
+                    Console.WriteLine("Document Created successfully :: " & iDocNo)
+
+                    sQuery = "UPDATE public.AB_REVENUEANDCOST SET ""A/R Invoice No"" = '" & iDocNo & "', " & _
+                             " SyncDate = NOW(),Status = 'SUCCESS',""Error Message"" = NULL WHERE ID = '" & sIntegId & "'"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
+                    If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                End If
             End If
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS", sFuncName)
@@ -2411,7 +2481,7 @@ Module modProcess
             Call WriteToLogFile(sErrDesc, sFuncName)
 
             Dim sQuery As String
-            sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
+            sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc.Replace("'", "") & "',SyncDate = NOW() " & _
                      " WHERE ID = '" & sIntegId & "'"
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
             If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
@@ -2429,13 +2499,15 @@ Module modProcess
         Dim sNumAtCard As String
         Dim sIntegId As String
         Dim iCount As Integer
+        Dim sMerChantid As String = String.Empty
         Dim sItemCode As String = String.Empty
         Dim sVatGroup As String = String.Empty
         Dim sServiceType As String = String.Empty
-        Dim sAGCode As String = String.Empty
-        Dim sCostCenter5, sCostCenter4, sCostCenter3, sCostCenter2, sCostCenter As String
+        'Dim sAGCode As String = String.Empty
+        'Dim sCostCenter5, sCostCenter4, sCostCenter3, sCostCenter2, sCostCenter As String
         Dim sSql As String = String.Empty
         Dim sItemDesc As String = String.Empty
+        Dim bLineAdded As Boolean = False
 
         Try
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting function", sFuncName)
@@ -2448,29 +2520,17 @@ Module modProcess
             sCardCode = oDv(iLine)(2).ToString.Trim
             sNumAtCard = oDv(iLine)(4).ToString.Trim
             sServiceType = oDv(iLine)(3).ToString.Trim
-            sAGCode = oDv(iLine)(54).ToString.Trim
+            'sAGCode = oDv(iLine)(54).ToString.Trim
+            sMerChantid = oDv(iLine)(24).ToString.Trim
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data based on id no " & sIntegId, sFuncName)
 
-            sSql = "SELECT ""PrcCode"" FROM ""OPRC"" WHERE UPPER(""U_AGCODE"") = '" & sAGCode.ToUpper() & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter5 = GetStringValue(sSql)
-
-            sSql = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter5 & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter4 = GetStringValue(sSql)
-
-            sSql = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter4 & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter3 = GetStringValue(sSql)
-
-            sSql = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter3 & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter2 = GetStringValue(sSql)
-
-            sSql = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter2.ToUpper() & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter = GetStringValue(sSql)
+            If sServiceType.ToUpper() = "BOOKING" Then
+                If sCostCenter5 = String.Empty Then
+                    sErrDesc = "Cost center for dimension 5 is mandatory for booking type"
+                    Throw New ArgumentException(sErrDesc)
+                End If
+            End If
 
             Dim dAmount As Double
             Try
@@ -2484,11 +2544,11 @@ Module modProcess
                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug(sErrDesc, sFuncName)
                 CreateAPInvoice = RTN_SUCCESS
                 Exit Function
-            ElseIf sCardCode.ToUpper() = "JPJ" And dAmount = 17 Then
-                sErrDesc = "agency_amount column Value is 17 for JPJ Service. No Ap Invoice will be Created"
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug(sErrDesc, sFuncName)
-                CreateAPInvoice = RTN_SUCCESS
-                Exit Function
+                'ElseIf sCardCode.ToUpper() = "JPJ" And dAmount = 17 Then
+                '    sErrDesc = "agency_amount column Value is 17 for JPJ Service. No Ap Invoice will be Created"
+                '    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug(sErrDesc, sFuncName)
+                '    CreateAPInvoice = RTN_SUCCESS
+                '    Exit Function
             ElseIf sCardCode.ToUpper() = "INSURANCE" Then
                 sErrDesc = "Agency is Insurance. No Ap Invoice will be Created"
                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug(sErrDesc, sFuncName)
@@ -2507,6 +2567,9 @@ Module modProcess
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Assigning values to UDF", sFuncName)
 
+            If Not (oDv(iLine)(24).ToString.Trim = String.Empty) Then
+                oAPInvoice.UserFields.Fields.Item("U_MERCHANT_ID").Value = oDv(iLine)(24).ToString.Trim
+            End If
             If Not (oDv(iLine)(25).ToString.Trim = String.Empty) Then
                 oAPInvoice.UserFields.Fields.Item("U_AE_PAYMENTTYPE").Value = oDv(iLine)(25).ToString.Trim
             End If
@@ -2643,6 +2706,7 @@ Module modProcess
 
             If Not (oDv(iLine)(17).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(17).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -2674,7 +2738,7 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oAPInvoice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oAPInvoice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -2701,6 +2765,7 @@ Module modProcess
 
             If Not (oDv(iLine)(10).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(10).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -2732,7 +2797,7 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oAPInvoice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oAPInvoice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -2758,6 +2823,7 @@ Module modProcess
             End If
             If Not (oDv(iLine)(11).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(11).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -2789,7 +2855,7 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oAPInvoice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oAPInvoice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -2815,6 +2881,7 @@ Module modProcess
             End If
             If Not (oDv(iLine)(12).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(12).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -2846,64 +2913,7 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oAPInvoice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
-                        If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
-                            oAPInvoice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
-                        End If
-                    Else
-                        If Not (sCostCenter = String.Empty) Then
-                            oAPInvoice.Lines.CostingCode = sCostCenter
-                        End If
-                        If Not (sCostCenter2 = String.Empty) Then
-                            oAPInvoice.Lines.CostingCode2 = sCostCenter2
-                        End If
-                        If Not (sCostCenter3 = String.Empty) Then
-                            oAPInvoice.Lines.CostingCode3 = sCostCenter3
-                        End If
-                        If Not (sCostCenter4 = String.Empty) Then
-                            oAPInvoice.Lines.CostingCode4 = sCostCenter4
-                        End If
-                        If Not (sCostCenter5 = String.Empty) Then
-                            oAPInvoice.Lines.CostingCode5 = sCostCenter5
-                        End If
-                    End If
-                    iCount = iCount + 1
-                End If
-            End If
-            If Not (oDv(iLine)(13).ToString = String.Empty) Then
-                If (CDbl(oDv(iLine)(13).ToString.Trim() <> 0)) Then
-                    If iCount > 1 Then
-                        oAPInvoice.Lines.Add()
-                    End If
-                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for EHAK_AMOUNT", sFuncName)
-
-                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'EHAK_AMOUNT'"
-                    If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::''ehak_amount'' provided does not exist in SAP(Mapping Table)."
-                        Call WriteToLogFile(sErrDesc, sFuncName)
-                        Throw New ArgumentException(sErrDesc)
-                    Else
-                        sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                    End If
-
-                    dtVatGroup.DefaultView.RowFilter = "ItemCode = '" & sItemCode & "'"
-                    If dtVatGroup.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode :: " & sItemCode & " provided does not exist in SAP."
-                        Call WriteToLogFile(sErrDesc, sFuncName)
-                        Throw New ArgumentException(sErrDesc)
-                    Else
-                        sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
-                    End If
-
-                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for EHAK_AMOUNT", sFuncName)
-
-                    oAPInvoice.Lines.ItemCode = sItemCode
-                    oAPInvoice.Lines.Quantity = 1
-                    oAPInvoice.Lines.UnitPrice = CDbl(oDv(iLine)(13).ToString.Trim)
-                    If sVatGroup <> "" Then
-                        oAPInvoice.Lines.VatGroup = sVatGroup
-                    End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oAPInvoice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -2929,6 +2939,7 @@ Module modProcess
             End If
             If Not (oDv(iLine)(14).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(14).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -2960,7 +2971,7 @@ Module modProcess
                     If sVatGroup <> "" Then
                         oAPInvoice.Lines.VatGroup = sVatGroup
                     End If
-                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
                         If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                             oAPInvoice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
@@ -2986,6 +2997,7 @@ Module modProcess
             End If
             If Not (oDv(iLine)(15).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(15).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     Dim dTxAmount As Double
                     Try
                         dTxAmount = CDbl(oDv(iLine)(6).ToString.Trim())
@@ -2998,70 +3010,7 @@ Module modProcess
                         dAmount = 0.0
                     End Try
                     sItemDesc = "agency_amount" & "-" & sServiceType
-                    If sCardCode.ToUpper = "JPJ" And sServiceType.ToUpper = "BOOKING" Then 'And dAmount = 27
-                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for AMOUNT,JPJ and BOOKING", sFuncName)
-
-                        If iCount > 1 Then
-                            oAPInvoice.Lines.Add()
-                        End If
-                        dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
-                        If dtItemCode.DefaultView.Count = 0 Then
-                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode for " & sItemDesc, sFuncName)
-                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for agency_amount", sFuncName)
-
-                            dtItemCode.DefaultView.RowFilter = Nothing
-                            dtItemCode.DefaultView.RowFilter = "RevCostCode = 'AGENCY_AMOUNT'"
-                            If dtItemCode.DefaultView.Count = 0 Then
-                                sErrDesc = "ItemCode ::''agency_amount'' provided does not exist in SAP(Mapping Table)."
-                                Call WriteToLogFile(sErrDesc, sFuncName)
-                                Throw New ArgumentException(sErrDesc)
-                            Else
-                                sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                            End If
-                        Else
-                            sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                        End If
-
-                        dtVatGroup.DefaultView.RowFilter = "ItemCode = '" & sItemCode & "'"
-                        If dtVatGroup.DefaultView.Count = 0 Then
-                            sErrDesc = "ItemCode :: " & sItemCode & " provided does not exist in SAP."
-                            Call WriteToLogFile(sErrDesc, sFuncName)
-                            Throw New ArgumentException(sErrDesc)
-                        Else
-                            sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
-                        End If
-
-                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for AMOUNT,JPJ and BOOKING", sFuncName)
-
-                        oAPInvoice.Lines.ItemCode = sItemCode
-                        oAPInvoice.Lines.Quantity = 1
-                        oAPInvoice.Lines.UnitPrice = CDbl(10)
-                        If sVatGroup <> "" Then
-                            oAPInvoice.Lines.VatGroup = sVatGroup
-                        End If
-                        If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
-                            If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
-                            End If
-                        Else
-                            If Not (sCostCenter = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode = sCostCenter
-                            End If
-                            If Not (sCostCenter2 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode2 = sCostCenter2
-                            End If
-                            If Not (sCostCenter3 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode3 = sCostCenter3
-                            End If
-                            If Not (sCostCenter4 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode4 = sCostCenter4
-                            End If
-                            If Not (sCostCenter5 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode5 = sCostCenter5
-                            End If
-                        End If
-                        iCount = iCount + 1
-                    ElseIf sCardCode.ToUpper = "JPJ" And sServiceType.ToUpper = "CDL" Then
+                    If sCardCode.ToUpper = "JPJ" And sServiceType.ToUpper = "CDL" Then
                         If iCount > 1 Then
                             oAPInvoice.Lines.Add()
                         End If
@@ -3102,26 +3051,8 @@ Module modProcess
                         If sVatGroup <> "" Then
                             oAPInvoice.Lines.VatGroup = sVatGroup
                         End If
-                        If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
-                            If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
-                            End If
-                        Else
-                            If Not (sCostCenter = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode = sCostCenter
-                            End If
-                            If Not (sCostCenter2 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode2 = sCostCenter2
-                            End If
-                            If Not (sCostCenter3 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode3 = sCostCenter3
-                            End If
-                            If Not (sCostCenter4 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode4 = sCostCenter4
-                            End If
-                            If Not (sCostCenter5 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode5 = sCostCenter5
-                            End If
+                        If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
+                            oAPInvoice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
                         iCount = iCount + 1
                     ElseIf sCardCode.ToUpper = "JPJ" And sServiceType.ToUpper = "JPJSUMMONS" Then
@@ -3176,26 +3107,8 @@ Module modProcess
                         If sVatGroup <> "" Then
                             oAPInvoice.Lines.VatGroup = sVatGroup
                         End If
-                        If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
-                            If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
-                            End If
-                        Else
-                            If Not (sCostCenter = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode = sCostCenter
-                            End If
-                            If Not (sCostCenter2 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode2 = sCostCenter2
-                            End If
-                            If Not (sCostCenter3 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode3 = sCostCenter3
-                            End If
-                            If Not (sCostCenter4 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode4 = sCostCenter4
-                            End If
-                            If Not (sCostCenter5 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode5 = sCostCenter5
-                            End If
+                        If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
+                            oAPInvoice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
                         iCount = iCount + 1
                     ElseIf sCardCode.ToUpper = "JPJ" And sServiceType.ToUpper = "LDL" Then
@@ -3238,26 +3151,8 @@ Module modProcess
                         If sVatGroup <> "" Then
                             oAPInvoice.Lines.VatGroup = sVatGroup
                         End If
-                        If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
-                            If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
-                            End If
-                        Else
-                            If Not (sCostCenter = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode = sCostCenter
-                            End If
-                            If Not (sCostCenter2 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode2 = sCostCenter2
-                            End If
-                            If Not (sCostCenter3 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode3 = sCostCenter3
-                            End If
-                            If Not (sCostCenter4 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode4 = sCostCenter4
-                            End If
-                            If Not (sCostCenter5 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode5 = sCostCenter5
-                            End If
+                        If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
+                            oAPInvoice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                         End If
                         iCount = iCount + 1
 
@@ -3314,30 +3209,24 @@ Module modProcess
                         If sVatGroup <> "" Then
                             oAPInvoice.Lines.VatGroup = sVatGroup
                         End If
-                        If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
-                            If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
-                            End If
-                        Else
-                            If Not (sCostCenter = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode = sCostCenter
-                            End If
-                            If Not (sCostCenter2 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode2 = sCostCenter2
-                            End If
-                            If Not (sCostCenter3 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode3 = sCostCenter3
-                            End If
-                            If Not (sCostCenter4 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode4 = sCostCenter4
-                            End If
-                            If Not (sCostCenter5 = String.Empty) Then
-                                oAPInvoice.Lines.CostingCode5 = sCostCenter5
-                            End If
+                        If Not (sCostCenter = String.Empty) Then
+                            oAPInvoice.Lines.CostingCode = sCostCenter
+                        End If
+                        If Not (sCostCenter2 = String.Empty) Then
+                            oAPInvoice.Lines.CostingCode2 = sCostCenter2
+                        End If
+                        If Not (sCostCenter3 = String.Empty) Then
+                            oAPInvoice.Lines.CostingCode3 = sCostCenter3
+                        End If
+                        If Not (sCostCenter4 = String.Empty) Then
+                            oAPInvoice.Lines.CostingCode4 = sCostCenter4
+                        End If
+                        If Not (sCostCenter5 = String.Empty) Then
+                            oAPInvoice.Lines.CostingCode5 = sCostCenter5
                         End If
                         iCount = iCount + 1
                     Else
-                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for AMOUNT", sFuncName)
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for AGENCY_AMOUNT", sFuncName)
 
                         If iCount > 1 Then
                             oAPInvoice.Lines.Add()
@@ -3370,7 +3259,7 @@ Module modProcess
                             sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                         End If
 
-                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for AMOUNT", sFuncName)
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for AGENCY_AMOUNT", sFuncName)
 
                         oAPInvoice.Lines.ItemCode = sItemCode
                         oAPInvoice.Lines.Quantity = 1
@@ -3378,7 +3267,7 @@ Module modProcess
                         If sVatGroup <> "" Then
                             oAPInvoice.Lines.VatGroup = sVatGroup
                         End If
-                        If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJ SUMMONS" Then
+                        If sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Then
                             If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
                                 oAPInvoice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
                             End If
@@ -3404,52 +3293,112 @@ Module modProcess
 
                 End If
             End If
+            If Not (oDv(iLine)(52).ToString.Trim = String.Empty) Then
+                If (CDbl(oDv(iLine)(52).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
+                    If iCount > 1 Then
+                        oAPInvoice.Lines.Add()
+                    End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for FIS_AMOUNT", sFuncName)
 
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Adding A/P Invoice Document", sFuncName)
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'FIS_AMOUNT'"
+                    If dtItemCode.DefaultView.Count = 0 Then
+                        sErrDesc = "ItemCode ::''fis_amount'' provided does not exist in SAP(Mapping Table)."
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    Else
+                        sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    End If
 
-            If oAPInvoice.Add() <> 0 Then
-                sErrDesc = p_oCompany.GetLastErrorDescription
-                sErrDesc = sErrDesc.Replace("'", " ")
-                Console.WriteLine("Error while adding A/p invoice document/ " & sErrDesc)
-                sErrDesc = sErrDesc & " in funct. " & sFuncName
+                    dtVatGroup.DefaultView.RowFilter = "ItemCode = '" & sItemCode & "'"
+                    If dtVatGroup.DefaultView.Count = 0 Then
+                        sErrDesc = "ItemCode :: " & sItemCode & " provided does not exist in SAP."
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    Else
+                        sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
+                    End If
 
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Error while adding A/p invoice document", sFuncName)
-                Throw New ArgumentException(sErrDesc)
-            Else
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("1 A/P invoice created successfully", sFuncName)
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for FIS_AMOUNT", sFuncName)
 
-                Dim iDocNo, iDocEntry As Integer
-                iDocEntry = p_oCompany.GetNewObjectKey()
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(oAPInvoice)
-
-                Dim sQuery As String
-                Dim oRecordSet As SAPbobsCOM.Recordset
-
-                sQuery = "SELECT ""DocNum"" FROM ""OPCH"" WHERE ""DocEntry"" = '" & iDocEntry & "'"
-                oRecordSet = p_oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
-                oRecordSet.DoQuery(sQuery)
-                If oRecordSet.RecordCount > 0 Then
-                    iDocNo = oRecordSet.Fields.Item("DocNum").Value
+                    oAPInvoice.Lines.ItemCode = sItemCode
+                    oAPInvoice.Lines.Quantity = 1
+                    oAPInvoice.Lines.UnitPrice = CDbl(oDv(iLine)(52).ToString.Trim)
+                    If sVatGroup <> "" Then
+                        oAPInvoice.Lines.VatGroup = sVatGroup
+                    End If
+                    If sServiceType.ToUpper() = "CDL" Or sServiceType.ToUpper() = "LDL" Or sServiceType.ToUpper() = "RTX" Or sServiceType.ToUpper() = "ETMS" Or sServiceType.ToUpper() = "STMS" Or sServiceType.ToUpper() = "JPJSUMMONS" Then
+                        If Not (p_oCompDef.sBookingCostCenter = String.Empty) Then
+                            oAPInvoice.Lines.CostingCode = p_oCompDef.sBookingCostCenter
+                        End If
+                    Else
+                        If Not (sCostCenter = String.Empty) Then
+                            oAPInvoice.Lines.CostingCode = sCostCenter
+                        End If
+                        If Not (sCostCenter2 = String.Empty) Then
+                            oAPInvoice.Lines.CostingCode2 = sCostCenter2
+                        End If
+                        If Not (sCostCenter3 = String.Empty) Then
+                            oAPInvoice.Lines.CostingCode3 = sCostCenter3
+                        End If
+                        If Not (sCostCenter4 = String.Empty) Then
+                            oAPInvoice.Lines.CostingCode4 = sCostCenter4
+                        End If
+                        If Not (sCostCenter5 = String.Empty) Then
+                            oAPInvoice.Lines.CostingCode5 = sCostCenter5
+                        End If
+                    End If
+                    iCount = iCount + 1
                 End If
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(oRecordSet)
-
-                Console.WriteLine("Document Created successfully :: " & iDocNo)
-
-                sQuery = "UPDATE public.AB_REVENUEANDCOST SET ""A/P Invoice No"" = '" & iDocNo & "', " & _
-                         " SyncDate = NOW(),Status = 'SUCCESS',""Error Message"" = NULL WHERE ID = '" & sIntegId & "'"
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
-                If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
-
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS", sFuncName)
-                CreateAPInvoice = RTN_SUCCESS
             End If
 
+            If bLineAdded = True Then
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Adding A/P Invoice Document", sFuncName)
+
+                If oAPInvoice.Add() <> 0 Then
+                    sErrDesc = p_oCompany.GetLastErrorDescription
+                    sErrDesc = sErrDesc.Replace("'", " ")
+                    Console.WriteLine("Error while adding A/p invoice document/ " & sErrDesc)
+                    sErrDesc = sErrDesc & " in funct. " & sFuncName
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Error while adding A/p invoice document", sFuncName)
+                    Throw New ArgumentException(sErrDesc)
+                Else
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("1 A/P invoice created successfully", sFuncName)
+
+                    Dim iDocNo, iDocEntry As Integer
+                    iDocEntry = p_oCompany.GetNewObjectKey()
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(oAPInvoice)
+
+                    Dim sQuery As String
+                    Dim oRecordSet As SAPbobsCOM.Recordset
+
+                    sQuery = "SELECT ""DocNum"" FROM ""OPCH"" WHERE ""DocEntry"" = '" & iDocEntry & "'"
+                    oRecordSet = p_oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+                    oRecordSet.DoQuery(sQuery)
+                    If oRecordSet.RecordCount > 0 Then
+                        iDocNo = oRecordSet.Fields.Item("DocNum").Value
+                    End If
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(oRecordSet)
+
+                    Console.WriteLine("Document Created successfully :: " & iDocNo)
+
+                    sQuery = "UPDATE public.AB_REVENUEANDCOST SET ""A/P Invoice No"" = '" & iDocNo & "', " & _
+                             " SyncDate = NOW(),Status = 'SUCCESS',""Error Message"" = NULL WHERE ID = '" & sIntegId & "'"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
+                    If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                End If
+            End If
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS", sFuncName)
+            CreateAPInvoice = RTN_SUCCESS
         Catch ex As Exception
             sErrDesc = ex.Message
             Call WriteToLogFile(sErrDesc, sFuncName)
 
             Dim sQuery As String
-            sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
+            sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc.Replace("'", "") & "',SyncDate = NOW() " & _
                      " WHERE ID = '" & sIntegId & "'"
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
             If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
@@ -3467,15 +3416,14 @@ Module modProcess
         Dim sNumAtCard As String
         Dim sIntegId As String
         Dim iCount As Integer
+        Dim sMerChantid As String = String.Empty
         Dim sItemCode As String = String.Empty
         Dim sVatGroup As String = String.Empty
         Dim sServiceType As String = String.Empty
-        Dim sAGCode As String = String.Empty
-        Dim sCostCenter5, sCostCenter4, sCostCenter3, sCostCenter2, sCostCenter As String
         Dim sSql As String = String.Empty
         Dim sItemDesc As String = String.Empty
         Dim sCardName As String = String.Empty
-
+        Dim bLineAdded As Boolean = False
         Try
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting function", sFuncName)
 
@@ -3486,6 +3434,7 @@ Module modProcess
             sIntegId = oDv(iLine)(0).ToString.Trim
             sCardCode = oDv(iLine)(46).ToString.Trim
             sCardName = oDv(iLine)(47).ToString.Trim
+            sMerChantid = oDv(iLine)(24).ToString.Trim
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data based on id no " & sIntegId, sFuncName)
 
@@ -3511,27 +3460,13 @@ Module modProcess
 
             sNumAtCard = oDv(iLine)(4).ToString.Trim
             sServiceType = oDv(iLine)(3).ToString.Trim
-            sAGCode = oDv(iLine)(54).ToString.Trim
 
-            sSql = "SELECT ""PrcCode"" FROM ""OPRC"" WHERE UPPER(""U_AGCODE"") = '" & sAGCode.ToUpper() & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter5 = GetStringValue(sSql)
-
-            sSql = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter5 & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter4 = GetStringValue(sSql)
-
-            sSql = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter4 & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter3 = GetStringValue(sSql)
-
-            sSql = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter3 & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter2 = GetStringValue(sSql)
-
-            sSql = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter2.ToUpper() & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter = GetStringValue(sSql)
+            If sServiceType.ToUpper() = "BOOKING" Then
+                If sCostCenter5 = String.Empty Then
+                    sErrDesc = "Cost center for dimension 5 is mandatory for booking type"
+                    Throw New ArgumentException(sErrDesc)
+                End If
+            End If
 
             Dim dAmount As Double
             Try
@@ -3550,7 +3485,10 @@ Module modProcess
             oAPInvoice.Comments = "From Integration database/Refer id No " & sIntegId
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Assigning values to UDF", sFuncName)
-
+            'sMerChantid = oDv(iLine)(24).ToString.Trim
+            If Not (oDv(iLine)(24).ToString.Trim = String.Empty) Then
+                oAPInvoice.UserFields.Fields.Item("U_MERCHANT_ID").Value = oDv(iLine)(24).ToString.Trim
+            End If
             If Not (oDv(iLine)(25).ToString.Trim = String.Empty) Then
                 oAPInvoice.UserFields.Fields.Item("U_AE_PAYMENTTYPE").Value = oDv(iLine)(25).ToString.Trim
             End If
@@ -3687,6 +3625,7 @@ Module modProcess
 
             If Not (oDv(iLine)(17).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(17).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -3738,6 +3677,7 @@ Module modProcess
             End If
             If Not (oDv(iLine)(19).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(19).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -3758,7 +3698,7 @@ Module modProcess
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
-                        sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
+                        sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
 
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for PROCESSFEE", sFuncName)
@@ -3789,6 +3729,7 @@ Module modProcess
             End If
             If Not (oDv(iLine)(20).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(20).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -3809,7 +3750,7 @@ Module modProcess
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
-                        sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
+                        sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
 
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for PASSFEE", sFuncName)
@@ -3840,6 +3781,7 @@ Module modProcess
             End If
             If Not (oDv(iLine)(21).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(21).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -3860,7 +3802,7 @@ Module modProcess
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
-                        sVatGroup = dtVatGroup.DefaultView.Item(0)(1).ToString().Trim()
+                        sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
                     End If
 
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for VISAFEE", sFuncName)
@@ -3891,6 +3833,7 @@ Module modProcess
             End If
             If Not (oDv(iLine)(10).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(10).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -3942,6 +3885,7 @@ Module modProcess
             End If
             If Not (oDv(iLine)(11).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(11).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -3993,6 +3937,7 @@ Module modProcess
             End If
             If Not (oDv(iLine)(12).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(12).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -4044,14 +3989,24 @@ Module modProcess
             End If
             If Not (oDv(iLine)(13).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(13).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for EHAK_AMOUNT", sFuncName)
 
-                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'EHAK_AMOUNT'"
+                    'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'EHAK_AMOUNT'"
+                    'If dtItemCode.DefaultView.Count = 0 Then
+                    '    sErrDesc = "ItemCode ::''ehak_amount'' provided does not exist in SAP(Mapping Table)."
+                    '    Call WriteToLogFile(sErrDesc, sFuncName)
+                    '    Throw New ArgumentException(sErrDesc)
+                    'Else
+                    '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    '    End
+
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'COMPTEST_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::''ehak_amount'' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''comptest_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -4095,6 +4050,7 @@ Module modProcess
             End If
             If Not (oDv(iLine)(14).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(14).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -4146,6 +4102,7 @@ Module modProcess
             End If
             If Not (oDv(iLine)(15).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(15).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     Dim dTxAmount As Double
                     Try
                         dTxAmount = CDbl(oDv(iLine)(6).ToString.Trim())
@@ -4528,52 +4485,108 @@ Module modProcess
                 End If
             End If
 
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Adding A/P Invoice Document", sFuncName)
+            If Not (oDv(iLine)(52).ToString.Trim = String.Empty) Then
+                If (CDbl(oDv(iLine)(52).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
+                    If iCount > 1 Then
+                        oAPInvoice.Lines.Add()
+                    End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for FIS_AMOUNT", sFuncName)
 
-            If oAPInvoice.Add() <> 0 Then
-                sErrDesc = p_oCompany.GetLastErrorDescription
-                sErrDesc = sErrDesc.Replace("'", " ")
-                Console.WriteLine("Error while adding A/p invoice document/ " & sErrDesc)
-                sErrDesc = sErrDesc & " in funct. " & sFuncName
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'FIS_AMOUNT'"
+                    If dtItemCode.DefaultView.Count = 0 Then
+                        sErrDesc = "ItemCode ::''fis_amount'' provided does not exist in SAP(Mapping Table)."
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    Else
+                        sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    End If
 
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Error while adding A/p invoice document", sFuncName)
-                Throw New ArgumentException(sErrDesc)
-            Else
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("A/P invoice -IMMI created successfully", sFuncName)
+                    dtVatGroup.DefaultView.RowFilter = "ItemCode = '" & sItemCode & "'"
+                    If dtVatGroup.DefaultView.Count = 0 Then
+                        sErrDesc = "ItemCode :: " & sItemCode & " provided does not exist in SAP."
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    Else
+                        sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
+                    End If
 
-                Dim iDocNo, iDocEntry As Integer
-                iDocEntry = p_oCompany.GetNewObjectKey()
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(oAPInvoice)
 
-                Dim sQuery As String
-                Dim oRecordSet As SAPbobsCOM.Recordset
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for FIS_AMOUNT", sFuncName)
 
-                sQuery = "SELECT ""DocNum"" FROM ""OPCH"" WHERE ""DocEntry"" = '" & iDocEntry & "'"
-                oRecordSet = p_oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
-                oRecordSet.DoQuery(sQuery)
-                If oRecordSet.RecordCount > 0 Then
-                    iDocNo = oRecordSet.Fields.Item("DocNum").Value
+                    oAPInvoice.Lines.ItemCode = sItemCode
+                    oAPInvoice.Lines.Quantity = 1
+                    oAPInvoice.Lines.UnitPrice = CDbl(oDv(iLine)(23).ToString.Trim)
+                    If sVatGroup <> "" Then
+                        oAPInvoice.Lines.VatGroup = sVatGroup
+                    End If
+                    If Not (sCostCenter = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode = sCostCenter
+                    End If
+                    If Not (sCostCenter2 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode2 = sCostCenter2
+                    End If
+                    If Not (sCostCenter3 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode3 = sCostCenter3
+                    End If
+                    If Not (sCostCenter4 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode4 = sCostCenter4
+                    End If
+                    If Not (sCostCenter5 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode5 = sCostCenter5
+                    End If
+                    iCount = iCount + 1
                 End If
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(oRecordSet)
-
-                Console.WriteLine("Document Created successfully :: " & iDocNo)
-
-                sQuery = "UPDATE public.AB_REVENUEANDCOST SET ""A/P Invoice No"" = '" & iDocNo & "', " & _
-                         " SyncDate = NOW(),Status = 'SUCCESS',""Error Message"" = NULL WHERE ID = '" & sIntegId & "'"
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
-                If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
-
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS", sFuncName)
-                CreateAPInvoice_IMMI = RTN_SUCCESS
             End If
 
+            If bLineAdded = True Then
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Adding A/P Invoice Document", sFuncName)
 
+                If oAPInvoice.Add() <> 0 Then
+                    sErrDesc = p_oCompany.GetLastErrorDescription
+                    sErrDesc = sErrDesc.Replace("'", " ")
+                    Console.WriteLine("Error while adding A/p invoice document/ " & sErrDesc)
+                    sErrDesc = sErrDesc & " in funct. " & sFuncName
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Error while adding A/p invoice document", sFuncName)
+                    Throw New ArgumentException(sErrDesc)
+                Else
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("A/P invoice -IMMI created successfully", sFuncName)
+
+                    Dim iDocNo, iDocEntry As Integer
+                    iDocEntry = p_oCompany.GetNewObjectKey()
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(oAPInvoice)
+
+                    Dim sQuery As String
+                    Dim oRecordSet As SAPbobsCOM.Recordset
+
+                    sQuery = "SELECT ""DocNum"" FROM ""OPCH"" WHERE ""DocEntry"" = '" & iDocEntry & "'"
+                    oRecordSet = p_oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+                    oRecordSet.DoQuery(sQuery)
+                    If oRecordSet.RecordCount > 0 Then
+                        iDocNo = oRecordSet.Fields.Item("DocNum").Value
+                    End If
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(oRecordSet)
+
+                    Console.WriteLine("Document Created successfully :: " & iDocNo)
+
+                    sQuery = "UPDATE public.AB_REVENUEANDCOST SET ""A/P Invoice No"" = '" & iDocNo & "', " & _
+                             " SyncDate = NOW(),Status = 'SUCCESS',""Error Message"" = NULL WHERE ID = '" & sIntegId & "'"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
+                    If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                    
+                End If
+            End If
+            
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS", sFuncName)
+            CreateAPInvoice_IMMI = RTN_SUCCESS
         Catch ex As Exception
             sErrDesc = ex.Message
             Call WriteToLogFile(sErrDesc, sFuncName)
 
             Dim sQuery As String
-            sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
+            sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc.Replace("'", "") & "',SyncDate = NOW() " & _
                      " WHERE ID = '" & sIntegId & "'"
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
             If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
@@ -4594,12 +4607,14 @@ Module modProcess
         Dim sItemCode As String = String.Empty
         Dim sVatGroup As String = String.Empty
         Dim sServiceType As String = String.Empty
-        Dim sAGCode As String = String.Empty
-        Dim sCostCenter5, sCostCenter4, sCostCenter3, sCostCenter2, sCostCenter As String
+        'Dim sAGCode As String = String.Empty
+        'Dim sCostCenter5, sCostCenter4, sCostCenter3, sCostCenter2, sCostCenter As String
         Dim sSql As String = String.Empty
         Dim sItemDesc As String = String.Empty
         Dim sPassPortNo As String = String.Empty
-
+        Dim bLineAdded As Boolean = False
+        Dim sMerChantid As String = String.Empty
+        
         Try
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting function", sFuncName)
 
@@ -4611,8 +4626,9 @@ Module modProcess
             sCardCode = oDv(iLine)(2).ToString.Trim
             sNumAtCard = oDv(iLine)(4).ToString.Trim
             sServiceType = oDv(iLine)(3).ToString.Trim
-            sAGCode = oDv(iLine)(54).ToString.Trim
-
+            'sAGCode = oDv(iLine)(54).ToString.Trim
+            sMerChantid = oDv(iLine)(24).ToString.Trim
+            
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data based on id no " & sIntegId, sFuncName)
 
             sPassPortNo = oDv(iLine)(48).ToString.Trim
@@ -4623,32 +4639,12 @@ Module modProcess
                 Throw New ArgumentException(sErrDesc)
             End If
 
-            If (oDv(iLine)(67).ToString.Trim() = String.Empty) Then
-                sErrDesc = "New Passport No. column value should not be null"
-                Call WriteToLogFile(sErrDesc, sFuncName)
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug(sErrDesc, sFuncName)
-                Throw New ArgumentException(sErrDesc)
+            If sServiceType.ToUpper() = "BOOKING" Then
+                If sCostCenter5 = String.Empty Then
+                    sErrDesc = "Cost center for dimension 5 is mandatory for booking type"
+                    Throw New ArgumentException(sErrDesc)
+                End If
             End If
-
-            sSql = "SELECT ""PrcCode"" FROM ""OPRC"" WHERE UPPER(""U_AGCODE"") = '" & sAGCode.ToUpper() & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter5 = GetStringValue(sSql)
-
-            sSql = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter5 & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter4 = GetStringValue(sSql)
-
-            sSql = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter4 & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter3 = GetStringValue(sSql)
-
-            sSql = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter3 & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter2 = GetStringValue(sSql)
-
-            sSql = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter2.ToUpper() & "' "
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sCostCenter = GetStringValue(sSql)
 
             Dim dAmount As Double
             Try
@@ -4668,6 +4664,9 @@ Module modProcess
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Assinging values to UDF", sFuncName)
 
+            If Not (oDv(iLine)(24).ToString.Trim = String.Empty) Then
+                oAPInvoice.UserFields.Fields.Item("U_MERCHANT_ID").Value = oDv(iLine)(24).ToString.Trim
+            End If
             If Not (oDv(iLine)(25).ToString.Trim = String.Empty) Then
                 oAPInvoice.UserFields.Fields.Item("U_AE_PAYMENTTYPE").Value = oDv(iLine)(25).ToString.Trim
             End If
@@ -4805,8 +4804,165 @@ Module modProcess
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Adding Line Items", sFuncName)
 
+            If Not (oDv(iLine)(19).ToString = String.Empty) Then
+                If (CDbl(oDv(iLine)(19).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
+                    If iCount > 1 Then
+                        oAPInvoice.Lines.Add()
+                    End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for PROCESSFEE", sFuncName)
+
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PROCESSFEE'"
+                    If dtItemCode.DefaultView.Count = 0 Then
+                        sErrDesc = "ItemCode ::''processfee'' provided does not exist in SAP(Mapping Table)."
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    Else
+                        sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    End If
+
+                    dtVatGroup.DefaultView.RowFilter = "ItemCode = '" & sItemCode & "'"
+                    If dtVatGroup.DefaultView.Count = 0 Then
+                        sErrDesc = "ItemCode :: " & sItemCode & " provided does not exist in SAP."
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    Else
+                        sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
+                    End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for PROCESSFEE", sFuncName)
+
+                    oAPInvoice.Lines.ItemCode = sItemCode
+                    oAPInvoice.Lines.Quantity = 1
+                    oAPInvoice.Lines.UnitPrice = CDbl(oDv(iLine)(19).ToString.Trim)
+                    If sVatGroup <> "" Then
+                        oAPInvoice.Lines.VatGroup = sVatGroup
+                    End If
+                    If Not (sCostCenter = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode = sCostCenter
+                    End If
+                    If Not (sCostCenter2 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode2 = sCostCenter2
+                    End If
+                    If Not (sCostCenter3 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode3 = sCostCenter3
+                    End If
+                    If Not (sCostCenter4 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode4 = sCostCenter4
+                    End If
+                    If Not (sCostCenter5 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode5 = sCostCenter5
+                    End If
+                    iCount = iCount + 1
+                End If
+            End If
+            If Not (oDv(iLine)(20).ToString = String.Empty) Then
+                If (CDbl(oDv(iLine)(20).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
+                    If iCount > 1 Then
+                        oAPInvoice.Lines.Add()
+                    End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for PASSFEE", sFuncName)
+
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PASSFEE'"
+                    If dtItemCode.DefaultView.Count = 0 Then
+                        sErrDesc = "ItemCode ::''passfee'' provided does not exist in SAP(Mapping Table)."
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    Else
+                        sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    End If
+
+                    dtVatGroup.DefaultView.RowFilter = "ItemCode = '" & sItemCode & "'"
+                    If dtVatGroup.DefaultView.Count = 0 Then
+                        sErrDesc = "ItemCode :: " & sItemCode & " provided does not exist in SAP."
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    Else
+                        sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
+                    End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting item for PASSFEE", sFuncName)
+
+                    oAPInvoice.Lines.ItemCode = sItemCode
+                    oAPInvoice.Lines.Quantity = 1
+                    oAPInvoice.Lines.UnitPrice = CDbl(oDv(iLine)(20).ToString.Trim)
+                    If sVatGroup <> "" Then
+                        oAPInvoice.Lines.VatGroup = sVatGroup
+                    End If
+                    If Not (sCostCenter = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode = sCostCenter
+                    End If
+                    If Not (sCostCenter2 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode2 = sCostCenter2
+                    End If
+                    If Not (sCostCenter3 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode3 = sCostCenter3
+                    End If
+                    If Not (sCostCenter4 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode4 = sCostCenter4
+                    End If
+                    If Not (sCostCenter5 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode5 = sCostCenter5
+                    End If
+                    iCount = iCount + 1
+                End If
+            End If
+            If Not (oDv(iLine)(21).ToString = String.Empty) Then
+                If (CDbl(oDv(iLine)(21).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
+                    If iCount > 1 Then
+                        oAPInvoice.Lines.Add()
+                    End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for VISAFEE", sFuncName)
+
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'VISAFEE'"
+                    If dtItemCode.DefaultView.Count = 0 Then
+                        sErrDesc = "ItemCode ::''visafee'' provided does not exist in SAP(Mapping Table)."
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    Else
+                        sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    End If
+
+                    dtVatGroup.DefaultView.RowFilter = "ItemCode = '" & sItemCode & "'"
+                    If dtVatGroup.DefaultView.Count = 0 Then
+                        sErrDesc = "ItemCode :: " & sItemCode & " provided does not exist in SAP."
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    Else
+                        sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
+                    End If
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for VISAFEE", sFuncName)
+
+                    oAPInvoice.Lines.ItemCode = sItemCode
+                    oAPInvoice.Lines.Quantity = 1
+                    oAPInvoice.Lines.UnitPrice = CDbl(oDv(iLine)(21).ToString.Trim)
+                    If sVatGroup <> "" Then
+                        oAPInvoice.Lines.VatGroup = sVatGroup
+                    End If
+                    If Not (sCostCenter = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode = sCostCenter
+                    End If
+                    If Not (sCostCenter2 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode2 = sCostCenter2
+                    End If
+                    If Not (sCostCenter3 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode3 = sCostCenter3
+                    End If
+                    If Not (sCostCenter4 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode4 = sCostCenter4
+                    End If
+                    If Not (sCostCenter5 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode5 = sCostCenter5
+                    End If
+                    iCount = iCount + 1
+                End If
+            End If
             If Not (oDv(iLine)(17).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(17).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -4862,6 +5018,7 @@ Module modProcess
 
             If Not (oDv(iLine)(10).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(10).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -4916,6 +5073,7 @@ Module modProcess
             End If
             If Not (oDv(iLine)(11).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(11).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -4970,6 +5128,7 @@ Module modProcess
             End If
             If Not (oDv(iLine)(12).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(12).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -5024,14 +5183,23 @@ Module modProcess
             End If
             If Not (oDv(iLine)(13).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(13).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for EHAK_AMOUNT", sFuncName)
 
-                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'EHAK_AMOUNT'"
+                    'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'EHAK_AMOUNT'"
+                    'If dtItemCode.DefaultView.Count = 0 Then
+                    '    sErrDesc = "ItemCode ::''ehak_amount'' provided does not exist in SAP(Mapping Table)."
+                    '    Call WriteToLogFile(sErrDesc, sFuncName)
+                    '    Throw New ArgumentException(sErrDesc)
+                    'Else
+                    '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    'End If
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'COMPTEST_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::''ehak_amount'' provided does not exist in SAP(Mapping Table)."
+                        sErrDesc = "ItemCode ::''comptest_amount'' provided does not exist in SAP(Mapping Table)."
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     Else
@@ -5078,6 +5246,7 @@ Module modProcess
             End If
             If Not (oDv(iLine)(14).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(14).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
@@ -5132,6 +5301,7 @@ Module modProcess
             End If
             If Not (oDv(iLine)(15).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(15).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
                     sItemDesc = "agency_amount" & "-" & sServiceType
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
@@ -5196,51 +5366,106 @@ Module modProcess
                 End If
             End If
 
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Adding A/P Invoice Document", sFuncName)
+            If Not (oDv(iLine)(52).ToString.Trim = String.Empty) Then
+                If (CDbl(oDv(iLine)(52).ToString.Trim() <> 0)) Then
+                    bLineAdded = True
+                    If iCount > 1 Then
+                        oAPInvoice.Lines.Add()
+                    End If
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for FIS_AMOUNT", sFuncName)
 
-            If oAPInvoice.Add() <> 0 Then
-                sErrDesc = p_oCompany.GetLastErrorDescription
-                sErrDesc = sErrDesc.Replace("'", " ")
-                Console.WriteLine("Error while adding A/p invoice document/ " & sErrDesc)
-                sErrDesc = sErrDesc & " in funct. " & sFuncName
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'FIS_AMOUNT'"
+                    If dtItemCode.DefaultView.Count = 0 Then
+                        sErrDesc = "ItemCode ::''fis_amount'' provided does not exist in SAP(Mapping Table)."
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    Else
+                        sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    End If
 
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Error while adding A/p invoice document", sFuncName)
-                Throw New ArgumentException(sErrDesc)
-            Else
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("A/P invoice 2 created successfully", sFuncName)
+                    dtVatGroup.DefaultView.RowFilter = "ItemCode = '" & sItemCode & "'"
+                    If dtVatGroup.DefaultView.Count = 0 Then
+                        sErrDesc = "ItemCode :: " & sItemCode & " provided does not exist in SAP."
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        Throw New ArgumentException(sErrDesc)
+                    Else
+                        sVatGroup = dtVatGroup.DefaultView.Item(0)(2).ToString().Trim()
+                    End If
 
-                Dim iDocNo, iDocEntry As Integer
-                iDocEntry = p_oCompany.GetNewObjectKey()
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(oAPInvoice)
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for INSFEE", sFuncName)
 
-                Dim sQuery As String
-                Dim oRecordSet As SAPbobsCOM.Recordset
-
-                sQuery = "SELECT ""DocNum"" FROM ""OPCH"" WHERE ""DocEntry"" = '" & iDocEntry & "'"
-                oRecordSet = p_oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
-                oRecordSet.DoQuery(sQuery)
-                If oRecordSet.RecordCount > 0 Then
-                    iDocNo = oRecordSet.Fields.Item("DocNum").Value
+                    oAPInvoice.Lines.ItemCode = sItemCode
+                    oAPInvoice.Lines.Quantity = 1
+                    oAPInvoice.Lines.UnitPrice = CDbl(oDv(iLine)(23).ToString.Trim)
+                    If sVatGroup <> "" Then
+                        oAPInvoice.Lines.VatGroup = sVatGroup
+                    End If
+                    If Not (sCostCenter = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode = sCostCenter
+                    End If
+                    If Not (sCostCenter2 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode2 = sCostCenter2
+                    End If
+                    If Not (sCostCenter3 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode3 = sCostCenter3
+                    End If
+                    If Not (sCostCenter4 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode4 = sCostCenter4
+                    End If
+                    If Not (sCostCenter5 = String.Empty) Then
+                        oAPInvoice.Lines.CostingCode5 = sCostCenter5
+                    End If
+                    iCount = iCount + 1
                 End If
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(oRecordSet)
-
-                Console.WriteLine("Document Created successfully :: " & iDocNo)
-
-                sQuery = "UPDATE public.AB_REVENUEANDCOST SET ""A/P Invoice No2"" = '" & iDocNo & "', " & _
-                         " SyncDate = NOW(),Status = 'SUCCESS',""Error Message"" = NULL WHERE ID = '" & sIntegId & "'"
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
-                If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
-
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS", sFuncName)
-                CreateAPInvoice_Second = RTN_SUCCESS
             End If
 
+            If bLineAdded = True Then
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Adding A/P Invoice Document", sFuncName)
+
+                If oAPInvoice.Add() <> 0 Then
+                    sErrDesc = p_oCompany.GetLastErrorDescription
+                    sErrDesc = sErrDesc.Replace("'", " ")
+                    Console.WriteLine("Error while adding A/p invoice document/ " & sErrDesc)
+                    sErrDesc = sErrDesc & " in funct. " & sFuncName
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Error while adding A/p invoice document", sFuncName)
+                    Throw New ArgumentException(sErrDesc)
+                Else
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("A/P invoice 2 created successfully", sFuncName)
+
+                    Dim iDocNo, iDocEntry As Integer
+                    iDocEntry = p_oCompany.GetNewObjectKey()
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(oAPInvoice)
+
+                    Dim sQuery As String
+                    Dim oRecordSet As SAPbobsCOM.Recordset
+
+                    sQuery = "SELECT ""DocNum"" FROM ""OPCH"" WHERE ""DocEntry"" = '" & iDocEntry & "'"
+                    oRecordSet = p_oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+                    oRecordSet.DoQuery(sQuery)
+                    If oRecordSet.RecordCount > 0 Then
+                        iDocNo = oRecordSet.Fields.Item("DocNum").Value
+                    End If
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(oRecordSet)
+
+                    Console.WriteLine("Document Created successfully :: " & iDocNo)
+
+                    sQuery = "UPDATE public.AB_REVENUEANDCOST SET ""A/P Invoice No2"" = '" & iDocNo & "', " & _
+                             " SyncDate = NOW(),Status = 'SUCCESS',""Error Message"" = NULL WHERE ID = '" & sIntegId & "'"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
+                    If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                End If
+            End If
+            
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS", sFuncName)
+            CreateAPInvoice_Second = RTN_SUCCESS
         Catch ex As Exception
             sErrDesc = ex.Message
             Call WriteToLogFile(sErrDesc, sFuncName)
 
             Dim sQuery As String
-            sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
+            sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc.Replace("'", "") & "',SyncDate = NOW() " & _
                      " WHERE ID = '" & sIntegId & "'"
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
             If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
@@ -5342,6 +5567,7 @@ Module modProcess
                 oCreditNote.CardCode = oRecordSet.Fields.Item("CardCode").Value
                 oCreditNote.NumAtCard = oRecordSet.Fields.Item("NumAtCard").Value
 
+                oCreditNote.UserFields.Fields.Item("U_MERCHANT_ID").Value = oRecordSet.Fields.Item("U_MERCHANT_ID").Value
                 oCreditNote.UserFields.Fields.Item("U_AE_PAYMENTTYPE").Value = oRecordSet.Fields.Item("U_AE_PAYMENTTYPE").Value
                 oCreditNote.UserFields.Fields.Item("U_SUMMONSID").Value = oRecordSet.Fields.Item("U_SUMMONSID").Value
                 oCreditNote.UserFields.Fields.Item("U_SUMMONTYPE").Value = oRecordSet.Fields.Item("U_SUMMONTYPE").Value
@@ -5455,7 +5681,7 @@ Module modProcess
             Call WriteToLogFile(sErrDesc, sFuncName)
 
             Dim sQuery As String
-            sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
+            sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc.Replace("'", "") & "',SyncDate = NOW() " & _
                      " WHERE ID = '" & sIntegId & "'"
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
             If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
