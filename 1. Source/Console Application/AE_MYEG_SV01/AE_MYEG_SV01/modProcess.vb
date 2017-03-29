@@ -373,7 +373,7 @@ Module modProcess
                         Call WriteToLogFile(sErrDesc, sFuncName)
                         Throw New ArgumentException(sErrDesc)
                     End If
-                Case "ZAKAT", "ASSESSMENT", "JIM", "JPN", "ZAKATPPZ", "ZAKATLZS", "ZAKATPKZP", "ZAKATMAIJ", "ZAKATPZNS", "ZAKATMAIP", "ZAKATJZNK"
+                Case "ZAKAT", "ASSESSMENT", "JIM", "JPN", "ZAKATPPZ", "ZAKATLZS", "ZAKATPKZP", "ZAKATMAINJ", "ZAKATPZNS", "ZAKATMAIP", "ZAKATJZNK"
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper(), sFuncName)
                     dtValidation.DefaultView.RowFilter = "MERCHANTID = '" & sMerChantid.ToUpper() & "' "
                     If dtValidation.DefaultView.Count > 0 Then
