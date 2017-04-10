@@ -135,7 +135,7 @@ Module modProcess
 
                     sSQL = "SELECT DISTINCT UPPER(""NumAtCard"") AS ""MERCHANTID"", UPPER(""U_AI_InvRefNo"") AS ""RECEIPTNO"",UPPER(""U_TRANS_ID"") AS ""TRANSID"", " & _
                        " UPPER(""U_FWID"") AS ""FWID"",UPPER(""U_SUMMONSID"") AS ""SUMMONSID"",UPPER(""U_COMPNO"") AS ""COMPOUNDNO"",UPPER(""U_COVERNOTENO"") AS ""COVERNOTENO"" " & _
-                       " FROM ""OINV"" "
+                       " FROM " & p_oCompany.CompanyDB & ".""OINV"" "
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING SQL :" & sSQL, sFuncName)
                     dtValidation = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
 
@@ -156,19 +156,19 @@ Module modProcess
 
                         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for ID " & sIntegId, sFuncName)
 
-                        sSQL = "SELECT ""Code"",""Name"",""U_ServiceType"" ""ServiceType"",UPPER(""U_REVCOSTCODE"") ""RevCostCode"" FROM ""@AE_ITEMCODEMAPPING"" "
+                        sSQL = "SELECT ""Code"",""Name"",""U_ServiceType"" ""ServiceType"",UPPER(""U_REVCOSTCODE"") ""RevCostCode"" FROM " & p_oCompany.CompanyDB & ".""@AE_ITEMCODEMAPPING"" "
                         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING SQL :" & sSQL, sFuncName)
                         dtItemCode = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
 
-                        sSQL = "SELECT ""CardCode"" FROM ""OCRD"" "
+                        sSQL = "SELECT ""CardCode"" FROM " & p_oCompany.CompanyDB & ".""OCRD"" "
                         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING SQL :" & sSQL, sFuncName)
                         dtBP = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
 
-                        sSQL = "SELECT * FROM ""@AE_MERCHANT_ID"" "
+                        sSQL = "SELECT * FROM " & p_oCompany.CompanyDB & ".""@AE_MERCHANT_ID"" "
                         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING SQL :" & sSQL, sFuncName)
                         dtMerchantId = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
 
-                        sSQL = "SELECT ""ItemCode"",""VatGourpSa"",""VatGroupPu"" FROM ""OITM"" WHERE ""frozenFor""='N'"
+                        sSQL = "SELECT ""ItemCode"",""VatGourpSa"",""VatGroupPu"" FROM " & p_oCompany.CompanyDB & ".""OITM"" WHERE ""frozenFor""='N'"
                         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING  SQL :" & sSQL, sFuncName)
                         dtVatGroup = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
 
@@ -181,24 +181,26 @@ Module modProcess
                         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Ag Code is " & sAGCode, sFuncName)
 
                         If sAGCode <> "" Then
-                            sSQL = "SELECT ""PrcCode"" FROM ""OPRC"" WHERE UPPER(""U_AGCODE"") = '" & sAGCode.ToUpper() & "' "
+                            sSQL = "SELECT ""PrcCode"" FROM " & p_oCompany.CompanyDB & ".""OPRC"" WHERE UPPER(""U_AGCODE"") = '" & sAGCode.ToUpper() & "' "
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
                             sCostCenter5 = GetStringValue(sSQL)
 
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Cost center for dim5 is " & sCostCenter5, sFuncName)
+
                             If sCostCenter5 <> "" Then
-                                sSQL = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter5 & "' "
+                                sSQL = "SELECT ""U_DIMENSION_LINK"" FROM " & p_oCompany.CompanyDB & ".""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter5 & "' "
                                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
                                 sCostCenter4 = GetStringValue(sSQL)
 
-                                sSQL = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter4 & "' "
+                                sSQL = "SELECT ""U_DIMENSION_LINK"" FROM " & p_oCompany.CompanyDB & ".""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter4 & "' "
                                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
                                 sCostCenter3 = GetStringValue(sSQL)
 
-                                sSQL = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter3 & "' "
+                                sSQL = "SELECT ""U_DIMENSION_LINK"" FROM " & p_oCompany.CompanyDB & ".""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter3 & "' "
                                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
                                 sCostCenter2 = GetStringValue(sSQL)
 
-                                sSQL = "SELECT ""U_DIMENSION_LINK"" FROM ""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter2.ToUpper() & "' "
+                                sSQL = "SELECT ""U_DIMENSION_LINK"" FROM " & p_oCompany.CompanyDB & ".""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter2.ToUpper() & "' "
                                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
                                 sCostCenter = GetStringValue(sSQL)
                             End If
@@ -539,6 +541,7 @@ Module modProcess
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Service Type is " & sServiceType, sFuncName)
 
             If sServiceType.ToUpper() = "BOOKING" Then
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Cost center dim5 is " & sCostCenter5, sFuncName)
                 If sCostCenter5 = String.Empty Then
                     sErrDesc = "Cost center for dimension 5 is mandatory for booking type"
                     Throw New ArgumentException(sErrDesc)
