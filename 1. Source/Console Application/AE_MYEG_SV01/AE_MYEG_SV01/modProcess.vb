@@ -1754,17 +1754,38 @@ Module modProcess
             If Not (oDv(iLine)(17).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(17).ToString.Trim() <> 0)) Then
                     bLineAdded = True
+                    sItemDesc = "levifee_amount" & "-" & sServiceType
                     If sAgency = "IMMI" Then
                         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("PRocessing data for LEVIFEE Amount and IMMI Agency", sFuncName)
 
                         If iCount > 1 Then
                             oArInovice.Lines.Add()
                         End If
-                        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
+                        'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
+                        'If dtItemCode.DefaultView.Count = 0 Then
+                        '    sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
+                        '    Call WriteToLogFile(sErrDesc, sFuncName)
+                        '    Throw New ArgumentException(sErrDesc)
+                        'Else
+                        '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                        'End If
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Inserting Item for " & sItemDesc, sFuncName)
+
+                        dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                         If dtItemCode.DefaultView.Count = 0 Then
-                            sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
-                            Call WriteToLogFile(sErrDesc, sFuncName)
-                            Throw New ArgumentException(sErrDesc)
+
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode in item mapping table for " & sItemDesc, sFuncName)
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for levifee_amount", sFuncName)
+
+                            dtItemCode.DefaultView.RowFilter = Nothing
+                            dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
+                            If dtItemCode.DefaultView.Count = 0 Then
+                                sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
+                                Call WriteToLogFile(sErrDesc, sFuncName)
+                                Throw New ArgumentException(sErrDesc)
+                            Else
+                                sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                            End If
                         Else
                             sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
                         End If
@@ -1862,11 +1883,29 @@ Module modProcess
                         If iCount > 1 Then
                             oArInovice.Lines.Add()
                         End If
-                        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
+                        'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
+                        'If dtItemCode.DefaultView.Count = 0 Then
+                        '    sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
+                        '    Call WriteToLogFile(sErrDesc, sFuncName)
+                        '    Throw New ArgumentException(sErrDesc)
+                        'Else
+                        '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                        'End If
+                        dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                         If dtItemCode.DefaultView.Count = 0 Then
-                            sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
-                            Call WriteToLogFile(sErrDesc, sFuncName)
-                            Throw New ArgumentException(sErrDesc)
+
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode in item mapping table for " & sItemDesc, sFuncName)
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for levifee_amount", sFuncName)
+
+                            dtItemCode.DefaultView.RowFilter = Nothing
+                            dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
+                            If dtItemCode.DefaultView.Count = 0 Then
+                                sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
+                                Call WriteToLogFile(sErrDesc, sFuncName)
+                                Throw New ArgumentException(sErrDesc)
+                            Else
+                                sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                            End If
                         Else
                             sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
                         End If
@@ -2040,13 +2079,32 @@ Module modProcess
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
+                    sItemDesc = "passfee" & "-" & sServiceType
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for PASSFFEE", sFuncName)
 
-                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PASSFEE'"
+                    'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PASSFEE'"
+                    'If dtItemCode.DefaultView.Count = 0 Then
+                    '    sErrDesc = "ItemCode ::''passfee'' provided does not exist in SAP(Mapping Table)."
+                    '    Call WriteToLogFile(sErrDesc, sFuncName)
+                    '    Throw New ArgumentException(sErrDesc)
+                    'Else
+                    '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    'End If
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::''passfee'' provided does not exist in SAP(Mapping Table)."
-                        Call WriteToLogFile(sErrDesc, sFuncName)
-                        Throw New ArgumentException(sErrDesc)
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode in item mapping table for " & sItemDesc, sFuncName)
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for passfee", sFuncName)
+
+                        dtItemCode.DefaultView.RowFilter = Nothing
+                        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PASSFEE'"
+                        If dtItemCode.DefaultView.Count = 0 Then
+                            sErrDesc = "ItemCode ::''passfee'' provided does not exist in SAP(Mapping Table)."
+                            Call WriteToLogFile(sErrDesc, sFuncName)
+                            Throw New ArgumentException(sErrDesc)
+                        Else
+                            sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                        End If
                     Else
                         sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
                     End If
@@ -2100,13 +2158,33 @@ Module modProcess
                     If iCount > 1 Then
                         oArInovice.Lines.Add()
                     End If
+                    sItemDesc = "visafee" & "-" & sServiceType
+
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for VISAFEE", sFuncName)
 
-                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'VISAFEE'"
+                    'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'VISAFEE'"
+                    'If dtItemCode.DefaultView.Count = 0 Then
+                    '    sErrDesc = "ItemCode ::''visafee'' provided does not exist in SAP(Mapping Table)."
+                    '    Call WriteToLogFile(sErrDesc, sFuncName)
+                    '    Throw New ArgumentException(sErrDesc)
+                    'Else
+                    '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    'End If
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::''visafee'' provided does not exist in SAP(Mapping Table)."
-                        Call WriteToLogFile(sErrDesc, sFuncName)
-                        Throw New ArgumentException(sErrDesc)
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode in item mapping table for " & sItemDesc, sFuncName)
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for passfee", sFuncName)
+
+                        dtItemCode.DefaultView.RowFilter = Nothing
+                        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'VISAFEE'"
+                        If dtItemCode.DefaultView.Count = 0 Then
+                            sErrDesc = "ItemCode ::''visafee'' provided does not exist in SAP(Mapping Table)."
+                            Call WriteToLogFile(sErrDesc, sFuncName)
+                            Throw New ArgumentException(sErrDesc)
+                        Else
+                            sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                        End If
                     Else
                         sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
                     End If
@@ -2710,16 +2788,35 @@ Module modProcess
             If Not (oDv(iLine)(17).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(17).ToString.Trim() <> 0)) Then
                     bLineAdded = True
+                    sItemDesc = "levifee_amount" & "-" & sServiceType
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Process datas for LEVIFEE_AMOUNT", sFuncName)
 
-                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
+                    'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
+                    'If dtItemCode.DefaultView.Count = 0 Then
+                    '    sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
+                    '    Call WriteToLogFile(sErrDesc, sFuncName)
+                    '    Throw New ArgumentException(sErrDesc)
+                    'Else
+                    '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    'End If
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
-                        Call WriteToLogFile(sErrDesc, sFuncName)
-                        Throw New ArgumentException(sErrDesc)
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode in item mapping table for " & sItemDesc, sFuncName)
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for levifee_amount", sFuncName)
+
+                        dtItemCode.DefaultView.RowFilter = Nothing
+                        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
+                        If dtItemCode.DefaultView.Count = 0 Then
+                            sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
+                            Call WriteToLogFile(sErrDesc, sFuncName)
+                            Throw New ArgumentException(sErrDesc)
+                        Else
+                            sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                        End If
                     Else
                         sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
                     End If
@@ -3629,16 +3726,35 @@ Module modProcess
             If Not (oDv(iLine)(17).ToString = String.Empty) Then
                 If (CDbl(oDv(iLine)(17).ToString.Trim() <> 0)) Then
                     bLineAdded = True
+                    sItemDesc = "levifee_amount" & "-" & sServiceType
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for LEVIFEE_AMOUNT", sFuncName)
 
-                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
+                    'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
+                    'If dtItemCode.DefaultView.Count = 0 Then
+                    '    sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
+                    '    Call WriteToLogFile(sErrDesc, sFuncName)
+                    '    Throw New ArgumentException(sErrDesc)
+                    'Else
+                    '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    'End If
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
-                        Call WriteToLogFile(sErrDesc, sFuncName)
-                        Throw New ArgumentException(sErrDesc)
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode in item mapping table for " & sItemDesc, sFuncName)
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for levifee_amount", sFuncName)
+
+                        dtItemCode.DefaultView.RowFilter = Nothing
+                        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
+                        If dtItemCode.DefaultView.Count = 0 Then
+                            sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
+                            Call WriteToLogFile(sErrDesc, sFuncName)
+                            Throw New ArgumentException(sErrDesc)
+                        Else
+                            sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                        End If
                     Else
                         sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
                     End If
@@ -3736,13 +3852,33 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    sItemDesc = "passfee" & "-" & sServiceType
+
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for PASSFEE", sFuncName)
 
-                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PASSFEE'"
+                    'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PASSFEE'"
+                    'If dtItemCode.DefaultView.Count = 0 Then
+                    '    sErrDesc = "ItemCode ::''passfee'' provided does not exist in SAP(Mapping Table)."
+                    '    Call WriteToLogFile(sErrDesc, sFuncName)
+                    '    Throw New ArgumentException(sErrDesc)
+                    'Else
+                    '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    'End If
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::''passfee'' provided does not exist in SAP(Mapping Table)."
-                        Call WriteToLogFile(sErrDesc, sFuncName)
-                        Throw New ArgumentException(sErrDesc)
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode in item mapping table for " & sItemDesc, sFuncName)
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for passfee", sFuncName)
+
+                        dtItemCode.DefaultView.RowFilter = Nothing
+                        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PASSFEE'"
+                        If dtItemCode.DefaultView.Count = 0 Then
+                            sErrDesc = "ItemCode ::''passfee'' provided does not exist in SAP(Mapping Table)."
+                            Call WriteToLogFile(sErrDesc, sFuncName)
+                            Throw New ArgumentException(sErrDesc)
+                        Else
+                            sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                        End If
                     Else
                         sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
                     End If
@@ -4865,13 +5001,33 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    sItemDesc = "passfee" & "-" & sServiceType
+
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for PASSFEE", sFuncName)
 
-                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PASSFEE'"
+                    'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PASSFEE'"
+                    'If dtItemCode.DefaultView.Count = 0 Then
+                    '    sErrDesc = "ItemCode ::''passfee'' provided does not exist in SAP(Mapping Table)."
+                    '    Call WriteToLogFile(sErrDesc, sFuncName)
+                    '    Throw New ArgumentException(sErrDesc)
+                    'Else
+                    '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    'End If
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::''passfee'' provided does not exist in SAP(Mapping Table)."
-                        Call WriteToLogFile(sErrDesc, sFuncName)
-                        Throw New ArgumentException(sErrDesc)
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode in item mapping table for " & sItemDesc, sFuncName)
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for passfee", sFuncName)
+
+                        dtItemCode.DefaultView.RowFilter = Nothing
+                        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PASSFEE'"
+                        If dtItemCode.DefaultView.Count = 0 Then
+                            sErrDesc = "ItemCode ::''passfee'' provided does not exist in SAP(Mapping Table)."
+                            Call WriteToLogFile(sErrDesc, sFuncName)
+                            Throw New ArgumentException(sErrDesc)
+                        Else
+                            sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                        End If
                     Else
                         sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
                     End If
@@ -4969,13 +5125,33 @@ Module modProcess
                     If iCount > 1 Then
                         oAPInvoice.Lines.Add()
                     End If
+                    sItemDesc = "levifee_amount" & "-" & sServiceType
+
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for LEVIFEE_AMOUNT", sFuncName)
 
-                    dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
+                    'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
+                    'If dtItemCode.DefaultView.Count = 0 Then
+                    '    sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
+                    '    Call WriteToLogFile(sErrDesc, sFuncName)
+                    '    Throw New ArgumentException(sErrDesc)
+                    'Else
+                    '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                    'End If
+                    dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                     If dtItemCode.DefaultView.Count = 0 Then
-                        sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
-                        Call WriteToLogFile(sErrDesc, sFuncName)
-                        Throw New ArgumentException(sErrDesc)
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("No itemcode in item mapping table for " & sItemDesc, sFuncName)
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting item code for levifee_amount", sFuncName)
+
+                        dtItemCode.DefaultView.RowFilter = Nothing
+                        dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
+                        If dtItemCode.DefaultView.Count = 0 Then
+                            sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
+                            Call WriteToLogFile(sErrDesc, sFuncName)
+                            Throw New ArgumentException(sErrDesc)
+                        Else
+                            sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
+                        End If
                     Else
                         sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
                     End If
