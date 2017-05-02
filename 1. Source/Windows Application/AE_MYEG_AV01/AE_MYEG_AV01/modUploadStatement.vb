@@ -470,6 +470,7 @@ Module modUploadStatement
                             oGrid.DataTable.SetValue("Error message", i, sErrDesc)
                         Else
                             oGrid.DataTable.SetValue("Status", i, "SUCCESS")
+                            oGrid.DataTable.SetValue("Error message", i, "")
                         End If
                     Else
                         oGrid.DataTable.SetValue("Status", i, "FAIL")
@@ -495,7 +496,7 @@ Module modUploadStatement
                 End Try
                 If sStatus = "SUCCESS" Then
                     sQuery = "UPDATE AB_STATEMENTUPLOAD SET UploadDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "', " & _
-                             " Status = '" & sStatus & "', ErrMsg = '" & sErrorMessage.Replace("'", "") & "',LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '0'" & _
+                             " Status = 'SUCCESS', ErrMsg = '',LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '0'" & _
                              " WHERE ID = '" & sID & "' "
                 Else
                     sQuery = "UPDATE AB_STATEMENTUPLOAD SET UploadDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "', " & _
@@ -777,6 +778,7 @@ Module modUploadStatement
                     bCheck = False
                 Else
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS.", sFuncName)
+                    sPayDocEntry = String.Empty
                     p_oDICompany.GetNewObjectCode(sPayDocEntry)
                     If oIncomingPayment.GetByKey(sPayDocEntry) Then
                         sPayDocEntry = oIncomingPayment.DocNum

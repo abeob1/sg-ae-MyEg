@@ -85,3 +85,42 @@ Error while executing the query
 [08/04/2016 17:40:09][             ArIncomingPayment_onAccount] Invoice Not Found
 [08/04/2016 17:43:24][                   ExpList_SBO_ItemEvent] Data Table - invalid column Unique Id  [66000-135]
 [08/04/2016 17:43:24][             SBO_Application_ItemEvent()] Data Table - invalid column Unique Id  [66000-135]
+[03/09/2017 16:55:00][                          ExecuteQuery()] ERROR [08001] could not connect to server: Connection refused (0x0000274D/10061)
+	Is the server running on host "localhost" (::1) and accepting
+	TCP/IP connections on port 5432?
+could not connect to server: Connection refused (0x0000274D/10061)
+	Is the server running on host "localhost" (127.0.0.1) and accepting
+	TCP/IP connections on port 5432?
+
+[03/09/2017 16:55:00][                          ExecuteQuery()] ERROR [08001] could not connect to server: Connection refused (0x0000274D/10061)
+	Is the server running on host "localhost" (::1) and accepting
+	TCP/IP connections on port 5432?
+could not connect to server: Connection refused (0x0000274D/10061)
+	Is the server running on host "localhost" (127.0.0.1) and accepting
+	TCP/IP connections on port 5432?
+
+[03/22/2017 14:15:22][                 AR_IncomingPayment_Grid] Invoice not found
+[03/22/2017 14:15:40][                 AR_IncomingPayment_Grid] Invoice not found
+[03/22/2017 14:16:29][                 AR_IncomingPayment_Grid] Reconciliation date must be on or after the last posting date for transactions selected for reconciliation   [الرسالة 3821-3]
+[03/22/2017 14:16:45][                 AR_IncomingPayment_Grid] Invoice not found
+[03/22/2017 14:16:52][                 AR_IncomingPayment_Grid] Invoice not found
+[03/22/2017 14:17:10][                 AR_IncomingPayment_Grid] Reconciliation date must be on or after the last posting date for transactions selected for reconciliation   [الرسالة 3821-3]
+[03/22/2017 14:17:19][       IncomingPayment_OnCustomer_Grid()] System call failed. (Exception from HRESULT: 0x80010100 (RPC_E_SYS_CALL_FAILED))
+[03/22/2017 14:17:20][             SBO_Application_ItemEvent()] System call failed. (Exception from HRESULT: 0x80010100 (RPC_E_SYS_CALL_FAILED))
+[03/22/2017 14:17:20][                               ShowErr()] Unable to cast COM object of type 'System.__ComObject' to interface type 'SAPbouiCOM.IApplication'. This operation failed because the QueryInterface call on the COM component for the interface with IID '{D1F75D47-137C-4335-AC2A-3FE209831B6A}' failed due to the following error: System call failed. (Exception from HRESULT: 0x80010100 (RPC_E_SYS_CALL_FAILED)).
+[03/22/2017 14:18:24][                            MyFunction()] The Microsoft Office Access database engine cannot open or write to the file ''. It is already opened exclusively by another user, or you need permission to view and write its data.
+[03/22/2017 14:18:24][                        RP_SBO_ItemEvent] Object reference not set to an instance of an object.
+[03/22/2017 14:18:24][             SBO_Application_ItemEvent()] Object reference not set to an instance of an object.
+[03/22/2017 14:18:38][                            MyFunction()] The Microsoft Office Access database engine cannot open or write to the file ''. It is already opened exclusively by another user, or you need permission to view and write its data.
+[03/22/2017 14:20:06][                            MyFunction()] The Microsoft Office Access database engine cannot open or write to the file ''. It is already opened exclusively by another user, or you need permission to view and write its data.
+[03/22/2017 14:20:06][                        RP_SBO_ItemEvent] Object reference not set to an instance of an object.
+[03/22/2017 14:20:06][             SBO_Application_ItemEvent()] Object reference not set to an instance of an object.
+[03/22/2017 14:20:33][                            MyFunction()] The Microsoft Office Access database engine cannot open or write to the file ''. It is already opened exclusively by another user, or you need permission to view and write its data.
+[03/22/2017 14:29:26][                                  Main()] Connection - Could not find SBO that match the connection string
+[03/22/2017 14:29:33][                                  Main()] Connection - Could not find SBO that match the connection string
+[03/22/2017 14:31:21][                 AR_IncomingPayment_Grid] Invoice not found
+[03/22/2017 14:31:22][                 AR_IncomingPayment_Grid] Invoice not found
+[03/22/2017 14:31:27][                 AR_IncomingPayment_Grid] Reconciliation date must be on or after the last posting date for transactions selected for reconciliation   [الرسالة 3821-3]
+[03/22/2017 14:31:28][                 AR_IncomingPayment_Grid] Invoice not found
+[03/22/2017 14:31:28][                 AR_IncomingPayment_Grid] Invoice not found
+[03/22/2017 14:31:32][                 AR_IncomingPayment_Grid] Reconciliation date must be on or after the last posting date for transactions selected for reconciliation   [الرسالة 3821-3]

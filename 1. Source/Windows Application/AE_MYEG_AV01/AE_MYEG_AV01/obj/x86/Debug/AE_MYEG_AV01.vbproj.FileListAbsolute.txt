@@ -34,3 +34,13 @@ D:\J\Myeg\Source\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\Interop.SAPbouiCOM.dll
 D:\J\Myeg\Source\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.vbproj.ResolveComReference.cache
 D:\J\Myeg\Source\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.exe
 D:\J\Myeg\Source\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.pdb
+C:\Solutions_SVN\MYEG\trunk\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\bin\Debug\AE_MYEG_AV01.exe.config
+C:\Solutions_SVN\MYEG\trunk\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\Interop.SAPbobsCOM.dll
+C:\Solutions_SVN\MYEG\trunk\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\Interop.SAPbouiCOM.dll
+C:\Solutions_SVN\MYEG\trunk\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.vbproj.ResolveComReference.cache
+C:\Solutions_SVN\MYEG\trunk\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.exe
+C:\Solutions_SVN\MYEG\trunk\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.pdb
+C:\Solutions_SVN\MYEG\trunk\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\bin\Debug\AE_MYEG_AV01.exe
+C:\Solutions_SVN\MYEG\trunk\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\bin\Debug\AE_MYEG_AV01.pdb
+C:\Solutions_SVN\MYEG\trunk\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.frmOpenFileDialog.resources
+C:\Solutions_SVN\MYEG\trunk\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.vbproj.GenerateResource.Cache

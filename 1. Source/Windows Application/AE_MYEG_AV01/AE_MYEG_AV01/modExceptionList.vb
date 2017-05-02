@@ -237,7 +237,7 @@ Module modExceptionList
         Next iloop
         Return s
     End Function
-#End Region   
+#End Region
 #Region "Check Fields"
     Private Function CheckFields(ByVal objForm As SAPbouiCOM.Form, ByRef sErrDesc As String) As Boolean
         Dim bCheck As Boolean
@@ -577,8 +577,8 @@ Module modExceptionList
                     dBalanceAmt = 0
                 End If
                 If oGrid.DataTable.GetValue("Status", i) = "SUCCESS" Then
-                    sQuery = "UPDATE AB_STATEMENTUPLOAD  SET InvoiceRef = '" & sInvRef & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',Status = '" & sStatus & "', " & _
-                                                 " ErrMsg = '" & sErrorMessage.Replace("'", "") & "', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '" & dBalanceAmt & "' " & _
+                    sQuery = "UPDATE AB_STATEMENTUPLOAD  SET InvoiceRef = '" & sInvRef & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',Status = 'SUCCESS', " & _
+                             " ErrMsg = '', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '" & dBalanceAmt & "' " & _
                                                  " WHERE ID = '" & sID & "'"
                 Else
                     sQuery = "UPDATE AB_STATEMENTUPLOAD SET InvoiceRef = '" & sInvRef & "' ,Status = '" & sStatus & "',ErrMsg = '" & sErrorMessage.Replace("'", "") & "', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "' " & _
@@ -1129,9 +1129,9 @@ Module modExceptionList
                 sPayDocNo = oGrid.DataTable.GetValue("Payment DocNo", i)
 
                 If oGrid.DataTable.GetValue("Status", i) = "SUCCESS" Then
-                    sQuery = "UPDATE AB_STATEMENTUPLOAD  SET InvoiceRef = '" & sInvRef & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',Status = '" & sStatus & "', " & _
-                                                 " ErrMsg = '" & sErrorMessage.Replace("'", "") & "', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '0' " & _
-                                                 " WHERE ID = '" & sID & "'"
+                    sQuery = "UPDATE AB_STATEMENTUPLOAD  SET InvoiceRef = '" & sInvRef & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',Status = 'SUCCESS', " & _
+                             " ErrMsg = '', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '0' " & _
+                             " WHERE ID = '" & sID & "'"
                 Else
                     sQuery = "UPDATE AB_STATEMENTUPLOAD SET InvoiceRef = '" & sInvRef & "' ,Status = '" & sStatus & "',ErrMsg = '" & sErrorMessage.Replace("'", "") & "', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "' " & _
                              " WHERE ID = '" & sID & "' "
@@ -1272,8 +1272,8 @@ Module modExceptionList
                 sPayDocNo = oGrid.DataTable.GetValue("Payment DocNo", i)
 
                 If oGrid.DataTable.GetValue("Status", i) = "SUCCESS" Then
-                    sQuery = "UPDATE AB_STATEMENTUPLOAD  SET InvoiceRef = '" & sInvRef & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',Status = '" & sStatus & "', " & _
-                             " ErrMsg = '" & sErrorMessage.Replace("'", "") & "', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '0' " & _
+                    sQuery = "UPDATE AB_STATEMENTUPLOAD  SET InvoiceRef = '" & sInvRef & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',Status = 'SUCCESS', " & _
+                             " ErrMsg = '', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '0' " & _
                              " WHERE ID = '" & sID & "'"
                 Else
                     sQuery = "UPDATE AB_STATEMENTUPLOAD SET InvoiceRef = '" & sInvRef & "' ,Status = '" & sStatus & "',ErrMsg = '" & sErrorMessage.Replace("'", "") & "', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "' " & _
