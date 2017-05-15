@@ -1,0 +1,244 @@
+CREATE TABLE ab_revenueandcost
+(
+  id serial NOT NULL,
+  entity character varying(15),
+  agency character varying(15),
+  "Service Type" character varying(20),
+  receipt_no character varying(100),
+  update_datetime date,
+  tx_amount numeric(18,3),
+  eservice_amount numeric(18,3),
+  gst_amount numeric(18,3),
+  voucher_amount numeric(18,3),
+  summons_amount numeric(18,3),
+  ppz_amount numeric(18,3),
+  jpj_amount numeric(18,3),
+  comptest_amount numeric(18,3),
+  inq_amt numeric(18,3),
+  fis_amount numeric(18,3),
+  photo_amount numeric(18,3),
+  agency_amount numeric(18,3),
+  delamount numeric(18,3),
+  levifee_amount numeric(18,3),
+  deliveryfee numeric(18,3),
+  processfee numeric(18,3),
+  passfee numeric(18,3),
+  visafee numeric(18,3),
+  fomafee numeric(18,3),
+  insfee numeric(18,3),
+  merchant_tx_id character varying(60),
+  payment_type_id character varying(30),
+  summons_id character varying(40),
+  summon_type character varying(30),
+  offence_datetime date,
+  offender_name character varying,
+  offender_ic character varying(30),
+  vehicle_no character varying(40),
+  law_code2 character varying(40),
+  law_code3 character varying(30),
+  jpj_rev_code character varying(30),
+  replace_type character varying(30),
+  user_id character varying(256),
+  id_no character varying(40),
+  comp_no character varying(30),
+  account_no character varying(75),
+  bill_date date,
+  fw_id character varying(100),
+  trans_id character varying(50),
+  car_registration_no character varying(30),
+  prepaid_acct_no character varying(30),
+  license_class character varying(30),
+  revenue_code character varying(30),
+  veh_owner_name character varying(200),
+  emp_name character varying(100),
+  passportno character varying(60),
+  applicantname character varying(256),
+  sector character varying(30),
+  print_status character varying(30),
+  emp_icno character varying(100),
+  ag_code character varying(50),
+  pay_mode character varying(100),
+  agency_account_no character varying(50),
+  zakat_id character varying(50),
+  req_id character varying(50),
+  credit_card_no character varying(50),
+  contact_no character varying(20),
+  zakat_agency_id character varying(50),
+  booking_id character varying(50),
+  covernote_number character varying(50),
+  email character varying(256),
+  ins_company character varying(100),
+  invoiceid character varying(200),
+  status character varying(30),
+  "Error Message" character varying,
+  syncdate date,
+  "A/R Invoice No" integer,
+  "A/P Invoice No" integer,
+  "A/P Invoice No2" integer,
+  "Credit Note No" integer,
+  new_passport_no character varying(50),
+  section_code character varying(40),
+  CONSTRAINT ab_revenueandcost_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ab_revenueandcost
+  OWNER TO app_sap;
+GRANT ALL ON TABLE ab_revenueandcost TO app_sap;
+GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE ab_revenueandcost TO g_sap_rw;
+
+-- Index: agency_lookup
+
+-- DROP INDEX agency_lookup;
+
+CREATE INDEX agency_lookup
+  ON ab_revenueandcost
+  USING btree
+  (agency COLLATE pg_catalog."default");
+
+-- Index: comp_no_lookup
+
+-- DROP INDEX comp_no_lookup;
+
+CREATE INDEX comp_no_lookup
+  ON ab_revenueandcost
+  USING btree
+  (comp_no COLLATE pg_catalog."default");
+
+-- Index: merchant_tx_id_lookup
+
+-- DROP INDEX merchant_tx_id_lookup;
+
+CREATE INDEX merchant_tx_id_lookup
+  ON ab_revenueandcost
+  USING btree
+  (merchant_tx_id COLLATE pg_catalog."default");
+
+-- Index: receipt_no_lookup
+
+-- DROP INDEX receipt_no_lookup;
+
+CREATE INDEX receipt_no_lookup
+  ON ab_revenueandcost
+  USING btree
+  (receipt_no COLLATE pg_catalog."default");
+
+-- Index: req_id_lookup
+
+-- DROP INDEX req_id_lookup;
+
+CREATE INDEX req_id_lookup
+  ON ab_revenueandcost
+  USING btree
+  (req_id COLLATE pg_catalog."default");
+
+-- Index: servicetype_lookup
+
+-- DROP INDEX servicetype_lookup;
+
+CREATE INDEX servicetype_lookup
+  ON ab_revenueandcost
+  USING btree
+  ("Service Type" COLLATE pg_catalog."default");
+
+-- Index: summons_id_lookup
+
+-- DROP INDEX summons_id_lookup;
+
+CREATE INDEX summons_id_lookup
+  ON ab_revenueandcost
+  USING btree
+  (summons_id COLLATE pg_catalog."default");
+---------------------------------------------
+
+-- Table: ab_receipts
+
+-- DROP TABLE ab_receipts;
+
+CREATE TABLE ab_receipts
+(
+  id serial NOT NULL,
+  entity character varying(30),
+  agency character varying(15),
+  servicetype character varying(20),
+  receipt_no character varying(50),
+  updated_datetime date,
+  receipt_amount numeric(18,3),
+  prepaid_acct_no character varying(15),
+  account_no character varying(15),
+  customername character varying(100),
+  invoicenumber character varying(9),
+  CONSTRAINT ab_receipts_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ab_receipts
+  OWNER TO postgres;
+GRANT ALL ON TABLE ab_receipts TO postgres;
+GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE ab_receipts TO g_sap_rw;
+
+
+-- Table: ab_selectedcustomer
+
+-- DROP TABLE ab_selectedcustomer;
+
+CREATE TABLE ab_selectedcustomer
+(
+  randomno integer,
+  docnum integer,
+  id character varying(10) NOT NULL,
+  invrefno character varying(50),
+  line character varying(10),
+  amount numeric(18,3),
+  custcode character varying(50),
+  custname character varying(100),
+  custamt numeric(18,3),
+  paymentdocnum character varying(10),
+  invdocentry character varying(10),
+  CONSTRAINT ab_selectedcustomer_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ab_selectedcustomer
+  OWNER TO postgres;
+GRANT ALL ON TABLE ab_selectedcustomer TO postgres;
+GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE ab_selectedcustomer TO g_sap_rw;
+
+
+
+-- Table: ab_statementupload
+
+-- DROP TABLE ab_statementupload;
+
+CREATE TABLE ab_statementupload
+(
+  id integer NOT NULL DEFAULT nextval('ab_statementupload_id_seq'::regclass),
+  entity character varying(30),
+  acctcode character varying(30),
+  invoiceref character varying(30),
+  duedate date,
+  memo character varying(200),
+  amount numeric(18,2),
+  st_no character varying(200),
+  paymentref character varying(200),
+  "time" character varying(15),
+  source character varying(200),
+  branchcode character varying(50),
+  transactioncode character varying(50),
+  uploaddate date,
+  sapsyncdate date,
+  status character varying(20),
+  errmsg character varying,
+  filename character varying,
+  lastsyncdate date,
+  paymentdocnum character varying(20),
+  balanceamt numeric(18,3)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE ab_statementupload
+  OWNER TO app_sap;
