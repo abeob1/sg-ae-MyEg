@@ -186,12 +186,12 @@ Module modUploadStatement
                 If IsDBNull(Datarows(7)) Then
                     If sSQL = "" Then
                         sSQL = "INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode, FileName) " & _
-                               " VALUES ('', '" & Datarows(1).ToString.Trim() & "','" & Datarows(2).ToString.Trim() & "','" & dDate.ToString("yyyy-MM-dd") & "','" & Datarows(4).ToString.Trim() & "', " & _
+                               " VALUES ('" & p_oDICompany.CompanyDB & "', '" & Datarows(1).ToString.Trim() & "','" & Datarows(2).ToString.Trim() & "','" & dDate.ToString("yyyy-MM-dd") & "','" & Datarows(4).ToString.Trim() & "', " & _
                                " " & Datarows(5).ToString.Trim() & ",'" & Datarows(6).ToString.Trim() & "','','" & Datarows(8).ToString.Trim() & "','" & Datarows(9).ToString.Trim() & "', " & _
                                " '" & Datarows(10).ToString.Trim() & "' ); "
                     Else
                         sSQL = sSQL & " INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode, FileName) " & _
-                                      " VALUES ('', '" & Datarows(1).ToString.Trim() & "','" & Datarows(2).ToString.Trim() & "','" & dDate.ToString("yyyy-MM-dd") & "','" & Datarows(4).ToString.Trim() & "', " & _
+                                      " VALUES ('" & p_oDICompany.CompanyDB & "', '" & Datarows(1).ToString.Trim() & "','" & Datarows(2).ToString.Trim() & "','" & dDate.ToString("yyyy-MM-dd") & "','" & Datarows(4).ToString.Trim() & "', " & _
                                       " " & Datarows(5).ToString.Trim() & ",'" & Datarows(6).ToString.Trim() & "','','" & Datarows(8).ToString.Trim() & "','" & Datarows(9).ToString.Trim() & "', " & _
                                       " '" & Datarows(10).ToString.Trim() & "' ); "
                     End If
@@ -201,12 +201,12 @@ Module modUploadStatement
 
                     If sSQL = "" Then
                         sSQL = "INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode, FileName) " & _
-                               " VALUES ('', '" & Datarows(1).ToString.Trim() & "','" & Datarows(2).ToString.Trim() & "','" & dDate.ToString("yyyy-MM-dd") & "','" & Datarows(4).ToString.Trim() & "', " & _
+                               " VALUES ('" & p_oDICompany.CompanyDB & "', '" & Datarows(1).ToString.Trim() & "','" & Datarows(2).ToString.Trim() & "','" & dDate.ToString("yyyy-MM-dd") & "','" & Datarows(4).ToString.Trim() & "', " & _
                                " " & Datarows(5).ToString.Trim() & ",'" & Datarows(6).ToString.Trim() & "','" & dt_tmp.ToString("HH:mm:ss") & "','" & Datarows(8).ToString.Trim() & "','" & Datarows(9).ToString.Trim() & "', " & _
                                " '" & Datarows(10).ToString.Trim() & "' ); "
                     Else
                         sSQL = sSQL & " INSERT INTO AB_STATEMENTUPLOAD (Entity ,AcctCode ,InvoiceRef ,DueDate,Memo ,Amount,PaymentRef ,Time ,Source ,BranchCode, FileName) " & _
-                                      " VALUES ('', '" & Datarows(1).ToString.Trim() & "','" & Datarows(2).ToString.Trim() & "','" & dDate.ToString("yyyy-MM-dd") & "','" & Datarows(4).ToString.Trim() & "', " & _
+                                      " VALUES ('" & p_oDICompany.CompanyDB & "', '" & Datarows(1).ToString.Trim() & "','" & Datarows(2).ToString.Trim() & "','" & dDate.ToString("yyyy-MM-dd") & "','" & Datarows(4).ToString.Trim() & "', " & _
                                       " " & Datarows(5).ToString.Trim() & ",'" & Datarows(6).ToString.Trim() & "','" & dt_tmp.ToString("HH:mm:ss") & "','" & Datarows(8).ToString.Trim() & "','" & Datarows(9).ToString.Trim() & "', " & _
                                       " '" & Datarows(10).ToString.Trim() & "' ); "
                     End If
@@ -242,7 +242,7 @@ Module modUploadStatement
         End Try
 
         sSQL = "SELECT ID ,Entity ,AcctCode ,InvoiceRef ,to_char(DueDate, 'dd/MM/yyyy') DueDate ,Memo ,Amount,PaymentRef,Time,Source,BranchCode  " & _
-              " FROM AB_STATEMENTUPLOAD WHERE COALESCE(Status,'') = '' AND filename = '" & sFileName & "' ORDER BY ID "
+              " FROM AB_STATEMENTUPLOAD WHERE COALESCE(Status,'') = '' AND filename = '" & sFileName & "' AND Entity = '" & p_oDICompany.CompanyDB & "' ORDER BY ID "
 
         oDT_Bankstat = New DataTable
         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLQuery()", sFuncName)

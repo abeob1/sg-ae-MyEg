@@ -290,12 +290,12 @@ Module modExceptionList
         sQuery = "SELECT ID ,Entity ,AcctCode ,InvoiceRef ,to_char(DueDate, 'dd/MM/yyyy') DueDate ,Memo ,COALESCE(BalanceAmt,Amount) ""Amount"",PaymentRef,Time,Source,BranchCode " & _
                  " FROM AB_STATEMENTUPLOAD where DueDate between '" & dtFromDate.ToString("yyyy-MM-dd") & "' and '" & dtToDate.ToString("yyyy-MM-dd") & "' AND COALESCE(Status,'FAIL') = 'FAIL' " & _
                  " AND AcctCode BETWEEN '" & sAcctCodeFrom & "' AND '" & sAcctCodeTo & "' " & _
-                 " AND (COALESCE(BalanceAmt,Amount) > 0) " & _
+                 " AND (COALESCE(BalanceAmt,Amount) > 0) AND Entity = '" & p_oDICompany.CompanyDB & "' " & _
                  " UNION ALL " & _
                  " SELECT ID ,Entity ,AcctCode ,InvoiceRef ,to_char(DueDate, 'dd/MM/yyyy') DueDate ,Memo ,COALESCE(BalanceAmt,Amount) ""Amount"",PaymentRef,Time,Source,BranchCode   " & _
                  " FROM AB_STATEMENTUPLOAD where DueDate between '" & dtFromDate.ToString("yyyy-MM-dd") & "' and '" & dtToDate.ToString("yyyy-MM-dd") & "' AND Status = 'SUCCESS'" & _
                  " AND AcctCode BETWEEN '" & sAcctCodeFrom & "' AND '" & sAcctCodeTo & "' " & _
-                 " AND (COALESCE(BalanceAmt,Amount) > 0) " & _
+                 " AND (COALESCE(BalanceAmt,Amount) > 0) AND Entity = '" & p_oDICompany.CompanyDB & "' " & _
                  " ORDER BY ID "
         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLQuery()", sFuncName)
         dtExecption = ExecuteSQLQueryDataTable(sQuery, sErrDesc)
