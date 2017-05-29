@@ -55,7 +55,7 @@ Module modProcess
                    " photo_amount,ag_code,pay_mode,agency_account_no,zakat_id,req_id,credit_card_no,contact_no,zakat_agency_id,booking_ID,covernote_number,email,ins_company,  " & _
                    " invoiceid,New_Passport_no,""A/P Invoice No"",Section_code,fw_id,trans_id  " & _
                    " FROM public.AB_REVENUEANDCOST WHERE COALESCE(Status,'FAIL') = 'SUCCESS' AND Agency = 'IMMI' AND print_status = 'SUCCESS' AND COALESCE(""A/P Invoice No2"",'0') = '0'  ) as fin ) AS TAB " & _
-                   " WHERE TAB.sno <= 5000 ORDER BY ID"
+                   " ORDER BY ID " 'WHERE TAB.sno <= 5000 
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
             oDataView = GetDataView(sSql)
@@ -620,6 +620,7 @@ Module modProcess
                 oArInovice.DocDate = CDate(oDv(iLine)(5).ToString.Trim)
             End If
             oArInovice.BPL_IDAssignedToInvoice = "1"
+            oArInovice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
             oArInovice.UserFields.Fields.Item("U_AI_InvRefNo").Value = oDv(iLine)(4).ToString.Trim
             oArInovice.Comments = "From Integration database. Refer id no " & sIntegId
             oArInovice.JournalMemo = "A/R Invoices - " & sCardCode & " " & sMerChantid
@@ -2615,6 +2616,7 @@ Module modProcess
             If Not (oDv(iLine)(5).ToString.Trim = String.Empty) Then
                 oAPInvoice.DocDate = CDate(oDv(iLine)(5).ToString.Trim)
             End If
+            oAPInvoice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
             oAPInvoice.DocDueDate = CDate(oDv(iLine)(5).ToString.Trim)
             oAPInvoice.BPL_IDAssignedToInvoice = "1"
             oAPInvoice.Comments = "From Integration database/Refer id No " & sIntegId
@@ -3553,6 +3555,7 @@ Module modProcess
             If Not (oDv(iLine)(5).ToString.Trim = String.Empty) Then
                 oAPInvoice.DocDate = CDate(oDv(iLine)(5).ToString.Trim)
             End If
+            oAPInvoice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
             oAPInvoice.DocDueDate = CDate(oDv(iLine)(5).ToString.Trim)
             oAPInvoice.BPL_IDAssignedToInvoice = "1"
             oAPInvoice.Comments = "From Integration database/Refer id No " & sIntegId
@@ -4810,6 +4813,7 @@ Module modProcess
             If Not (oDv(iLine)(5).ToString.Trim = String.Empty) Then
                 oAPInvoice.DocDate = CDate(oDv(iLine)(5).ToString.Trim)
             End If
+            oAPInvoice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
             oAPInvoice.DocDueDate = CDate(oDv(iLine)(5).ToString.Trim)
             oAPInvoice.BPL_IDAssignedToInvoice = "1"
             oAPInvoice.Comments = "From Integration database/Refer id No " & sIntegId
