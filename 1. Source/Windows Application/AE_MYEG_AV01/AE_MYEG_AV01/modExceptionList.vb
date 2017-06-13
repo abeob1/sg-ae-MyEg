@@ -676,6 +676,7 @@ Module modExceptionList
 
                 oGrid.Columns.Item("Payment DocNo").Editable = True
                 oGrid.DataTable.SetValue("Payment DocNo", iLine, sPayDocEntry)
+                oGrid.DataTable.SetValue("Status", iLine, "SUCCESS")
                 objForm.Items.Item("5").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
                 oGrid.Columns.Item("Payment DocNo").Editable = False
 
@@ -749,6 +750,7 @@ Module modExceptionList
 
                         oGrid.Columns.Item("Payment DocNo").Editable = True
                         oGrid.DataTable.SetValue("Payment DocNo", iLine, sPayDocEntry)
+                        oGrid.DataTable.SetValue("Status", iLine, "SUCCESS")
                         objForm.Items.Item("5").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
                         oGrid.Columns.Item("Payment DocNo").Editable = False
 
@@ -862,6 +864,7 @@ Module modExceptionList
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Payment added successfully", sFuncName)
 
                             sErrDesc = String.Empty
+                            sPayDocEntry = String.Empty
                             p_oDICompany.GetNewObjectCode(sPayDocEntry)
                             If oIncomingPayment.GetByKey(sPayDocEntry) Then
                                 sPayDocEntry = oIncomingPayment.DocNum
@@ -869,6 +872,7 @@ Module modExceptionList
 
                             oGrid.Columns.Item("Payment DocNo").Editable = True
                             oGrid.DataTable.SetValue("Payment DocNo", iLine, sPayDocEntry)
+                            'oGrid.DataTable.SetValue("Status", iLine, "SUCCESS")
                             objForm.Items.Item("5").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
                             oGrid.Columns.Item("Payment DocNo").Editable = False
 
@@ -944,6 +948,8 @@ Module modExceptionList
                                     bCheck = False
                                 Else
                                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS.", sFuncName)
+                                    sPayDocEntry = String.Empty
+
                                     p_oDICompany.GetNewObjectCode(sPayDocEntry)
                                     If oIncomingPayment.GetByKey(sPayDocEntry) Then
                                         sPayDocEntry = oIncomingPayment.DocNum
@@ -951,6 +957,7 @@ Module modExceptionList
 
                                     oGrid.Columns.Item("Payment DocNo").Editable = True
                                     oGrid.DataTable.SetValue("Payment DocNo", iLine, sPayDocEntry)
+                                    'oGrid.DataTable.SetValue("Status", iLine, "SUCCESS")
                                     objForm.Items.Item("5").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
                                     oGrid.Columns.Item("Payment DocNo").Editable = False
 
@@ -1062,6 +1069,7 @@ Module modExceptionList
 
                     oGrid.Columns.Item("Payment DocNo").Editable = True
                     oGrid.DataTable.SetValue("Payment DocNo", iLine, sPayDocEntry)
+                    oGrid.DataTable.SetValue("Status", iLine, "SUCCESS")
                     objForm.Items.Item("5").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
                     oGrid.Columns.Item("Payment DocNo").Editable = False
 
@@ -1215,6 +1223,7 @@ Module modExceptionList
 
             oGrid.Columns.Item("Payment DocNo").Editable = True
             oGrid.DataTable.SetValue("Payment DocNo", iLine, sPayDocEntry)
+            oGrid.DataTable.SetValue("Status", iLine, "SUCCESS")
             objForm.Items.Item("5").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
             oGrid.Columns.Item("Payment DocNo").Editable = False
 
@@ -1359,6 +1368,7 @@ Module modExceptionList
 
             oGrid.Columns.Item("Payment DocNo").Editable = True
             oGrid.DataTable.SetValue("Payment DocNo", iLine, sPayDocEntry)
+            oGrid.DataTable.SetValue("Status", iLine, "SUCCESS")
             objForm.Items.Item("5").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
             oGrid.Columns.Item("Payment DocNo").Editable = False
 

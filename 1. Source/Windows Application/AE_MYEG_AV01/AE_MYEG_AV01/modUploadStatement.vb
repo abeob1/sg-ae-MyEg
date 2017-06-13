@@ -140,11 +140,11 @@ Module modUploadStatement
 
         Dim sSQL As String
         Dim oDs As DataSet
-        sSQL = "SELECT ID FROM AB_STATEMENTUPLOAD WHERE FILENAME = '" & sFileName & "'"
+        sSQL = "SELECT ID FROM AB_STATEMENTUPLOAD WHERE FILENAME = '" & sFileName & "' AND Entity = '" & p_oDICompany.CompanyDB & "' "
         oDs = ExecuteSQLQueryDataset(sSQL, sErrDesc)
         If oDs.Tables(0).Rows.Count > 0 Then
             v_Check = False
-            sErrDesc = "File already uploaded"
+            sErrDesc = "File already uploaded to the entity " & p_oDICompany.CompanyDB
             Return v_Check
             Exit Function
         End If
