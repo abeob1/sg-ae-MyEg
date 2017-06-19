@@ -118,6 +118,7 @@ Module modProcess
         Dim sFuncName As String = "CategorizeInvoice"
         Dim sEntity, sAgency, sPrintStatus, sSQL, sIntegId, sApinvNo As String
         Dim sAGCode As String = String.Empty
+        Dim oRecSet As SAPbobsCOM.Recordset = Nothing
 
         Try
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting Function", sFuncName)
@@ -128,6 +129,213 @@ Module modProcess
             Console.WriteLine("Connecting Company")
             If ConnectToTargetCompany(p_oCompany, sEntity, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
             Console.WriteLine("Company Connection Successful")
+
+            If p_oCompany.Connected Then
+
+                oRecSet = p_oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+
+                sSQL = "SELECT ""Code"",""Name"",""U_ServiceType"" ""ServiceType"",UPPER(""U_REVCOSTCODE"") ""RevCostCode"" FROM " & p_oCompany.CompanyDB & ".""@AE_ITEMCODEMAPPING"" "
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING SQL :" & sSQL, sFuncName)
+                dtItemCode = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
+
+                sSQL = "SELECT ""CardCode"" FROM " & p_oCompany.CompanyDB & ".""OCRD"" "
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING SQL :" & sSQL, sFuncName)
+                dtBP = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
+
+                sSQL = "SELECT * FROM " & p_oCompany.CompanyDB & ".""@AE_MERCHANT_ID"" "
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING SQL :" & sSQL, sFuncName)
+                dtMerchantId = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
+
+                sSQL = "SELECT ""ItemCode"",""VatGourpSa"",""VatGroupPu"" FROM " & p_oCompany.CompanyDB & ".""OITM"" WHERE ""frozenFor""='N'"
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING  SQL :" & sSQL, sFuncName)
+                dtVatGroup = ExecuteQueryReturnDataTable_HANA(sSQL, p_oCompany.CompanyDB)
+
+                For i As Integer = 0 To oDv.Count - 1
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling Validation()", sFuncName)
+                    If Validation(oDv, i, sErrDesc) = RTN_SUCCESS Then
+
+                        sIntegId = oDv(i)(0).ToString.Trim
+                        sAgency = oDv(i)(2).ToString.Trim
+                        sPrintStatus = oDv(i)(51).ToString.Trim
+                        sApinvNo = oDv(i)(68).ToString.Trim
+                        sAGCode = oDv(i)(54).ToString.Trim
+
+                        sCostCenter = String.Empty
+                        sCostCenter2 = String.Empty
+                        sCostCenter3 = String.Empty
+                        sCostCenter4 = String.Empty
+                        sCostCenter5 = String.Empty
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for ID " & sIntegId, sFuncName)
+
+                        If sPrintStatus = "" Then
+                            Console.WriteLine("Agency is " & sAgency)
+                        Else
+                            Console.WriteLine("Agency is " & sAgency & " and Print Status is " & sPrintStatus)
+                        End If
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Ag Code is " & sAGCode, sFuncName)
+
+                        If sAGCode <> "" Then
+                            sSQL = "SELECT ""PrcCode"" FROM " & p_oCompany.CompanyDB & ".""OPRC"" WHERE UPPER(""U_AGCODE"") = '" & sAGCode.ToUpper() & "' "
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                            oRecSet.DoQuery(sSQL)
+                            If oRecSet.RecordCount > 0 Then
+                                sCostCenter5 = oRecSet.Fields.Item("PrcCode").Value
+                            Else
+                                sCostCenter5 = ""
+                            End If
+
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Cost center for dim5 is " & sCostCenter5, sFuncName)
+
+                            If sCostCenter5 <> "" Then
+                                sSQL = "SELECT ""U_DIMENSION_LINK"" FROM " & p_oCompany.CompanyDB & ".""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter5 & "' "
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                                oRecSet.DoQuery(sSQL)
+                                If oRecSet.RecordCount > 0 Then
+                                    sCostCenter4 = oRecSet.Fields.Item("U_DIMENSION_LINK").Value
+                                Else
+                                    sCostCenter4 = ""
+                                End If
+
+                                sSQL = "SELECT ""U_DIMENSION_LINK"" FROM " & p_oCompany.CompanyDB & ".""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter4 & "' "
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                                oRecSet.DoQuery(sSQL)
+                                If oRecSet.RecordCount > 0 Then
+                                    sCostCenter3 = oRecSet.Fields.Item("U_DIMENSION_LINK").Value
+                                Else
+                                    sCostCenter3 = ""
+                                End If
+
+                                sSQL = "SELECT ""U_DIMENSION_LINK"" FROM " & p_oCompany.CompanyDB & ".""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter3 & "' "
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                                oRecSet.DoQuery(sSQL)
+                                If oRecSet.RecordCount > 0 Then
+                                    sCostCenter2 = oRecSet.Fields.Item("U_DIMENSION_LINK").Value
+                                Else
+                                    sCostCenter2 = ""
+                                End If
+
+                                sSQL = "SELECT ""U_DIMENSION_LINK"" FROM " & p_oCompany.CompanyDB & ".""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter2.ToUpper() & "' "
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                                oRecSet.DoQuery(sSQL)
+                                If oRecSet.RecordCount > 0 Then
+                                    sCostCenter = oRecSet.Fields.Item("U_DIMENSION_LINK").Value
+                                Else
+                                    sCostCenter = ""
+                                End If
+                            End If
+
+                            Else
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Ag Code is null/Not getting Cost Center" & sAGCode, sFuncName)
+                            End If
+
+                            If sAgency = "IMMI" Then
+                                If sPrintStatus = "" And sApinvNo = "" Then
+                                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CreateARinvoice followed by CreateAPInvoice", sFuncName)
+
+                                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling StartTransaction()", sFuncName)
+                                    If StartTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                                    If CreateARInvoice(oDv, i, sErrDesc) = RTN_ERROR Then
+                                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling RollbackTransaction()", sFuncName)
+                                        If RollbackTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                                        Continue For
+                                    ElseIf CreateAPInvoice_IMMI(oDv, i, sPrintStatus, sErrDesc) = RTN_ERROR Then
+                                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ", sFuncName)
+                                        If RollbackTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                                        Continue For
+                                    Else
+                                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CommitTransaction()", sFuncName)
+                                        If CommitTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                                    End If
+                                ElseIf sPrintStatus.ToUpper() = "SUCCESS" And sApinvNo <> "" Then
+
+                                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling StartTransaction()", sFuncName)
+                                    If StartTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                                    If CreateAPInvoice_Second(oDv, i, sErrDesc) = RTN_ERROR Then
+                                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling RollbackTransaction()", sFuncName)
+                                        If RollbackTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                                        Continue For
+                                    ElseIf CreateCreditNote(oDv, i, sErrDesc) = RTN_ERROR Then
+                                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling RollbackTransaction()", sFuncName)
+                                        If RollbackTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                                        Continue For
+                                    Else
+                                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CommitTransaction()", sFuncName)
+                                        If CommitTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                                    End If
+                                End If
+                            Else
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CreateARinvoice followed by CreateAPInvoice", sFuncName)
+
+                                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling StartTransaction()", sFuncName)
+                                If StartTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+                                If CreateARInvoice(oDv, i, sErrDesc) = RTN_ERROR Then
+                                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling RollbackTransaction()", sFuncName)
+                                    If RollbackTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                                    Continue For
+                                ElseIf CreateAPInvoice(oDv, i, sErrDesc) = RTN_ERROR Then
+                                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling RollbackTransaction()", sFuncName)
+                                    If RollbackTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                                    Continue For
+                                Else
+                                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling CommitTransaction()", sFuncName)
+                                    If CommitTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                                End If
+                            End If
+
+                        Else
+                            Continue For
+                        End If
+                Next
+            End If
+
+            Console.WriteLine("Disconnecting Company connection" & sEntity)
+            p_oCompany.Disconnect()
+            Console.WriteLine("Company disconnected successfully")
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS", sFuncName)
+            CategorizeInvoice = RTN_SUCCESS
+        Catch ex As Exception
+            sErrDesc = ex.Message
+            Call WriteToLogFile(sErrDesc, sFuncName)
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling RollbackTransaction()", sFuncName)
+            If RollbackTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
+            CategorizeInvoice = RTN_ERROR
+        End Try
+    End Function
+#End Region
+#Region "Process the datas to create invoice BACKUP"
+    Private Function CategorizeInvoice_BACKUP(ByVal oDv As DataView, ByRef sErrDesc As String) As Long
+        Dim sFuncName As String = "CategorizeInvoice_BACKUP"
+        Dim sEntity, sAgency, sPrintStatus, sSQL, sIntegId, sApinvNo As String
+        Dim sAGCode As String = String.Empty
+
+        Try
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting Function", sFuncName)
+
+            sEntity = oDv(0)(1).ToString.Trim
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ConnectToTargetCompany()", sFuncName)
+            Console.WriteLine("Connecting Company")
+            If ConnectToTargetCompany(p_oCompany, sEntity, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+            Console.WriteLine("Company Connection Successful")
+
+            '1. Duplicate in Postg sql data
+            ' odv.dup
+            '2. Duplicate check agaist SAP
+            ' sSQL = "SELECT DISTINCT UPPER(""NumAtCard"") AS ""MERCHANTID"", UPPER(""U_AI_InvRefNo"") AS ""RECEIPTNO"",UPPER(""U_TRANS_ID"") AS ""TRANSID"", " & _
+            '           " UPPER(""U_FWID"") AS ""FWID"",UPPER(""U_SUMMONSID"") AS ""SUMMONSID"",UPPER(""U_COMPNO"") AS ""COMPOUNDNO"",UPPER(""U_COVERNOTENO"") AS ""COVERNOTENO"" " & _
+            ''           " FROM " & p_oCompany.CompanyDB & ".""OINV"" "
+            'If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("EXECUTING SQL :" & sSQL, sFuncName)
+            ' Recordset
+            '3. 
 
             If p_oCompany.Connected Then
 
@@ -296,7 +504,7 @@ Module modProcess
             Console.WriteLine("Company disconnected successfully")
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS", sFuncName)
-            CategorizeInvoice = RTN_SUCCESS
+            CategorizeInvoice_BACKUP = RTN_SUCCESS
         Catch ex As Exception
             sErrDesc = ex.Message
             Call WriteToLogFile(sErrDesc, sFuncName)
@@ -305,13 +513,181 @@ Module modProcess
             If RollbackTransaction(sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
-            CategorizeInvoice = RTN_ERROR
+            CategorizeInvoice_BACKUP = RTN_ERROR
         End Try
     End Function
 #End Region
 #Region "Validation"
     Private Function Validation(ByVal oDv As DataView, ByVal iLine As Integer, ByRef sErrDesc As String) As Long
         Dim sFuncName As String = "Validation"
+        Dim sSQL As String = String.Empty
+        Dim sIntegId As String = String.Empty
+        Dim sAgency As String = String.Empty
+        Dim sServiceType As String = String.Empty
+        Dim sMerChantid As String = String.Empty
+        Dim sReceiptNo As String = String.Empty
+        Dim sTransId As String = String.Empty
+        Dim sFwId As String = String.Empty
+        Dim sSummonsID As String = String.Empty
+        Dim sCompoundNo As String = String.Empty
+        Dim sCoverNoteNo As String = String.Empty
+        Dim sApinvNo As String = String.Empty
+
+        Try
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting Function ", sFuncName)
+
+            sIntegId = oDv(iLine)(0).ToString.Trim.ToUpper()
+            sAgency = oDv(iLine)(2).ToString.Trim.ToUpper()
+            sServiceType = oDv(iLine)(3).ToString.Trim.ToUpper()
+            sReceiptNo = oDv(iLine)(4).ToString.Trim.ToUpper()
+            sMerChantid = oDv(iLine)(24).ToString.Trim.ToUpper()
+            sSummonsID = oDv(iLine)(26).ToString.Trim.ToUpper()
+            sCompoundNo = oDv(iLine)(38).ToString.Trim.ToUpper()
+            sCoverNoteNo = oDv(iLine)(63).ToString.Trim.ToUpper()
+            sApinvNo = oDv(iLine)(68).ToString.Trim.ToUpper()
+            sFwId = oDv(iLine)(70).ToString.Trim.ToUpper()
+            sTransId = oDv(iLine)(71).ToString.Trim.ToUpper()
+
+            Dim oRecordSet As SAPbobsCOM.Recordset = Nothing
+            oRecordSet = p_oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Service type is " & sServiceType.ToUpper(), sFuncName)
+
+            Select Case sServiceType.ToUpper()
+                Case "BOOKING", "CDL", "LDL", "RTX", "STMS", "ETMS"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Receipt No " & sReceiptNo.ToUpper(), sFuncName)
+
+                    sSQL = "SELECT ""U_AI_InvRefNo"" FROM " & p_oCompany.CompanyDB & ".""OINV"" WHERE UPPER(""U_AI_InvRefNo"") = '" & sReceiptNo.ToUpper() & "' "
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                    oRecordSet.DoQuery(sSQL)
+                    If oRecordSet.RecordCount > 0 Then
+                        sErrDesc = "RECEIPTNO ::" & sReceiptNo & " already exist in SAP. Function " & sFuncName
+                        Throw New ArgumentException(sErrDesc)
+                    End If
+
+                Case "JPJSUMMONS"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper() & " and Transid " & sTransId, sFuncName)
+
+                    sSQL = "SELECT DISTINCT ""NumAtCard"" AS ""MERCHANTID"",""U_TRANS_ID"" AS ""TRANSID"" FROM " & p_oCompany.CompanyDB & ".""OINV"" " & _
+                           " WHERE UPPER(""NumAtCard"") = '" & sMerChantid.ToUpper() & "' AND UPPER(""U_TRANS_ID"") = '" & sTransId.ToUpper() & "'"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                    oRecordSet.DoQuery(sSQL)
+                    If oRecordSet.RecordCount > 0 Then
+                        sErrDesc = "MERCHANTID ::" & sMerChantid & " and TRANSID ::" & sTransId & " already exist in SAP. Function " & sFuncName
+                        Throw New ArgumentException(sErrDesc)
+                    End If
+
+                Case "ZAKAT", "ASSESSMENT", "JIM", "JPN", "ZAKATPPZ", "ZAKATLZS", "ZAKATPKZP", "ZAKATMAINJ", "ZAKATPZNS", "ZAKATMAIP", "ZAKATJZNK"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper(), sFuncName)
+
+                    sSQL = "SELECT DISTINCT ""NumAtCard"" AS ""MERCHANTID"" FROM " & p_oCompany.CompanyDB & ".""OINV"" WHERE UPPER(""NumAtCard"") = '" & sMerChantid.ToUpper() & "' "
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                    oRecordSet.DoQuery(sSQL)
+                    If oRecordSet.RecordCount > 0 Then
+                        sErrDesc = "MERCHANTID ::" & sMerChantid & " already exist in SAP. Function " & sFuncName
+                        Throw New ArgumentException(sErrDesc)
+                    End If
+
+                Case "MAIDPR"
+                    If sAgency.ToUpper() = "IMMI" And sApinvNo = "" Then
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper(), sFuncName)
+
+                        sSQL = "SELECT DISTINCT ""NumAtCard"" AS ""MERCHANTID"" FROM " & p_oCompany.CompanyDB & ".""OINV"" WHERE UPPER(""NumAtCard"") = '" & sMerChantid.ToUpper() & "' "
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                        oRecordSet.DoQuery(sSQL)
+                        If oRecordSet.RecordCount > 0 Then
+                            sErrDesc = "MERCHANTID ::" & sMerChantid & " already exist in SAP. Function " & sFuncName
+                            Throw New ArgumentException(sErrDesc)
+                        End If
+
+                    End If
+                Case "PDRM"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper() & " and SummonsId " & sSummonsID.ToUpper(), sFuncName)
+
+                    sSQL = "SELECT DISTINCT ""NumAtCard"" AS ""MERCHANTID"",""U_SUMMONSID"" AS ""SUMMONSID"" FROM " & p_oCompany.CompanyDB & ".""OINV"" " & _
+                           " WHERE UPPER(""NumAtCard"") = '" & sMerChantid.ToUpper() & "' AND UPPER(""U_SUMMONSID"") = '" & sSummonsID.ToUpper() & "' "
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                    oRecordSet.DoQuery(sSQL)
+                    If oRecordSet.RecordCount > 0 Then
+                        sErrDesc = "MERCHANTID ::" & sMerChantid & " and SUMMONSID ::" & sSummonsID & " already exist in SAP. Function " & sFuncName
+                        Throw New ArgumentException(sErrDesc)
+                    End If
+
+                Case "COMPOUND"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper() & " and Compound no " & sCompoundNo.ToUpper(), sFuncName)
+
+                    sSQL = "SELECT DISTINCT ""NumAtCard"" AS ""MERCHANTID"",""U_COMPNO"" AS ""COMPOUNDNO"" FROM " & p_oCompany.CompanyDB & ".""OINV"" " & _
+                           " WHERE UPPER(""NumAtCard"") = '" & sMerChantid.ToUpper() & "' AND UPPER(""U_COMPNO"") = '" & sCompoundNo.ToUpper() & "' "
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                    oRecordSet.DoQuery(sSQL)
+                    If oRecordSet.RecordCount > 0 Then
+                        sErrDesc = "MERCHANTID ::" & sMerChantid & " and COMPOUNDNO ::" & sCompoundNo & " already exist in SAP. Function " & sFuncName
+                        Throw New ArgumentException(sErrDesc)
+                    End If
+
+                Case "FOREIGN WORKER", "PATI"
+                    If sAgency.ToUpper() = "IMMI" Then
+                        If sApinvNo = "" Then
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper() & " and fwid " & sFwId.ToUpper(), sFuncName)
+
+                            sSQL = "SELECT DISTINCT ""NumAtCard"" AS ""MERCHANTID"",""U_FWID"" AS ""FWID"" FROM " & p_oCompany.CompanyDB & ".""OINV"" " & _
+                                   " WHERE UPPER(""NumAtCard"") = '" & sMerChantid.ToUpper() & "' AND UPPER(""U_FWID"") = '" & sFwId.ToUpper() & "' "
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                            oRecordSet.DoQuery(sSQL)
+                            If oRecordSet.RecordCount > 0 Then
+                                sErrDesc = "MERCHANTID ::" & sMerChantid & " and FWID ::" & sFwId & " already exist in SAP. Function " & sFuncName
+                                Throw New ArgumentException(sErrDesc)
+                            End If
+
+                        End If
+                    Else
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper() & " and fwid " & sFwId.ToUpper(), sFuncName)
+                       
+                        sSQL = "SELECT DISTINCT ""NumAtCard"" AS ""MERCHANTID"",""U_FWID"" AS ""FWID"" FROM " & p_oCompany.CompanyDB & ".""OINV"" " & _
+                               " WHERE UPPER(""NumAtCard"") = '" & sMerChantid.ToUpper() & "' AND UPPER(""U_FWID"") = '" & sFwId.ToUpper() & "' "
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                        oRecordSet.DoQuery(sSQL)
+                        If oRecordSet.RecordCount > 0 Then
+                            sErrDesc = "MERCHANTID ::" & sMerChantid & " and FWID ::" & sFwId & " already exist in SAP. Function " & sFuncName
+                            Throw New ArgumentException(sErrDesc)
+                        End If
+
+                    End If
+                Case "VEHICLE INSURANCE"
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper() & " and CoverNote NO " & sCoverNoteNo.ToUpper(), sFuncName)
+
+                    sSQL = "SELECT DISTINCT ""NumAtCard"" AS ""MERCHANTID"",""U_COVERNOTENO"" AS ""COVERNOTENO"" FROM " & p_oCompany.CompanyDB & ".""OINV"" " & _
+                           " WHERE UPPER(""NumAtCard"") = '" & sMerChantid.ToUpper() & "' AND UPPER(""U_COVERNOTENO"") = '" & sCoverNoteNo.ToUpper() & "' "
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                    oRecordSet.DoQuery(sSQL)
+                    If oRecordSet.RecordCount > 0 Then
+                        sErrDesc = "MERCHANTID ::" & sMerChantid & " and COVERNOTENO ::" & sCoverNoteNo & " already exist in SAP. Function " & sFuncName
+                        Throw New ArgumentException(sErrDesc)
+                    End If
+
+            End Select
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(oRecordSet)
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS", sFuncName)
+            Validation = RTN_SUCCESS
+        Catch ex As Exception
+            sErrDesc = ex.Message
+            Call WriteToLogFile(sErrDesc, sFuncName)
+
+            Dim sQuery As String
+            sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
+                     " WHERE ID = '" & sIntegId & "'"
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
+            If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
+            Validation = RTN_ERROR
+        End Try
+    End Function
+#End Region
+#Region "Validation BACKUP"
+    Private Function Validation_BACKUP(ByVal oDv As DataView, ByVal iLine As Integer, ByRef sErrDesc As String) As Long
+        Dim sFuncName As String = "Validation_BACKUP"
         Dim sSQL As String = String.Empty
         Dim sIntegId As String = String.Empty
         Dim sAgency As String = String.Empty
@@ -489,12 +865,12 @@ Module modProcess
             End Select
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS", sFuncName)
-            Validation = RTN_SUCCESS
+            Validation_BACKUP = RTN_SUCCESS
         Catch ex As Exception
             sErrDesc = ex.Message
             Call WriteToLogFile(sErrDesc, sFuncName)
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
-            Validation = RTN_ERROR
+            Validation_BACKUP = RTN_ERROR
         End Try
     End Function
 #End Region
@@ -514,8 +890,7 @@ Module modProcess
         Dim sServiceType As String = String.Empty
         Dim sItemDesc As String = String.Empty
         Dim bLineAdded As Boolean = False
-        ' Dim sAGCode As String = String.Empty
-        'Dim sCostCenter5, sCostCenter4, sCostCenter3, sCostCenter2, sCostCenter As String
+        Dim oRs As SAPbobsCOM.Recordset = Nothing
 
         Try
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting function", sFuncName)
@@ -526,9 +901,17 @@ Module modProcess
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Creating AR Invoice document", sFuncName)
             Console.WriteLine("Creating AR Invoice document")
 
+            oRs = p_oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+
             sSql = "SELECT ""Code"" FROM ""OVTG"" WHERE ""Code"" = '" & p_oCompDef.sEserviceTax & "'"
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
-            sEservice_Taxcode = GetStringValue(sSql)
+            oRs.DoQuery(sSql)
+            If oRs.RecordCount > 0 Then
+                sEservice_Taxcode = oRs.Fields.Item("Code").Value
+            Else
+                sEservice_Taxcode = ""
+            End If
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(oRs)
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Initializing AR Invoice object", sFuncName)
             oArInovice = p_oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oInvoices)
@@ -591,25 +974,11 @@ Module modProcess
                 dtBP.DefaultView.RowFilter = "CardCode = '" & sCardCode & "'"
                 If dtBP.DefaultView.Count = 0 Then
                     sErrDesc = "Cardcode ::" & sCardCode & " provided does not exist in SAP. Function " & sFuncName
-
-                    Dim sQuery As String
-                    sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
-                             " WHERE ID = '" & sIntegId & "'"
-                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
-                    If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
-
                     Call WriteToLogFile(sErrDesc, sFuncName)
                     Throw New ArgumentException(sErrDesc)
                 End If
             Else
                 sErrDesc = "Cardcode is Mandatory. Function " & sFuncName
-
-                Dim sQuery As String
-                sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
-                         " WHERE ID = '" & sIntegId & "'"
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sQuery, sFuncName)
-                If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
-
                 Call WriteToLogFile(sErrDesc, sFuncName)
                 Throw New ArgumentException(sErrDesc)
             End If
@@ -620,7 +989,7 @@ Module modProcess
                 oArInovice.DocDate = CDate(oDv(iLine)(5).ToString.Trim)
             End If
             oArInovice.BPL_IDAssignedToInvoice = "1"
-            oArInovice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
+            'oArInovice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
             oArInovice.UserFields.Fields.Item("U_AI_InvRefNo").Value = oDv(iLine)(4).ToString.Trim
             oArInovice.Comments = "From Integration database. Refer id no " & sIntegId
             oArInovice.JournalMemo = "A/R Invoices - " & sCardCode & " " & sMerChantid
@@ -2558,8 +2927,6 @@ Module modProcess
         Dim sItemCode As String = String.Empty
         Dim sVatGroup As String = String.Empty
         Dim sServiceType As String = String.Empty
-        'Dim sAGCode As String = String.Empty
-        'Dim sCostCenter5, sCostCenter4, sCostCenter3, sCostCenter2, sCostCenter As String
         Dim sSql As String = String.Empty
         Dim sItemDesc As String = String.Empty
         Dim bLineAdded As Boolean = False
@@ -2596,6 +2963,12 @@ Module modProcess
 
             If sCardCode.ToUpper() = "JPJ" And dAmount = 0 Then
                 sErrDesc = "agency_amount column Value is 0 for JPJ Service. No Ap Invoice will be Created"
+
+                sSql = "UPDATE public.AB_REVENUEANDCOST SET Status = 'SUCCESS', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
+                         " WHERE ID = '" & sIntegId & "'"
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
+                If ExecuteNonQuery(sSql, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug(sErrDesc, sFuncName)
                 CreateAPInvoice = RTN_SUCCESS
                 Exit Function
@@ -2606,6 +2979,12 @@ Module modProcess
                 '    Exit Function
             ElseIf sCardCode.ToUpper() = "INSURANCE" Then
                 sErrDesc = "Agency is Insurance. No Ap Invoice will be Created"
+
+                sSql = "UPDATE public.AB_REVENUEANDCOST SET Status = 'SUCCESS', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
+                         " WHERE ID = '" & sIntegId & "'"
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSql, sFuncName)
+                If ExecuteNonQuery(sSql, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+
                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug(sErrDesc, sFuncName)
                 CreateAPInvoice = RTN_SUCCESS
                 Exit Function
@@ -2616,7 +2995,7 @@ Module modProcess
             If Not (oDv(iLine)(5).ToString.Trim = String.Empty) Then
                 oAPInvoice.DocDate = CDate(oDv(iLine)(5).ToString.Trim)
             End If
-            oAPInvoice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
+            'oAPInvoice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
             oAPInvoice.DocDueDate = CDate(oDv(iLine)(5).ToString.Trim)
             oAPInvoice.BPL_IDAssignedToInvoice = "1"
             oAPInvoice.Comments = "From Integration database/Refer id No " & sIntegId
@@ -3555,7 +3934,7 @@ Module modProcess
             If Not (oDv(iLine)(5).ToString.Trim = String.Empty) Then
                 oAPInvoice.DocDate = CDate(oDv(iLine)(5).ToString.Trim)
             End If
-            oAPInvoice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
+            'oAPInvoice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
             oAPInvoice.DocDueDate = CDate(oDv(iLine)(5).ToString.Trim)
             oAPInvoice.BPL_IDAssignedToInvoice = "1"
             oAPInvoice.Comments = "From Integration database/Refer id No " & sIntegId
@@ -4813,7 +5192,7 @@ Module modProcess
             If Not (oDv(iLine)(5).ToString.Trim = String.Empty) Then
                 oAPInvoice.DocDate = CDate(oDv(iLine)(5).ToString.Trim)
             End If
-            oAPInvoice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
+            'oAPInvoice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
             oAPInvoice.DocDueDate = CDate(oDv(iLine)(5).ToString.Trim)
             oAPInvoice.BPL_IDAssignedToInvoice = "1"
             oAPInvoice.Comments = "From Integration database/Refer id No " & sIntegId
