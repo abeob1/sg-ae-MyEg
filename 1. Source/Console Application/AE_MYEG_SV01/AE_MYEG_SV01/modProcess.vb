@@ -533,6 +533,9 @@ Module modProcess
         Dim sCoverNoteNo As String = String.Empty
         Dim sApinvNo As String = String.Empty
 
+        Dim oRecordSet As SAPbobsCOM.Recordset = Nothing
+        oRecordSet = p_oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+
         Try
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting Function ", sFuncName)
 
@@ -547,9 +550,6 @@ Module modProcess
             sApinvNo = oDv(iLine)(68).ToString.Trim.ToUpper()
             sFwId = oDv(iLine)(70).ToString.Trim.ToUpper()
             sTransId = oDv(iLine)(71).ToString.Trim.ToUpper()
-
-            Dim oRecordSet As SAPbobsCOM.Recordset = Nothing
-            oRecordSet = p_oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Service type is " & sServiceType.ToUpper(), sFuncName)
 
@@ -673,6 +673,8 @@ Module modProcess
         Catch ex As Exception
             sErrDesc = ex.Message
             Call WriteToLogFile(sErrDesc, sFuncName)
+
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(oRecordSet)
 
             Dim sQuery As String
             sQuery = "UPDATE public.AB_REVENUEANDCOST SET Status = 'FAIL', ""Error Message"" = '" & sErrDesc & "',SyncDate = NOW() " & _
