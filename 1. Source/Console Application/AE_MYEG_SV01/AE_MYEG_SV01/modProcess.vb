@@ -991,7 +991,7 @@ Module modProcess
                 oArInovice.DocDate = CDate(oDv(iLine)(5).ToString.Trim)
             End If
             oArInovice.BPL_IDAssignedToInvoice = "1"
-            'oArInovice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
+            oArInovice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
             oArInovice.UserFields.Fields.Item("U_AI_InvRefNo").Value = oDv(iLine)(4).ToString.Trim
             oArInovice.Comments = "From Integration database. Refer id no " & sIntegId
             oArInovice.JournalMemo = "A/R Invoices - " & sCardCode & " " & sMerChantid
@@ -2997,7 +2997,7 @@ Module modProcess
             If Not (oDv(iLine)(5).ToString.Trim = String.Empty) Then
                 oAPInvoice.DocDate = CDate(oDv(iLine)(5).ToString.Trim)
             End If
-            'oAPInvoice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
+            oAPInvoice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
             oAPInvoice.DocDueDate = CDate(oDv(iLine)(5).ToString.Trim)
             oAPInvoice.BPL_IDAssignedToInvoice = "1"
             oAPInvoice.Comments = "From Integration database/Refer id No " & sIntegId
@@ -3936,7 +3936,7 @@ Module modProcess
             If Not (oDv(iLine)(5).ToString.Trim = String.Empty) Then
                 oAPInvoice.DocDate = CDate(oDv(iLine)(5).ToString.Trim)
             End If
-            'oAPInvoice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
+            oAPInvoice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
             oAPInvoice.DocDueDate = CDate(oDv(iLine)(5).ToString.Trim)
             oAPInvoice.BPL_IDAssignedToInvoice = "1"
             oAPInvoice.Comments = "From Integration database/Refer id No " & sIntegId
@@ -5194,7 +5194,7 @@ Module modProcess
             If Not (oDv(iLine)(5).ToString.Trim = String.Empty) Then
                 oAPInvoice.DocDate = CDate(oDv(iLine)(5).ToString.Trim)
             End If
-            'oAPInvoice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
+            oAPInvoice.UserFields.Fields.Item("U_SERVICETYPE").Value = sServiceType
             oAPInvoice.DocDueDate = CDate(oDv(iLine)(5).ToString.Trim)
             oAPInvoice.BPL_IDAssignedToInvoice = "1"
             oAPInvoice.Comments = "From Integration database/Refer id No " & sIntegId
