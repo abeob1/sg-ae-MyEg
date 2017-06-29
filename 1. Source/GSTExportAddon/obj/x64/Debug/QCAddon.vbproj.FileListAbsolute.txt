@@ -1,0 +1,1 @@
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x64\Debug\QCAddon.vbprojResolveAssemblyReference.cache

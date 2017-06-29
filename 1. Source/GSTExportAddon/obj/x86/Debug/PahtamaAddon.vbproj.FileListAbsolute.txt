@@ -1,0 +1,131 @@
+C:\ ai-mm-ptm\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\ ai-mm-ptm\obj\x86\Debug\Interop.SAPbobsCOM.dll
+C:\ ai-mm-ptm\obj\x86\Debug\Interop.SAPbouiCOM.dll
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.vbproj.ResolveComReference.cache
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmImportTransferRequest.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmImport.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmTool.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmUpdateForeCast.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmApplicationUpdate2SAP.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmManageVersion.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmBatchSelection.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmDebugTool.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmAuthorization.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmUserMaster.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmSettings.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmSearchPickList.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmOpenSalesOrder.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmPickManager.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmQuery.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmEditStockRequest.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmDMSSale.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmPromotionInputDetail.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmStockRequestApproval.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmSPQuantity.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmIncentiveSetup.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmAccumulateProSetup.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmLoyaltySetup.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmReplenishmentPriority.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmReplenishment.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmInventoryTransfer.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmLoyaltyTransaction.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmOpenTransferRequest4Close.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmFixedWarehouse.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmAllocatedBIN.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmPick.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmOpenPickList.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmReplenishmentDCReceipt.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmReplenishmentDCSuggest.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmReplenishmentS1.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmTransferTo.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmOpenTransferRequest.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmFIFONonBatch.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmRouteMaster.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmPostDocument.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmInvoiceWizard.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmChangePassword.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmPrjMaster.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmImportXML.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmReportS.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmErrorMessage.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmGeneralList.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmPromotionPopup.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmMainApp.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmGenerate.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmSalesIncentive.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmImportPrice.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmLogin.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmRoutePlan.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmPromotionSetup.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmReport.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.Resources.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.myLabel.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.SAP_FakeForm.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmMornitorSYNIN.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmMornitorSYNOUT.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmServiceSetting.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.Service1.resources
+C:\ ai-mm-ptm\obj\x86\Debug\ResGen.read.1.tlog
+C:\ ai-mm-ptm\obj\x86\Debug\ResGen.write.1.tlog
+C:\ ai-mm-ptm\obj\x86\Debug\Pahtama Application.exe.licenses
+C:\ ai-mm-ptm\bin\Debug\Pahtama Application.exe.config
+C:\ ai-mm-ptm\bin\Debug\Pahtama Application.exe
+C:\ ai-mm-ptm\bin\Debug\Pahtama Application.pdb
+C:\ ai-mm-ptm\bin\Debug\Pahtama Application.xml
+C:\ ai-mm-ptm\bin\Debug\Cyotek.GhostScript.dll
+C:\ ai-mm-ptm\bin\Debug\Cyotek.GhostScript.PdfConversion.dll
+C:\ ai-mm-ptm\bin\Debug\itextsharp.dll
+C:\ ai-mm-ptm\bin\Debug\Interop.SAPbobsCOM.dll
+C:\ ai-mm-ptm\bin\Debug\Interop.SAPbouiCOM.dll
+C:\ ai-mm-ptm\obj\x86\Debug\Pahtama Application.exe
+C:\ ai-mm-ptm\obj\x86\Debug\Pahtama Application.xml
+C:\ ai-mm-ptm\obj\x86\Debug\Pahtama Application.pdb
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmN_3Pro_Branch.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmN_3Pro_Route.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmN_5Pro_Scheme_Buy.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmN_4Pro_Scheme.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmN_2Pro_Header.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmN_1Pro_Group.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmN_3Pro_CustomerInc.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmN_3Pro_CustomerExc.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmN_5Pro_Scheme_ExcludeItem.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmN_5Pro_Scheme_Promotion.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmN_6Pro_Document.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmSalesOrder.resources
+C:\ ai-mm-ptm\obj\x86\Debug\PahtamaAddon.frmBatchConvert.resources
+C:\QC\QCAddon\bin\Debug\QCAddon.exe.config
+C:\QC\QCAddon\bin\Debug\QCAddon.exe
+C:\QC\QCAddon\bin\Debug\QCAddon.pdb
+C:\QC\QCAddon\bin\Debug\QCAddon.xml
+C:\QC\QCAddon\bin\Debug\Interop.SAPbobsCOM.dll
+C:\QC\QCAddon\bin\Debug\Interop.SAPbouiCOM.dll
+C:\QC\QCAddon\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\QC\QCAddon\obj\x86\Debug\Interop.SAPbobsCOM.dll
+C:\QC\QCAddon\obj\x86\Debug\Interop.SAPbouiCOM.dll
+C:\QC\QCAddon\obj\x86\Debug\PahtamaAddon.vbproj.ResolveComReference.cache
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmImportTransferRequest.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmImport.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmTool.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmUpdateForeCast.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmQCSetup.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmImportXML.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmErrorMessage.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmGeneralList.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmImportPrice.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmReport.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.Resources.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.myLabel.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.SAP_FakeForm.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmMornitorSYNIN.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmMornitorSYNOUT.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmServiceSetting.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.Service1.resources
+C:\QC\QCAddon\obj\x86\Debug\ResGen.read.1.tlog
+C:\QC\QCAddon\obj\x86\Debug\ResGen.write.1.tlog
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.exe.licenses
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.exe
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.xml
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.pdb
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmQCInspection.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmQCOpenOrderList.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmQCOrderMeasurement.resources

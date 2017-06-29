@@ -1,0 +1,140 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+GSTExport
+</name>
+</assembly>
+<members>
+<member name="P:GSTExport.My.Resources.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:GSTExport.My.Resources.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:GSTExport.My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSet._QC_Inspection_MeasurementDataTable">
+	<summary>
+Represents the strongly named DataTable class.
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSet._QC_Inspection_HeaderDataTable">
+	<summary>
+Represents the strongly named DataTable class.
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSet._QC_Order_HeaderDataTable">
+	<summary>
+Represents the strongly named DataTable class.
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSet._QC_Order_MeasurementDataTable">
+	<summary>
+Represents the strongly named DataTable class.
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSet._QC_SetupDataTable">
+	<summary>
+Represents the strongly named DataTable class.
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSet._QC_Inspection_MeasurementRow">
+	<summary>
+Represents strongly named DataRow class.
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSet._QC_Inspection_HeaderRow">
+	<summary>
+Represents strongly named DataRow class.
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSet._QC_Order_HeaderRow">
+	<summary>
+Represents strongly named DataRow class.
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSet._QC_Order_MeasurementRow">
+	<summary>
+Represents strongly named DataRow class.
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSet._QC_SetupRow">
+	<summary>
+Represents strongly named DataRow class.
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSet._QC_Inspection_MeasurementRowChangeEvent">
+	<summary>
+Row event argument class
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSet._QC_Inspection_HeaderRowChangeEvent">
+	<summary>
+Row event argument class
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSet._QC_Order_HeaderRowChangeEvent">
+	<summary>
+Row event argument class
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSet._QC_Order_MeasurementRowChangeEvent">
+	<summary>
+Row event argument class
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSet._QC_SetupRowChangeEvent">
+	<summary>
+Row event argument class
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSet">
+	<summary>
+Represents a strongly typed in-memory cache of data.
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSetTableAdapters._QC_Inspection_MeasurementTableAdapter">
+	<summary>
+Represents the connection and commands used to retrieve and save data.
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSetTableAdapters._QC_Inspection_HeaderTableAdapter">
+	<summary>
+Represents the connection and commands used to retrieve and save data.
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSetTableAdapters._QC_Order_HeaderTableAdapter">
+	<summary>
+Represents the connection and commands used to retrieve and save data.
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSetTableAdapters._QC_Order_MeasurementTableAdapter">
+	<summary>
+Represents the connection and commands used to retrieve and save data.
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSetTableAdapters._QC_SetupTableAdapter">
+	<summary>
+Represents the connection and commands used to retrieve and save data.
+</summary>
+</member><member name="M:GSTExport.SAP_YGNDataSetTableAdapters.TableAdapterManager.UpdateUpdatedRows(GSTExport.SAP_YGNDataSet,System.Collections.Generic.List{System.Data.DataRow},System.Collections.Generic.List{System.Data.DataRow})">
+	<summary>
+Update rows in top-down order.
+</summary>
+</member><member name="M:GSTExport.SAP_YGNDataSetTableAdapters.TableAdapterManager.UpdateInsertedRows(GSTExport.SAP_YGNDataSet,System.Collections.Generic.List{System.Data.DataRow})">
+	<summary>
+Insert rows in top-down order.
+</summary>
+</member><member name="M:GSTExport.SAP_YGNDataSetTableAdapters.TableAdapterManager.UpdateDeletedRows(GSTExport.SAP_YGNDataSet,System.Collections.Generic.List{System.Data.DataRow})">
+	<summary>
+Delete rows in bottom-up order.
+</summary>
+</member><member name="M:GSTExport.SAP_YGNDataSetTableAdapters.TableAdapterManager.GetRealUpdatedRows(System.Data.DataRow[],System.Collections.Generic.List{System.Data.DataRow})">
+	<summary>
+Remove inserted rows that become updated rows after calling TableAdapter.Update(inserted rows) first
+</summary>
+</member><member name="M:GSTExport.SAP_YGNDataSetTableAdapters.TableAdapterManager.UpdateAll(GSTExport.SAP_YGNDataSet)">
+	<summary>
+Update all changes to the dataset.
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSetTableAdapters.TableAdapterManager.UpdateOrderOption">
+	<summary>
+Update Order Option
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSetTableAdapters.TableAdapterManager.SelfReferenceComparer">
+	<summary>
+Used to sort self-referenced table's rows
+</summary>
+</member><member name="T:GSTExport.SAP_YGNDataSetTableAdapters.TableAdapterManager">
+	<summary>
+TableAdapterManager is used to coordinate TableAdapters in the dataset to enable Hierarchical Update scenarios
+</summary>
+</member>
+</members>
+</doc>

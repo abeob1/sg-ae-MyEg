@@ -1,0 +1,70 @@
+C:\Malaysia\GST Addon\GSTExportAddon\bin\Debug\GSTAddon.exe.config
+C:\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\Interop.SAPbobsCOM.dll
+C:\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\Interop.SAPbouiCOM.dll
+C:\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.vbproj.ResolveComReference.cache
+C:\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.frmExportGAF.resources
+C:\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.frmReport.resources
+C:\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.Resources.resources
+C:\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.myLabel.resources
+C:\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.SAP_FakeForm.resources
+C:\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.vbproj.GenerateResource.Cache
+C:\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.exe.licenses
+C:\Malaysia\GST Addon\GSTExportAddon\bin\Debug\GSTAddon.exe
+C:\Malaysia\GST Addon\GSTExportAddon\bin\Debug\GSTAddon.pdb
+C:\Malaysia\GST Addon\GSTExportAddon\bin\Debug\GSTAddon.xml
+C:\Malaysia\GST Addon\GSTExportAddon\bin\Debug\Interop.SAPbobsCOM.dll
+C:\Malaysia\GST Addon\GSTExportAddon\bin\Debug\Interop.SAPbouiCOM.dll
+C:\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.exe
+C:\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.xml
+C:\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.pdb
+C:\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.vbprojResolveAssemblyReference.cache
+D:\WORKING FOLDER\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\Interop.SAPbobsCOM.dll
+D:\WORKING FOLDER\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\Interop.SAPbouiCOM.dll
+D:\WORKING FOLDER\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.vbproj.ResolveComReference.cache
+D:\WORKING FOLDER\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.exe
+D:\WORKING FOLDER\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.xml
+D:\WORKING FOLDER\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.pdb
+D:\WORKING FOLDER\ABC\Malaysia\GST Addon\GSTExportAddon\bin\Debug\GSTAddon.exe
+D:\WORKING FOLDER\ABC\Malaysia\GST Addon\GSTExportAddon\bin\Debug\GSTAddon.pdb
+D:\WORKING FOLDER\ABC\Malaysia\GST Addon\GSTExportAddon\bin\Debug\GSTAddon.xml
+D:\WORKING FOLDER\ABC\Malaysia\GST Addon\GSTExportAddon\bin\Debug\Interop.SAPbobsCOM.dll
+D:\WORKING FOLDER\ABC\Malaysia\GST Addon\GSTExportAddon\bin\Debug\Interop.SAPbouiCOM.dll
+D:\WORKING FOLDER\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.frmReport.resources
+D:\WORKING FOLDER\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.Resources.resources
+D:\WORKING FOLDER\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.vbproj.GenerateResource.Cache
+D:\WORKING FOLDER\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.exe.licenses
+D:\WORKING FOLDER\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.vbprojResolveAssemblyReference.cache
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\bin\Debug\GSTAddon.exe
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\bin\Debug\GSTAddon.pdb
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\bin\Debug\GSTAddon.xml
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\bin\Debug\Sap.Data.Hana.v3.5.dll
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\bin\Debug\Sap.Data.Hana.v3.5.xml
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\bin\Debug\Interop.SAPbobsCOM.dll
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\bin\Debug\Interop.SAPbouiCOM.dll
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\Interop.SAPbobsCOM.dll
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\Interop.SAPbouiCOM.dll
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.vbproj.ResolveComReference.cache
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.DebugForm.resources
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.frmReport.resources
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.Resources.resources
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.vbproj.GenerateResource.Cache
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.exe.licenses
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.exe
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.xml
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.pdb
+D:\ABC\Malaysia\GST Addon\GSTExportAddon\obj\x86\Debug\GSTAddon.vbprojResolveAssemblyReference.cache
+C:\Abeo\J\GSTExportAddon\GSTExportAddon\bin\Debug\GSTAddon.exe.config
+C:\Abeo\J\GSTExportAddon\GSTExportAddon\obj\x86\Debug\Interop.SAPbobsCOM.dll
+C:\Abeo\J\GSTExportAddon\GSTExportAddon\obj\x86\Debug\Interop.SAPbouiCOM.dll
+C:\Abeo\J\GSTExportAddon\GSTExportAddon\obj\x86\Debug\GSTAddon.vbproj.ResolveComReference.cache
+C:\Abeo\J\GSTExportAddon\GSTExportAddon\obj\x86\Debug\GSTAddon.exe
+C:\Abeo\J\GSTExportAddon\GSTExportAddon\obj\x86\Debug\GSTAddon.xml
+C:\Abeo\J\GSTExportAddon\GSTExportAddon\obj\x86\Debug\GSTAddon.pdb
+C:\Abeo\J\GSTExportAddon\GSTExportAddon\bin\Debug\GSTAddon.exe
+C:\Abeo\J\GSTExportAddon\GSTExportAddon\bin\Debug\GSTAddon.pdb
+C:\Abeo\J\GSTExportAddon\GSTExportAddon\bin\Debug\GSTAddon.xml
+C:\Abeo\J\GSTExportAddon\GSTExportAddon\obj\x86\Debug\GSTAddon.DebugForm.resources
+C:\Abeo\J\GSTExportAddon\GSTExportAddon\obj\x86\Debug\GSTAddon.frmReport.resources
+C:\Abeo\J\GSTExportAddon\GSTExportAddon\obj\x86\Debug\GSTAddon.Resources.resources
+C:\Abeo\J\GSTExportAddon\GSTExportAddon\obj\x86\Debug\GSTAddon.vbproj.GenerateResource.Cache
+C:\Abeo\J\GSTExportAddon\GSTExportAddon\obj\x86\Debug\GSTAddon.exe.licenses

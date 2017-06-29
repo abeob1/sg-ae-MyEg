@@ -1,0 +1,137 @@
+C:\QC\QCAddon\bin\Debug\QCAddon.exe.config
+C:\QC\QCAddon\bin\Debug\QCAddon.exe
+C:\QC\QCAddon\bin\Debug\QCAddon.pdb
+C:\QC\QCAddon\bin\Debug\QCAddon.xml
+C:\QC\QCAddon\bin\Debug\Interop.SAPbobsCOM.dll
+C:\QC\QCAddon\bin\Debug\Interop.SAPbouiCOM.dll
+C:\QC\QCAddon\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\QC\QCAddon\obj\x86\Debug\Interop.SAPbobsCOM.dll
+C:\QC\QCAddon\obj\x86\Debug\Interop.SAPbouiCOM.dll
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.vbproj.ResolveComReference.cache
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmQCOrderMeasurement.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmQCOpenOrderList.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmQCInspection.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmQCSetup.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmGeneralList.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.Resources.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.myLabel.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.SAP_FakeForm.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmServiceSetting.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.Service1.resources
+C:\QC\QCAddon\obj\x86\Debug\ResGen.read.1.tlog
+C:\QC\QCAddon\obj\x86\Debug\ResGen.write.1.tlog
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.exe.licenses
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.exe
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.xml
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.pdb
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmSO2Production.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmSettings.resources
+C:\QC\QCAddon\obj\x86\Debug\QCAddon.frmItemStructure.resources
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\Interop.SAPbobsCOM.dll
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\Interop.SAPbouiCOM.dll
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.vbproj.ResolveComReference.cache
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.xml
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.pdb
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\bin\Debug\QCAddon.exe
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\bin\Debug\QCAddon.pdb
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\bin\Debug\QCAddon.xml
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\bin\Debug\Interop.SAPbobsCOM.dll
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\bin\Debug\Interop.SAPbouiCOM.dll
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.frmItemStructure.resources
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.frmSettings.resources
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.frmSO2Production.resources
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.frmQCOrderMeasurement.resources
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.frmQCOpenOrderList.resources
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.frmQCInspection.resources
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.frmQCSetup.resources
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.frmGeneralList.resources
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.Resources.resources
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.myLabel.resources
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.SAP_FakeForm.resources
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.frmServiceSetting.resources
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.Service1.resources
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.vbproj.GenerateResource.Cache
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.exe.licenses
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.exe
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\bin\Debug\QCAddon.exe.config
+C:\www.SAPB1Addon.Com\QCO\QC\QCAddon\obj\x86\Debug\QCAddon.vbprojResolveAssemblyReference.cache
+C:\PROJECTS\QC\QCAddon\bin\Debug\QCAddon.exe.config
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\Interop.SAPbobsCOM.dll
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\Interop.SAPbouiCOM.dll
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.vbproj.ResolveComReference.cache
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.exe
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.xml
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.pdb
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.frmItemStructure.resources
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.frmSettings.resources
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.frmSO2Production.resources
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.frmQCOrderMeasurement.resources
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.frmQCOpenOrderList.resources
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.frmQCInspection.resources
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.frmQCSetup.resources
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.frmGeneralList.resources
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.Resources.resources
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.myLabel.resources
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.SAP_FakeForm.resources
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.Service1.resources
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.vbproj.GenerateResource.Cache
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.exe.licenses
+C:\PROJECTS\QC\QCAddon\bin\Debug\QCAddon.exe
+C:\PROJECTS\QC\QCAddon\bin\Debug\QCAddon.pdb
+C:\PROJECTS\QC\QCAddon\bin\Debug\QCAddon.xml
+C:\PROJECTS\QC\QCAddon\bin\Debug\Interop.SAPbobsCOM.dll
+C:\PROJECTS\QC\QCAddon\bin\Debug\Interop.SAPbouiCOM.dll
+C:\PROJECTS\QC\QCAddon\obj\x86\Debug\QCAddon.vbprojResolveAssemblyReference.cache
+C:\PROJECTS\QC\ ml-qc\QCAddon\bin\Debug\QCAddon.exe.config
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\Interop.SAPbobsCOM.dll
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\Interop.SAPbouiCOM.dll
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.vbproj.ResolveComReference.cache
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.exe
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.xml
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.pdb
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.frmItemStructure.resources
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.frmSettings.resources
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.frmSO2Production.resources
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.frmQCOrderMeasurement.resources
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.frmQCOpenOrderList.resources
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.frmQCInspection.resources
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.frmQCSetup.resources
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.frmGeneralList.resources
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.Resources.resources
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.myLabel.resources
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.SAP_FakeForm.resources
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.Service1.resources
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.vbproj.GenerateResource.Cache
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.exe.licenses
+C:\PROJECTS\QC\ ml-qc\QCAddon\bin\Debug\QCAddon.exe
+C:\PROJECTS\QC\ ml-qc\QCAddon\bin\Debug\QCAddon.pdb
+C:\PROJECTS\QC\ ml-qc\QCAddon\bin\Debug\QCAddon.xml
+C:\PROJECTS\QC\ ml-qc\QCAddon\bin\Debug\Interop.SAPbobsCOM.dll
+C:\PROJECTS\QC\ ml-qc\QCAddon\bin\Debug\Interop.SAPbouiCOM.dll
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.frmExportGAF.resources
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.frmReport.resources
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.frmReceiptFromProduction.resources
+C:\PROJECTS\QC\ ml-qc\QCAddon\obj\x86\Debug\QCAddon.vbprojResolveAssemblyReference.cache
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\bin\Debug\QCAddon.exe.config
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\obj\x86\Debug\Interop.SAPbobsCOM.dll
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\obj\x86\Debug\Interop.SAPbouiCOM.dll
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\obj\x86\Debug\QCAddon.vbproj.ResolveComReference.cache
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\obj\x86\Debug\QCAddon.exe
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\obj\x86\Debug\QCAddon.xml
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\obj\x86\Debug\QCAddon.pdb
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\bin\Debug\QCAddon.exe
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\bin\Debug\QCAddon.pdb
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\bin\Debug\QCAddon.xml
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\bin\Debug\Interop.SAPbobsCOM.dll
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\bin\Debug\Interop.SAPbouiCOM.dll
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\obj\x86\Debug\QCAddon.vbprojResolveAssemblyReference.cache
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\obj\x86\Debug\QCAddon.frmReport.resources
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\obj\x86\Debug\QCAddon.frmSettings.resources
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\obj\x86\Debug\QCAddon.frmExportGAF.resources
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\obj\x86\Debug\QCAddon.frmGeneralList.resources
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\obj\x86\Debug\QCAddon.Resources.resources
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\obj\x86\Debug\QCAddon.myLabel.resources
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\obj\x86\Debug\QCAddon.SAP_FakeForm.resources
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\obj\x86\Debug\QCAddon.Service1.resources
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\obj\x86\Debug\QCAddon.vbproj.GenerateResource.Cache
+C:\PROJECTS\QC\ ml-qc\GSTExportAddon\obj\x86\Debug\QCAddon.exe.licenses
