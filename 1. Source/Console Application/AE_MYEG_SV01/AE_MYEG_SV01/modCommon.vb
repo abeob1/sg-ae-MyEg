@@ -38,7 +38,7 @@ Module modCommon
             oCompDef.sDebug = String.Empty
 
             oCompDef.sEserviceTax = String.Empty
-            oCompDef.sImmiGlAccount = String.Empty
+            'oCompDef.sImmiGlAccount = String.Empty
             oCompDef.sBookingCostCenter = String.Empty
 
             If Not String.IsNullOrEmpty(ConfigurationManager.AppSettings("Server")) Then
@@ -93,9 +93,9 @@ Module modCommon
                 oCompDef.sEserviceTax = ConfigurationManager.AppSettings("EserviceTax")
             End If
 
-            If Not String.IsNullOrEmpty(ConfigurationManager.AppSettings("IMMIApGLAccount")) Then
-                oCompDef.sImmiGlAccount = ConfigurationManager.AppSettings("IMMIApGLAccount")
-            End If
+            'If Not String.IsNullOrEmpty(ConfigurationManager.AppSettings("IMMIApGLAccount")) Then
+            '    oCompDef.sImmiGlAccount = ConfigurationManager.AppSettings("IMMIApGLAccount")
+            'End If
 
             If Not String.IsNullOrEmpty(ConfigurationManager.AppSettings("BookingCostCenter")) Then
                 oCompDef.sBookingCostCenter = ConfigurationManager.AppSettings("BookingCostCenter")

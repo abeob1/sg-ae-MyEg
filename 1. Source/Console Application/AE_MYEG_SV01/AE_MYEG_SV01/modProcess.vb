@@ -160,12 +160,6 @@ Module modProcess
                         sApinvNo = oDv(i)(68).ToString.Trim
                         sAGCode = oDv(i)(54).ToString.Trim
 
-                        sCostCenter = String.Empty
-                        sCostCenter2 = String.Empty
-                        sCostCenter3 = String.Empty
-                        sCostCenter4 = String.Empty
-                        sCostCenter5 = String.Empty
-
                         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for ID " & sIntegId, sFuncName)
 
                         If sPrintStatus = "" Then
@@ -174,16 +168,20 @@ Module modProcess
                             Console.WriteLine("Agency is " & sAgency & " and Print Status is " & sPrintStatus)
                         End If
 
-                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Ag Code is " & sAGCode, sFuncName)
+                        sCostCenter = String.Empty
+                        sCostCenter2 = String.Empty
+                        sCostCenter3 = String.Empty
+                        sCostCenter4 = String.Empty
+                        sCostCenter5 = String.Empty
 
                         If sAGCode <> "" Then
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Ag Code is " & sAGCode, sFuncName)
+
                             sSQL = "SELECT ""PrcCode"" FROM " & p_oCompany.CompanyDB & ".""OPRC"" WHERE UPPER(""U_AGCODE"") = '" & sAGCode.ToUpper() & "' "
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
                             oRecSet.DoQuery(sSQL)
                             If oRecSet.RecordCount > 0 Then
                                 sCostCenter5 = oRecSet.Fields.Item("PrcCode").Value
-                            Else
-                                sCostCenter5 = ""
                             End If
 
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Cost center for dim5 is " & sCostCenter5, sFuncName)
@@ -194,8 +192,6 @@ Module modProcess
                                 oRecSet.DoQuery(sSQL)
                                 If oRecSet.RecordCount > 0 Then
                                     sCostCenter4 = oRecSet.Fields.Item("U_DIMENSION_LINK").Value
-                                Else
-                                    sCostCenter4 = ""
                                 End If
 
                                 sSQL = "SELECT ""U_DIMENSION_LINK"" FROM " & p_oCompany.CompanyDB & ".""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter4 & "' "
@@ -203,8 +199,6 @@ Module modProcess
                                 oRecSet.DoQuery(sSQL)
                                 If oRecSet.RecordCount > 0 Then
                                     sCostCenter3 = oRecSet.Fields.Item("U_DIMENSION_LINK").Value
-                                Else
-                                    sCostCenter3 = ""
                                 End If
 
                                 sSQL = "SELECT ""U_DIMENSION_LINK"" FROM " & p_oCompany.CompanyDB & ".""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter3 & "' "
@@ -212,8 +206,6 @@ Module modProcess
                                 oRecSet.DoQuery(sSQL)
                                 If oRecSet.RecordCount > 0 Then
                                     sCostCenter2 = oRecSet.Fields.Item("U_DIMENSION_LINK").Value
-                                Else
-                                    sCostCenter2 = ""
                                 End If
 
                                 sSQL = "SELECT ""U_DIMENSION_LINK"" FROM " & p_oCompany.CompanyDB & ".""OPRC"" WHERE ""PrcCode"" = '" & sCostCenter2.ToUpper() & "' "
@@ -221,8 +213,6 @@ Module modProcess
                                 oRecSet.DoQuery(sSQL)
                                 If oRecSet.RecordCount > 0 Then
                                     sCostCenter = oRecSet.Fields.Item("U_DIMENSION_LINK").Value
-                                Else
-                                    sCostCenter = ""
                                 End If
                             End If
 
@@ -5143,8 +5133,6 @@ Module modProcess
         Dim sItemCode As String = String.Empty
         Dim sVatGroup As String = String.Empty
         Dim sServiceType As String = String.Empty
-        'Dim sAGCode As String = String.Empty
-        'Dim sCostCenter5, sCostCenter4, sCostCenter3, sCostCenter2, sCostCenter As String
         Dim sSql As String = String.Empty
         Dim sItemDesc As String = String.Empty
         Dim sPassPortNo As String = String.Empty
@@ -5162,7 +5150,6 @@ Module modProcess
             sCardCode = oDv(iLine)(2).ToString.Trim
             sNumAtCard = oDv(iLine)(4).ToString.Trim
             sServiceType = oDv(iLine)(3).ToString.Trim
-            'sAGCode = oDv(iLine)(54).ToString.Trim
             sMerChantid = oDv(iLine)(24).ToString.Trim
             
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data based on id no " & sIntegId, sFuncName)
@@ -5423,14 +5410,6 @@ Module modProcess
 
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for PASSFEE", sFuncName)
 
-                    'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'PASSFEE'"
-                    'If dtItemCode.DefaultView.Count = 0 Then
-                    '    sErrDesc = "ItemCode ::''passfee'' provided does not exist in SAP(Mapping Table)."
-                    '    Call WriteToLogFile(sErrDesc, sFuncName)
-                    '    Throw New ArgumentException(sErrDesc)
-                    'Else
-                    '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                    'End If
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                     If dtItemCode.DefaultView.Count = 0 Then
 
@@ -5494,15 +5473,6 @@ Module modProcess
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for VISAFEE", sFuncName)
 
                     sItemDesc = "visafee" & "-" & sServiceType
-
-                    'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'VISAFEE'"
-                    'If dtItemCode.DefaultView.Count = 0 Then
-                    '    sErrDesc = "ItemCode ::''visafee'' provided does not exist in SAP(Mapping Table)."
-                    '    Call WriteToLogFile(sErrDesc, sFuncName)
-                    '    Throw New ArgumentException(sErrDesc)
-                    'Else
-                    '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                    'End If
 
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                     If dtItemCode.DefaultView.Count = 0 Then
@@ -5568,14 +5538,6 @@ Module modProcess
 
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for LEVIFEE_AMOUNT", sFuncName)
 
-                    'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'LEVIFEE_AMOUNT'"
-                    'If dtItemCode.DefaultView.Count = 0 Then
-                    '    sErrDesc = "ItemCode ::''levifee_amount'' provided does not exist in SAP(Mapping Table)."
-                    '    Call WriteToLogFile(sErrDesc, sFuncName)
-                    '    Throw New ArgumentException(sErrDesc)
-                    'Else
-                    '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                    'End If
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = '" & sItemDesc.ToUpper() & "'"
                     If dtItemCode.DefaultView.Count = 0 Then
 
@@ -5609,9 +5571,9 @@ Module modProcess
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
                     oAPInvoice.Lines.UnitPrice = CDbl(oDv(iLine)(17).ToString.Trim)
-                    If Not (p_oCompDef.sImmiGlAccount = String.Empty) Then
-                        oAPInvoice.Lines.AccountCode = p_oCompDef.sImmiGlAccount
-                    End If
+                    'If Not (p_oCompDef.sImmiGlAccount = String.Empty) Then
+                    '    oAPInvoice.Lines.AccountCode = p_oCompDef.sImmiGlAccount
+                    'End If
                     If sVatGroup <> "" Then
                         oAPInvoice.Lines.VatGroup = sVatGroup
                     End If
@@ -5665,9 +5627,9 @@ Module modProcess
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
                     oAPInvoice.Lines.UnitPrice = CDbl(oDv(iLine)(10).ToString.Trim)
-                    If Not (p_oCompDef.sImmiGlAccount = String.Empty) Then
-                        oAPInvoice.Lines.AccountCode = p_oCompDef.sImmiGlAccount
-                    End If
+                    'If Not (p_oCompDef.sImmiGlAccount = String.Empty) Then
+                    '    oAPInvoice.Lines.AccountCode = p_oCompDef.sImmiGlAccount
+                    'End If
                     If sVatGroup <> "" Then
                         oAPInvoice.Lines.VatGroup = sVatGroup
                     End If
@@ -5720,9 +5682,9 @@ Module modProcess
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
                     oAPInvoice.Lines.UnitPrice = CDbl(oDv(iLine)(11).ToString.Trim)
-                    If Not (p_oCompDef.sImmiGlAccount = String.Empty) Then
-                        oAPInvoice.Lines.AccountCode = p_oCompDef.sImmiGlAccount
-                    End If
+                    'If Not (p_oCompDef.sImmiGlAccount = String.Empty) Then
+                    '    oAPInvoice.Lines.AccountCode = p_oCompDef.sImmiGlAccount
+                    'End If
                     If sVatGroup <> "" Then
                         oAPInvoice.Lines.VatGroup = sVatGroup
                     End If
@@ -5775,9 +5737,9 @@ Module modProcess
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
                     oAPInvoice.Lines.UnitPrice = CDbl(oDv(iLine)(12).ToString.Trim)
-                    If Not (p_oCompDef.sImmiGlAccount = String.Empty) Then
-                        oAPInvoice.Lines.AccountCode = p_oCompDef.sImmiGlAccount
-                    End If
+                    'If Not (p_oCompDef.sImmiGlAccount = String.Empty) Then
+                    '    oAPInvoice.Lines.AccountCode = p_oCompDef.sImmiGlAccount
+                    'End If
                     If sVatGroup <> "" Then
                         oAPInvoice.Lines.VatGroup = sVatGroup
                     End If
@@ -5807,14 +5769,6 @@ Module modProcess
                     End If
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing datas for EHAK_AMOUNT", sFuncName)
 
-                    'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'EHAK_AMOUNT'"
-                    'If dtItemCode.DefaultView.Count = 0 Then
-                    '    sErrDesc = "ItemCode ::''ehak_amount'' provided does not exist in SAP(Mapping Table)."
-                    '    Call WriteToLogFile(sErrDesc, sFuncName)
-                    '    Throw New ArgumentException(sErrDesc)
-                    'Else
-                    '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                    'End If
                     dtItemCode.DefaultView.RowFilter = "RevCostCode = 'COMPTEST_AMOUNT'"
                     If dtItemCode.DefaultView.Count = 0 Then
                         sErrDesc = "ItemCode ::''comptest_amount'' provided does not exist in SAP(Mapping Table)."
@@ -5838,9 +5792,9 @@ Module modProcess
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
                     oAPInvoice.Lines.UnitPrice = CDbl(oDv(iLine)(13).ToString.Trim)
-                    If Not (p_oCompDef.sImmiGlAccount = String.Empty) Then
-                        oAPInvoice.Lines.AccountCode = p_oCompDef.sImmiGlAccount
-                    End If
+                    'If Not (p_oCompDef.sImmiGlAccount = String.Empty) Then
+                    '    oAPInvoice.Lines.AccountCode = p_oCompDef.sImmiGlAccount
+                    'End If
                     If sVatGroup <> "" Then
                         oAPInvoice.Lines.VatGroup = sVatGroup
                     End If
@@ -5893,9 +5847,9 @@ Module modProcess
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
                     oAPInvoice.Lines.UnitPrice = CDbl(oDv(iLine)(14).ToString.Trim)
-                    If Not (p_oCompDef.sImmiGlAccount = String.Empty) Then
-                        oAPInvoice.Lines.AccountCode = p_oCompDef.sImmiGlAccount
-                    End If
+                    'If Not (p_oCompDef.sImmiGlAccount = String.Empty) Then
+                    '    oAPInvoice.Lines.AccountCode = p_oCompDef.sImmiGlAccount
+                    'End If
                     If sVatGroup <> "" Then
                         oAPInvoice.Lines.VatGroup = sVatGroup
                     End If
@@ -5958,9 +5912,9 @@ Module modProcess
                     oAPInvoice.Lines.ItemCode = sItemCode
                     oAPInvoice.Lines.Quantity = 1
                     oAPInvoice.Lines.UnitPrice = CDbl(oDv(iLine)(15).ToString.Trim)
-                    If Not (p_oCompDef.sImmiGlAccount = String.Empty) Then
-                        oAPInvoice.Lines.AccountCode = p_oCompDef.sImmiGlAccount
-                    End If
+                    'If Not (p_oCompDef.sImmiGlAccount = String.Empty) Then
+                    '    oAPInvoice.Lines.AccountCode = p_oCompDef.sImmiGlAccount
+                    'End If
                     If sVatGroup <> "" Then
                         oAPInvoice.Lines.VatGroup = sVatGroup
                     End If

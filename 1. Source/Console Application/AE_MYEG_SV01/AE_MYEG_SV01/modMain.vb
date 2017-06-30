@@ -21,7 +21,7 @@
         Public sDebug As String
 
         Public sEserviceTax As String
-        Public sImmiGlAccount As String
+        'Public sImmiGlAccount As String
         Public sBookingCostCenter As String
     End Structure
 
