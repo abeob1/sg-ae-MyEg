@@ -2038,15 +2038,6 @@ Module modProcess
                         oArInovice.Lines.Add()
                     End If
 
-                    'dtItemCode.DefaultView.RowFilter = "RevCostCode = 'DELAMOUNT'"
-                    'If dtItemCode.DefaultView.Count = 0 Then
-                    '    sErrDesc = "ItemCode ::''delamount'' provided does not exist in SAP(Mapping Table)."
-                    '    Call WriteToLogFile(sErrDesc, sFuncName)
-                    '    Throw New ArgumentException(sErrDesc)
-                    'Else
-                    '    sItemCode = dtItemCode.DefaultView.Item(0)(0).ToString().Trim()
-                    'End If
-
                     sItemDesc = "delamount" & "-" & sServiceType
 
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data for DELAMOUNT ", sFuncName)
@@ -3878,9 +3869,14 @@ Module modProcess
             oAPInvoice = p_oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oPurchaseInvoices)
 
             sIntegId = oDv(iLine)(0).ToString.Trim
-            sCardCode = oDv(iLine)(46).ToString.Trim
             sCardName = oDv(iLine)(47).ToString.Trim
             sMerChantid = oDv(iLine)(24).ToString.Trim
+            sNumAtCard = oDv(iLine)(4).ToString.Trim
+            sServiceType = oDv(iLine)(3).ToString.Trim
+            sCardCode = oDv(iLine)(46).ToString.Trim
+            If sServiceType.ToUpper() = "PATI" Then
+                sCardCode = oDv(iLine)(2).ToString.Trim
+            End If
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Processing data based on id no " & sIntegId, sFuncName)
 
@@ -3903,9 +3899,6 @@ Module modProcess
                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug(sErrDesc, sFuncName)
                 Throw New ArgumentException(sErrDesc)
             End If
-
-            sNumAtCard = oDv(iLine)(4).ToString.Trim
-            sServiceType = oDv(iLine)(3).ToString.Trim
 
             If sServiceType.ToUpper() = "BOOKING" Then
                 If sCostCenter5 = String.Empty Then
