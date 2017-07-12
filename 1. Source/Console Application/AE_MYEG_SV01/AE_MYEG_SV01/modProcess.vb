@@ -522,6 +522,7 @@ Module modProcess
         Dim sCompoundNo As String = String.Empty
         Dim sCoverNoteNo As String = String.Empty
         Dim sApinvNo As String = String.Empty
+        Dim sPassPortNo As String = String.Empty
 
         Dim oRecordSet As SAPbobsCOM.Recordset = Nothing
         oRecordSet = p_oCompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
@@ -540,6 +541,7 @@ Module modProcess
             sApinvNo = oDv(iLine)(68).ToString.Trim.ToUpper()
             sFwId = oDv(iLine)(70).ToString.Trim.ToUpper()
             sTransId = oDv(iLine)(71).ToString.Trim.ToUpper()
+            sPassPortNo = oDv(iLine)(48).ToString.Trim.ToUpper()
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Service type is " & sServiceType.ToUpper(), sFuncName)
 
@@ -580,6 +582,13 @@ Module modProcess
 
                 Case "MAIDPR"
                     If sAgency.ToUpper() = "IMMI" And sApinvNo = "" Then
+                        If sPassPortNo = "" Then
+                            sErrDesc = "Passport No. column value should not be null"
+                            Call WriteToLogFile(sErrDesc, sFuncName)
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug(sErrDesc, sFuncName)
+                            Throw New ArgumentException(sErrDesc)
+                        End If
+
                         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper(), sFuncName)
 
                         sSQL = "SELECT DISTINCT ""NumAtCard"" AS ""MERCHANTID"" FROM " & p_oCompany.CompanyDB & ".""OINV"" WHERE UPPER(""NumAtCard"") = '" & sMerChantid.ToUpper() & "' "
@@ -618,6 +627,15 @@ Module modProcess
                 Case "FOREIGN WORKER", "PATI"
                     If sAgency.ToUpper() = "IMMI" Then
                         If sApinvNo = "" Then
+                            If sServiceType.ToUpper() = "FOREIGN WORKER" Then
+                                If sPassPortNo = "" Then
+                                    sErrDesc = "Passport No. column value should not be null"
+                                    Call WriteToLogFile(sErrDesc, sFuncName)
+                                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug(sErrDesc, sFuncName)
+                                    Throw New ArgumentException(sErrDesc)
+                                End If
+                            End If
+
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper() & " and fwid " & sFwId.ToUpper(), sFuncName)
 
                             sSQL = "SELECT DISTINCT ""NumAtCard"" AS ""MERCHANTID"",""U_FWID"" AS ""FWID"" FROM " & p_oCompany.CompanyDB & ".""OINV"" " & _
@@ -632,7 +650,7 @@ Module modProcess
                         End If
                     Else
                         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Checking Merchant id " & sMerChantid.ToUpper() & " and fwid " & sFwId.ToUpper(), sFuncName)
-                       
+
                         sSQL = "SELECT DISTINCT ""NumAtCard"" AS ""MERCHANTID"",""U_FWID"" AS ""FWID"" FROM " & p_oCompany.CompanyDB & ".""OINV"" " & _
                                " WHERE UPPER(""NumAtCard"") = '" & sMerChantid.ToUpper() & "' AND UPPER(""U_FWID"") = '" & sFwId.ToUpper() & "' "
                         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
@@ -3860,7 +3878,9 @@ Module modProcess
         Dim sSql As String = String.Empty
         Dim sItemDesc As String = String.Empty
         Dim sCardName As String = String.Empty
+        Dim sPassPortNo As String = String.Empty
         Dim bLineAdded As Boolean = False
+
         Try
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting function", sFuncName)
 
@@ -6096,7 +6116,6 @@ Module modProcess
         Dim sIntegId As String = String.Empty
         Dim sSQL As String = String.Empty
         Dim sApInvNo As String = String.Empty
-        Dim sApInvEntry As String = String.Empty
         Dim sPassportNo As String = String.Empty
         Dim oDs As New DataSet
         Dim oCreditNote As SAPbobsCOM.Documents
@@ -6115,6 +6134,11 @@ Module modProcess
             If oDs.Tables(0).Rows.Count > 0 Then
                 sApInvNo = oDs.Tables(0).Rows(0).Item(0).ToString
                 sPassportNo = oDs.Tables(0).Rows(0).Item(1).ToString
+            End If
+
+            If sPassportNo = "" Then
+                sErrDesc = "Passport number is mandatory.Please check the passport number in table"
+                Throw New ArgumentException(sErrDesc)
             End If
 
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Creating A/p Credit Memo Object", sFuncName)
@@ -6235,7 +6259,9 @@ Module modProcess
                     If ExecuteNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
 
                 End If
-
+            Else
+                sErrDesc = "Credit note not created. Check Invoice No " & sApInvNo & " with passport no " & sPassportNo
+                Throw New ArgumentException(sErrDesc)
             End If
             System.Runtime.InteropServices.Marshal.ReleaseComObject(oRecordSet)
 
