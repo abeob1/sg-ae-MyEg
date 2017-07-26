@@ -173,7 +173,7 @@ Module modUploadStatement
                     sDate_Trimmed = sDate
                 End If
                 Dim dDate As Date
-                Dim format() = {"dd/MM/yyyy", "dd/MM/yy", "d/M/yyyy", "M/d/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", "yyyyMMdd", "MMddYYYY", "M/dd/yyyy", "MM/dd/YYYY", "d-M-yyyy", "d.M.yyyy"}
+                Dim format() = {"dd/MM/yyyy", "dd/M/yyyy", "dd/MM/yy", "d/M/yyyy", "M/d/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", "yyyyMMdd", "MMddYYYY", "M/dd/yyyy", "MM/dd/YYYY", "d-M-yyyy", "d.M.yyyy"}
                 Date.TryParseExact(sDate_Trimmed, format, System.Globalization.DateTimeFormatInfo.InvariantInfo, Globalization.DateTimeStyles.None, dDate)
 
                 'dt_tmp = Datarows(7)
@@ -252,8 +252,9 @@ Module modUploadStatement
         p_oSBOApplication.StatusBar.SetText("Processing...", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Warning)
         'LoadDatasinMatrix(objForm, oDT_Bankstat, sErrDesc)
         loadGrid(objForm, oDT_Bankstat)
-        p_oSBOApplication.StatusBar.SetText("Process completed successfully", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success)
+        ' p_oSBOApplication.StatusBar.SetText("Process completed successfully", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success)
         objForm.Freeze(False)
+        objForm.Update()
 
         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling IncomingPayment_OnCustomer()", sFuncName)
         'If IncomingPayment_OnCustomer(objForm, oDT_Bankstat, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
@@ -288,12 +289,13 @@ Module modUploadStatement
         objForm.DataSources.DataTables.Item("BNKSTMT").Columns.Add("Payment DocNo", SAPbouiCOM.BoFieldsType.ft_AlphaNumeric, 10)
         objForm.DataSources.DataTables.Item("BNKSTMT").Columns.Add("ID", SAPbouiCOM.BoFieldsType.ft_AlphaNumeric, 10)
 
+        oRecordSet = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+
         For Each oDr As DataRow In dataTable.Rows
             objForm.DataSources.DataTables.Item("BNKSTMT").Rows.Add()
             sAcctCode = oDr("AcctCode").ToString.Trim()
 
             sSql = "SELECT ""AcctName"" FROM ""OACT"" WHERE ""AcctCode"" = '" & sAcctCode & "'"
-            oRecordSet = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
             oRecordSet.DoQuery(sSql)
             If oRecordSet.RecordCount > 0 Then
                 sAcctName = oRecordSet.Fields.Item("AcctName").Value
@@ -483,6 +485,7 @@ Module modUploadStatement
             p_oSBOApplication.StatusBar.SetText("Uploaded successfully the bank statement...", SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success)
 
             Dim sID, sStatus, sErrorMessage, sPayDocNo As String
+            sQuery = String.Empty
             Dim dAmount As Double = 0.0
             For i As Integer = 0 To oGrid.DataTable.Rows.Count - 1
                 sID = oGrid.DataTable.GetValue("ID", i)
@@ -495,25 +498,40 @@ Module modUploadStatement
                     dAmount = 0.0
                 End Try
                 If sStatus = "SUCCESS" Then
-                    sQuery = "UPDATE AB_STATEMENTUPLOAD SET UploadDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "', " & _
-                             " Status = 'SUCCESS', ErrMsg = '',LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '0'" & _
-                             " WHERE ID = '" & sID & "' "
+                    If sQuery = "" Then
+                        sQuery = " UPDATE AB_STATEMENTUPLOAD SET UploadDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "', " & _
+                                 " Status = 'SUCCESS', ErrMsg = '',LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '0'" & _
+                                 " WHERE ID = '" & sID & "'; "
+                    Else
+                        sQuery = sQuery & " UPDATE AB_STATEMENTUPLOAD SET UploadDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "', " & _
+                                          " Status = 'SUCCESS', ErrMsg = '',LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '0'" & _
+                                          " WHERE ID = '" & sID & "'; "
+                    End If
                 Else
-                    sQuery = "UPDATE AB_STATEMENTUPLOAD SET UploadDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "', " & _
+                    If sQuery = "" Then
+                        sQuery = "UPDATE AB_STATEMENTUPLOAD SET UploadDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "', " & _
                              " Status = '" & sStatus & "', ErrMsg = '" & sErrorMessage.Replace("'", "") & "',LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "'" & _
-                             " WHERE ID = '" & sID & "' "
+                             " WHERE ID = '" & sID & "'; "
+                    Else
+                        sQuery = sQuery & " UPDATE AB_STATEMENTUPLOAD SET UploadDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "', " & _
+                             " Status = '" & sStatus & "', ErrMsg = '" & sErrorMessage.Replace("'", "") & "',LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "'" & _
+                             " WHERE ID = '" & sID & "'; "
+                    End If
                 End If
+                
+            Next
+            If sQuery <> "" Then
                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
                 If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
-            Next
+            End If
 
             IncomingPayment_OnCustomer_Grid = RTN_SUCCESS
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS", sFuncName)
         Catch ex As Exception
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
             sErrDesc = ex.Message
-            IncomingPayment_OnCustomer_Grid = RTN_ERROR
             Call WriteToLogFile(ex.Message, sFuncName)
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
+            IncomingPayment_OnCustomer_Grid = RTN_ERROR
         End Try
     End Function
 #End Region
@@ -670,9 +688,9 @@ Module modUploadStatement
         Dim sQuery As String = String.Empty
         Dim oRecordSet As SAPbobsCOM.Recordset
         Dim sNumAtCard As String = String.Empty
+        Dim sID As String = String.Empty
 
         Try
-            Console.WriteLine("Starting Function", sFuncName)
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting Function", sFuncName)
 
             oRecordSet = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
@@ -685,7 +703,9 @@ Module modUploadStatement
 
             Dim dtDocDate As Date
             oGrid = objForm.Items.Item("7").Specific
+            sID = oGrid.DataTable.GetValue("ID", iLine)
             sNumAtCard = oGrid.DataTable.GetValue("Merchant Id", iLine)
+
             Dim sDocDate As String
             sDocDate = oGrid.DataTable.GetValue("Posting Date", iLine)
             Dim format() = {"dd/MM/yyyy", "dd/MM/yy", "d/M/yyyy", "M/d/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", "yyyyMMdd", "MMddYYYY", "M/dd/yyyy", "MM/dd/YYYY", "d-M-yyyy", "d.M.yyyy"}
@@ -809,6 +829,7 @@ Module modUploadStatement
         Catch ex As Exception
             sErrDesc = ex.Message
             Call WriteToLogFile(sErrDesc, sFuncName)
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Error while creating incoming payment for id " & sID, sFuncName)
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
             Return False
         End Try

@@ -442,6 +442,8 @@ Module modExceptionList
         Dim dAmount As Double = 0.0
         Dim dPayAmount As Double = 0.0
         Dim sPostDate As String
+        Dim sRcptQry As String = String.Empty
+        Dim sFullRcptQry As String = String.Empty
 
         For i As Integer = 0 To oGrid.DataTable.Rows.Count - 1
             If oGrid.DataTable.GetValue("Choose", i) = "Y" And oGrid.DataTable.GetValue("Payment DocNo", i) = "" Then
@@ -497,12 +499,17 @@ Module modExceptionList
 
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ArIncomingPayment_ParialReceipts_Grid()", sFuncName)
 
-                    If ArIncomingPayment_ParialReceipts_Grid(objForm, i, sErrDesc) = False Then
+                    If ArIncomingPayment_ParialReceipts_Grid(objForm, i, sRcptQry, sErrDesc) = False Then
                         oGrid.DataTable.SetValue("Status", i, "FAIL")
                         oGrid.DataTable.SetValue("Error message", i, sErrDesc)
                     Else
                         oGrid.DataTable.SetValue("Status", i, "SUCCESS")
                         oGrid.DataTable.SetValue("Error message", i, "")
+                        If sFullRcptQry = "" Then
+                            sFullRcptQry = sRcptQry
+                        Else
+                            sFullRcptQry = sFullRcptQry & sRcptQry
+                        End If
                     End If
                 ElseIf oGrid.DataTable.GetValue("PartialReceipt", i) = "" And oGrid.DataTable.GetValue("MultipleCustomer", i) = "Y" Then
                     If oGrid.DataTable.GetValue("SelectedCustomer", i) = "" Then
@@ -577,23 +584,40 @@ Module modExceptionList
                     dBalanceAmt = 0
                 End If
                 If oGrid.DataTable.GetValue("Status", i) = "SUCCESS" Then
-                    sQuery = "UPDATE AB_STATEMENTUPLOAD  SET InvoiceRef = '" & sInvRef & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',Status = 'SUCCESS', " & _
-                             " ErrMsg = '', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '" & dBalanceAmt & "' " & _
-                                                 " WHERE ID = '" & sID & "'"
+                    If sQuery = "" Then
+                        sQuery = " UPDATE AB_STATEMENTUPLOAD  SET InvoiceRef = '" & sInvRef & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',Status = 'SUCCESS', " & _
+                                 " ErrMsg = '', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '" & dBalanceAmt & "' " & _
+                                 " WHERE ID = '" & sID & "'; "
+                    Else
+                        sQuery = sQuery & " UPDATE AB_STATEMENTUPLOAD  SET InvoiceRef = '" & sInvRef & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',Status = 'SUCCESS', " & _
+                                          " ErrMsg = '', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '" & dBalanceAmt & "' " & _
+                                          " WHERE ID = '" & sID & "'; "
+                    End If
+                    
                 Else
-                    sQuery = "UPDATE AB_STATEMENTUPLOAD SET InvoiceRef = '" & sInvRef & "' ,Status = '" & sStatus & "',ErrMsg = '" & sErrorMessage.Replace("'", "") & "', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "' " & _
-                             " WHERE ID = '" & sID & "' "
+                    If sQuery = "" Then
+                        sQuery = " UPDATE AB_STATEMENTUPLOAD SET InvoiceRef = '" & sInvRef & "' ,Status = '" & sStatus & "',ErrMsg = '" & sErrorMessage.Replace("'", "") & "', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "' " & _
+                                 " WHERE ID = '" & sID & "'; "
+                    Else
+                        sQuery = sQuery & " UPDATE AB_STATEMENTUPLOAD SET InvoiceRef = '" & sInvRef & "' ,Status = '" & sStatus & "',ErrMsg = '" & sErrorMessage.Replace("'", "") & "', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "' " & _
+                                          " WHERE ID = '" & sID & "'; "
+                    End If
                 End If
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
-                If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
-
+                
             End If
         Next
-
+        If sQuery <> "" Then
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
+            If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+        End If
+        If sFullRcptQry <> "" Then
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sFullRcptQry, sFuncName)
+            If ExecuteSQLNonQuery(sFullRcptQry, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+        End If
     End Sub
 #End Region
 #Region "AR incoming payment on Account based for Partial Receipt - Based on Grid"
-    Private Function ArIncomingPayment_ParialReceipts_Grid(ByVal objForm As SAPbouiCOM.Form, ByVal iLine As Integer, ByRef sErrDesc As String) As Boolean
+    Private Function ArIncomingPayment_ParialReceipts_Grid(ByVal objForm As SAPbouiCOM.Form, ByVal iLine As Integer, ByRef sRcptQuery As String, ByRef sErrDesc As String) As Boolean
         Dim bCheck As Boolean
         bCheck = True
 
@@ -608,169 +632,180 @@ Module modExceptionList
         Dim sARDocEntry As String = String.Empty
         Dim sPref As String = String.Empty
         Dim sMerchantId As String = String.Empty
+        Dim sID As String = String.Empty
 
-        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting Function", sFuncName)
+        Try
 
-        oGrid = objForm.Items.Item("19").Specific
-        sInvRefNo = oGrid.DataTable.GetValue("Merchant Id", iLine)
-        sPref = oGrid.DataTable.GetValue("Pref", iLine)
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting Function", sFuncName)
 
-        Dim sPostDate, sDueDate As String
-        Dim dtPostDate, dtDueDate As Date
-        sPostDate = oGrid.DataTable.GetValue("Posting Date", iLine)
-        sDueDate = oGrid.DataTable.GetValue("Due Date", iLine)
-        Dim format() = {"dd/MM/yyyy", "dd/MM/yy", "d/M/yyyy", "M/d/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", "yyyyMMdd", "MMddYYYY", "M/dd/yyyy", "MM/dd/YYYY", "d-M-yyyy", "d.M.yyyy"}
-        Date.TryParseExact(sPostDate, format, System.Globalization.DateTimeFormatInfo.InvariantInfo, Globalization.DateTimeStyles.None, dtPostDate)
-        Date.TryParseExact(sDueDate, format, System.Globalization.DateTimeFormatInfo.InvariantInfo, Globalization.DateTimeStyles.None, dtDueDate)
+            oGrid = objForm.Items.Item("19").Specific
+            sInvRefNo = oGrid.DataTable.GetValue("Merchant Id", iLine)
+            sPref = oGrid.DataTable.GetValue("Pref", iLine)
+            sID = oGrid.DataTable.GetValue("ID", iLine)
 
-        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Post Date is " & dtPostDate.ToString("yyyy-MM-dd"), sFuncName)
-        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Due Date is " & dtDueDate.ToString("yyyy-MM-dd"), sFuncName)
+            Dim sPostDate, sDueDate As String
+            Dim dtPostDate, dtDueDate As Date
+            sPostDate = oGrid.DataTable.GetValue("Posting Date", iLine)
+            sDueDate = oGrid.DataTable.GetValue("Due Date", iLine)
+            Dim format() = {"dd/MM/yyyy", "dd/MM/yy", "d/M/yyyy", "M/d/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", "yyyyMMdd", "MMddYYYY", "M/dd/yyyy", "MM/dd/YYYY", "d-M-yyyy", "d.M.yyyy"}
+            Date.TryParseExact(sPostDate, format, System.Globalization.DateTimeFormatInfo.InvariantInfo, Globalization.DateTimeStyles.None, dtPostDate)
+            Date.TryParseExact(sDueDate, format, System.Globalization.DateTimeFormatInfo.InvariantInfo, Globalization.DateTimeStyles.None, dtDueDate)
 
-        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Initializing the payment object", sFuncName)
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Post Date is " & dtPostDate.ToString("yyyy-MM-dd"), sFuncName)
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Due Date is " & dtDueDate.ToString("yyyy-MM-dd"), sFuncName)
 
-        oIncomingPayment = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oIncomingPayments)
-        oARInvoice = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oInvoices)
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Initializing the payment object", sFuncName)
 
-        If sInvRefNo = "" Then
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Invoice Ref No is empty", sFuncName)
-            oIncomingPayment.DocType = SAPbobsCOM.BoRcptTypes.rCustomer
+            oIncomingPayment = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oIncomingPayments)
+            oARInvoice = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oInvoices)
 
-            oIncomingPayment.CardCode = oGrid.DataTable.GetValue("Customer", iLine)
-            oIncomingPayment.DocDate = dtPostDate.ToString("dd/MM/yyyy")
-            oIncomingPayment.Remarks = oGrid.DataTable.GetValue("Memo", iLine)
-            If sPref <> "" And sInvRefNo <> "" Then
-                oIncomingPayment.JournalRemarks = sInvRefNo & "-" & sPref
-            ElseIf sPref <> "" And sInvRefNo = "" Then
-                oIncomingPayment.JournalRemarks = sPref
-            ElseIf sPref = "" And sInvRefNo <> "" Then
-                oIncomingPayment.JournalRemarks = sInvRefNo
-            End If
+            If sInvRefNo = "" Then
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Invoice Ref No is empty", sFuncName)
+                oIncomingPayment.DocType = SAPbobsCOM.BoRcptTypes.rCustomer
 
-            'oIncomingPayment.UserFields.Fields.Item("U_AB_STNO").Value = oMatrix.Columns.Item("V_4").Cells.Item(iLine).Specific.value
-            oIncomingPayment.UserFields.Fields.Item("U_AB_TIME").Value = oGrid.DataTable.GetValue("Time", iLine)
-            oIncomingPayment.UserFields.Fields.Item("U_AB_SOURCE").Value = oGrid.DataTable.GetValue("Source", iLine)
-            oIncomingPayment.UserFields.Fields.Item("U_AB_BRANCHCODE").Value = oGrid.DataTable.GetValue("Branch", iLine)
-
-            ''----- Bank Transfer
-
-            oIncomingPayment.TransferAccount = oGrid.DataTable.GetValue("Account Code", iLine)
-            oIncomingPayment.TransferDate = dtPostDate.ToString("dd/MM/yyyy")
-            oIncomingPayment.TransferSum = CDbl(oGrid.DataTable.GetValue("PayAmount", iLine))
-            '' oIncomingPayment.CashSum = 0
-
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Attempting to Add  ", sFuncName)
-            lRetCode = oIncomingPayment.Add()
-
-            If lRetCode <> 0 Then
-                sErrDesc = p_oDICompany.GetLastErrorDescription
-                Call WriteToLogFile(sErrDesc, sFuncName)
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
-                bCheck = False
-            Else
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Payment added successful", sFuncName)
-                sErrDesc = String.Empty
-                p_oDICompany.GetNewObjectCode(sPayDocEntry)
-                If oIncomingPayment.GetByKey(sPayDocEntry) Then
-                    sPayDocEntry = oIncomingPayment.DocNum
+                oIncomingPayment.CardCode = oGrid.DataTable.GetValue("Customer", iLine)
+                oIncomingPayment.DocDate = dtPostDate.ToString("dd/MM/yyyy")
+                oIncomingPayment.Remarks = oGrid.DataTable.GetValue("Memo", iLine)
+                If sPref <> "" And sInvRefNo <> "" Then
+                    oIncomingPayment.JournalRemarks = sInvRefNo & "-" & sPref
+                ElseIf sPref <> "" And sInvRefNo = "" Then
+                    oIncomingPayment.JournalRemarks = sPref
+                ElseIf sPref = "" And sInvRefNo <> "" Then
+                    oIncomingPayment.JournalRemarks = sInvRefNo
                 End If
 
-                oGrid.Columns.Item("Payment DocNo").Editable = True
-                oGrid.DataTable.SetValue("Payment DocNo", iLine, sPayDocEntry)
-                oGrid.DataTable.SetValue("Status", iLine, "SUCCESS")
-                objForm.Items.Item("5").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
-                oGrid.Columns.Item("Payment DocNo").Editable = False
+                'oIncomingPayment.UserFields.Fields.Item("U_AB_STNO").Value = oMatrix.Columns.Item("V_4").Cells.Item(iLine).Specific.value
+                oIncomingPayment.UserFields.Fields.Item("U_AB_TIME").Value = oGrid.DataTable.GetValue("Time", iLine)
+                oIncomingPayment.UserFields.Fields.Item("U_AB_SOURCE").Value = oGrid.DataTable.GetValue("Source", iLine)
+                oIncomingPayment.UserFields.Fields.Item("U_AB_BRANCHCODE").Value = oGrid.DataTable.GetValue("Branch", iLine)
 
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Updating receipts table", sFuncName)
+                ''----- Bank Transfer
 
-                sQuery = "INSERT INTO AB_RECEIPTS (Entity ,receipt_no ,updated_datetime ,receipt_amount,prepaid_acct_no ,account_no ,CustomerName ,InvoiceNumber) " & _
-                  "VALUES ('" & p_oDICompany.CompanyDB & "', '" & sPayDocEntry & "','" & dtPostDate.ToString("yyyy-MM-dd") & "'," & oGrid.DataTable.GetValue("PayAmount", iLine) & ", " & _
-                  " '" & oGrid.DataTable.GetValue("Customer", iLine) & "','" & oGrid.DataTable.GetValue("Account Code", iLine) & "','" & oIncomingPayment.CardName & "', '') "
+                oIncomingPayment.TransferAccount = oGrid.DataTable.GetValue("Account Code", iLine)
+                oIncomingPayment.TransferDate = dtPostDate.ToString("dd/MM/yyyy")
+                oIncomingPayment.TransferSum = CDbl(oGrid.DataTable.GetValue("PayAmount", iLine))
+                '' oIncomingPayment.CashSum = 0
 
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
-                If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Attempting to Add  ", sFuncName)
+                lRetCode = oIncomingPayment.Add()
 
-                bCheck = True
-            End If
-        Else
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting invoice for the Ref No" & sInvRefNo, sFuncName)
-
-            sQuery = "SELECT ""DocNum"",""DocEntry"",""NumAtCard"" FROM OINV WHERE ""NumAtCard"" = '" & sInvRefNo & "'"
-            oRecordSet = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
-            oRecordSet.DoQuery(sQuery)
-            If oRecordSet.RecordCount > 0 Then
-                sARDocEntry = oRecordSet.Fields.Item("DocEntry").Value
-
-                If oARInvoice.GetByKey(sARDocEntry) Then
-                    oIncomingPayment.DocType = SAPbobsCOM.BoRcptTypes.rCustomer
-                    oIncomingPayment.CardCode = oARInvoice.CardCode
-                    oIncomingPayment.DocDate = dtDueDate.ToString("dd/MM/yyyy")
-                    oIncomingPayment.DueDate = dtDueDate.ToString("dd/MM/yyyy")
-                    oIncomingPayment.TaxDate = dtDueDate.ToString("dd/MM/yyyy")
-                    If sPref <> "" And sInvRefNo <> "" Then
-                        oIncomingPayment.JournalRemarks = sInvRefNo & "-" & sPref
-                    ElseIf sPref <> "" And sInvRefNo = "" Then
-                        oIncomingPayment.JournalRemarks = sPref
-                    ElseIf sPref = "" And sInvRefNo <> "" Then
-                        oIncomingPayment.JournalRemarks = sInvRefNo
+                If lRetCode <> 0 Then
+                    sErrDesc = p_oDICompany.GetLastErrorDescription
+                    Call WriteToLogFile(sErrDesc, sFuncName)
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
+                    bCheck = False
+                Else
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Payment added successful", sFuncName)
+                    sErrDesc = String.Empty
+                    p_oDICompany.GetNewObjectCode(sPayDocEntry)
+                    If oIncomingPayment.GetByKey(sPayDocEntry) Then
+                        sPayDocEntry = oIncomingPayment.DocNum
                     End If
-                    oIncomingPayment.Remarks = "Based on Upload id " & oGrid.DataTable.GetValue("ID", iLine)
 
-                    oIncomingPayment.UserFields.Fields.Item("U_AB_TIME").Value = oGrid.DataTable.GetValue("Time", iLine)
-                    oIncomingPayment.UserFields.Fields.Item("U_AB_SOURCE").Value = oGrid.DataTable.GetValue("Source", iLine)
-                    oIncomingPayment.UserFields.Fields.Item("U_AB_BRANCHCODE").Value = oGrid.DataTable.GetValue("Branch", iLine)
+                    oGrid.Columns.Item("Payment DocNo").Editable = True
+                    oGrid.DataTable.SetValue("Payment DocNo", iLine, sPayDocEntry)
+                    oGrid.DataTable.SetValue("Status", iLine, "SUCCESS")
+                    objForm.Items.Item("5").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
+                    oGrid.Columns.Item("Payment DocNo").Editable = False
 
-                    oIncomingPayment.Invoices.DocEntry = oARInvoice.DocEntry
-                    oIncomingPayment.Invoices.InvoiceType = SAPbobsCOM.BoRcptInvTypes.it_Invoice
-                    oIncomingPayment.Invoices.SumApplied = oGrid.DataTable.GetValue("PayAmount", iLine)
-                    oIncomingPayment.Invoices.Add()
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Updating receipts table", sFuncName)
 
-                    'Bank Transfer
-                    oIncomingPayment.TransferAccount = oGrid.DataTable.GetValue("Account Code", iLine)
-                    oIncomingPayment.TransferDate = dtDueDate.ToString("dd/MM/yyyy")
-                    oIncomingPayment.TransferSum = oGrid.DataTable.GetValue("PayAmount", iLine)
-                    oIncomingPayment.CashSum = 0
+                    sRcptQuery = " INSERT INTO AB_RECEIPTS (Entity ,receipt_no ,updated_datetime ,receipt_amount,prepaid_acct_no ,account_no ,CustomerName ,InvoiceNumber) " & _
+                      "VALUES ('" & p_oDICompany.CompanyDB & "', '" & sPayDocEntry & "','" & dtPostDate.ToString("yyyy-MM-dd") & "'," & oGrid.DataTable.GetValue("PayAmount", iLine) & ", " & _
+                      " '" & oGrid.DataTable.GetValue("Customer", iLine) & "','" & oGrid.DataTable.GetValue("Account Code", iLine) & "','" & oIncomingPayment.CardName & "', ''); "
 
-                    oIncomingPayment.Remarks = oGrid.DataTable.GetValue("Memo", iLine)
-                    'oIncomingPayment.JournalRemarks = oGrid.DataTable.GetValue("Pref", iLine)
+                    'If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
+                    'If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
 
-                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Attempting to Add  ", sFuncName)
-                    lRetCode = oIncomingPayment.Add()
+                    bCheck = True
+                End If
+            Else
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Getting invoice for the Ref No" & sInvRefNo, sFuncName)
 
-                    If lRetCode <> 0 Then
-                        sErrDesc = p_oDICompany.GetLastErrorDescription
-                        Call WriteToLogFile(sErrDesc, sFuncName)
-                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
-                        bCheck = False
-                    Else
-                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS.", sFuncName)
-                        p_oDICompany.GetNewObjectCode(sPayDocEntry)
-                        If oIncomingPayment.GetByKey(sPayDocEntry) Then
-                            sPayDocEntry = oIncomingPayment.DocNum
+                sQuery = "SELECT ""DocNum"",""DocEntry"",""NumAtCard"" FROM OINV WHERE ""NumAtCard"" = '" & sInvRefNo & "'"
+                oRecordSet = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+                oRecordSet.DoQuery(sQuery)
+                If oRecordSet.RecordCount > 0 Then
+                    sARDocEntry = oRecordSet.Fields.Item("DocEntry").Value
+
+                    If oARInvoice.GetByKey(sARDocEntry) Then
+                        oIncomingPayment.DocType = SAPbobsCOM.BoRcptTypes.rCustomer
+                        oIncomingPayment.CardCode = oARInvoice.CardCode
+                        oIncomingPayment.DocDate = dtDueDate.ToString("dd/MM/yyyy")
+                        oIncomingPayment.DueDate = dtDueDate.ToString("dd/MM/yyyy")
+                        oIncomingPayment.TaxDate = dtDueDate.ToString("dd/MM/yyyy")
+                        If sPref <> "" And sInvRefNo <> "" Then
+                            oIncomingPayment.JournalRemarks = sInvRefNo & "-" & sPref
+                        ElseIf sPref <> "" And sInvRefNo = "" Then
+                            oIncomingPayment.JournalRemarks = sPref
+                        ElseIf sPref = "" And sInvRefNo <> "" Then
+                            oIncomingPayment.JournalRemarks = sInvRefNo
                         End If
+                        oIncomingPayment.Remarks = "Based on Upload id " & oGrid.DataTable.GetValue("ID", iLine)
 
-                        oGrid.Columns.Item("Payment DocNo").Editable = True
-                        oGrid.DataTable.SetValue("Payment DocNo", iLine, sPayDocEntry)
-                        oGrid.DataTable.SetValue("Status", iLine, "SUCCESS")
-                        objForm.Items.Item("5").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
-                        oGrid.Columns.Item("Payment DocNo").Editable = False
+                        oIncomingPayment.UserFields.Fields.Item("U_AB_TIME").Value = oGrid.DataTable.GetValue("Time", iLine)
+                        oIncomingPayment.UserFields.Fields.Item("U_AB_SOURCE").Value = oGrid.DataTable.GetValue("Source", iLine)
+                        oIncomingPayment.UserFields.Fields.Item("U_AB_BRANCHCODE").Value = oGrid.DataTable.GetValue("Branch", iLine)
 
-                        oARInvoice.NumAtCard = oGrid.DataTable.GetValue("Merchant Id", iLine)
-                        oARInvoice.Update()
+                        oIncomingPayment.Invoices.DocEntry = oARInvoice.DocEntry
+                        oIncomingPayment.Invoices.InvoiceType = SAPbobsCOM.BoRcptInvTypes.it_Invoice
+                        oIncomingPayment.Invoices.SumApplied = oGrid.DataTable.GetValue("PayAmount", iLine)
+                        oIncomingPayment.Invoices.Add()
 
-                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS.", sFuncName)
-                        bCheck = True
+                        'Bank Transfer
+                        oIncomingPayment.TransferAccount = oGrid.DataTable.GetValue("Account Code", iLine)
+                        oIncomingPayment.TransferDate = dtDueDate.ToString("dd/MM/yyyy")
+                        oIncomingPayment.TransferSum = oGrid.DataTable.GetValue("PayAmount", iLine)
+                        oIncomingPayment.CashSum = 0
+
+                        oIncomingPayment.Remarks = oGrid.DataTable.GetValue("Memo", iLine)
+                        'oIncomingPayment.JournalRemarks = oGrid.DataTable.GetValue("Pref", iLine)
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Attempting to Add  ", sFuncName)
+                        lRetCode = oIncomingPayment.Add()
+
+                        If lRetCode <> 0 Then
+                            sErrDesc = p_oDICompany.GetLastErrorDescription
+                            Call WriteToLogFile(sErrDesc, sFuncName)
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
+                            bCheck = False
+                        Else
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS.", sFuncName)
+                            p_oDICompany.GetNewObjectCode(sPayDocEntry)
+                            If oIncomingPayment.GetByKey(sPayDocEntry) Then
+                                sPayDocEntry = oIncomingPayment.DocNum
+                            End If
+
+                            oGrid.Columns.Item("Payment DocNo").Editable = True
+                            oGrid.DataTable.SetValue("Payment DocNo", iLine, sPayDocEntry)
+                            oGrid.DataTable.SetValue("Status", iLine, "SUCCESS")
+                            objForm.Items.Item("5").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
+                            oGrid.Columns.Item("Payment DocNo").Editable = False
+
+                            oARInvoice.NumAtCard = oGrid.DataTable.GetValue("Merchant Id", iLine)
+                            oARInvoice.Update()
+
+                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS.", sFuncName)
+                            bCheck = True
+                        End If
                     End If
+                Else
+                    sErrDesc = "Invoice Not Found"
+                    Call WriteToLogFile(sErrDesc, sFuncName)
+                    bCheck = False
+                    Return bCheck
+                    Exit Function
                 End If
-            Else
-                sErrDesc = "Invoice Not Found"
-                Call WriteToLogFile(sErrDesc, sFuncName)
-                bCheck = False
-                Return bCheck
-                Exit Function
             End If
-        End If
 
-        Return bCheck
+            Return bCheck
+        Catch ex As Exception
+            sErrDesc = ex.Message
+            Call WriteToLogFile(sErrDesc, sFuncName)
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Error while creating payment with onAccount for id " & sid, sFuncName)
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
+            Return False
+        End Try
     End Function
 #End Region
 #Region "AR Incoming Payment on Account based - Multiple customers Based on Grid"
@@ -878,17 +913,19 @@ Module modExceptionList
 
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Updating AB_RECEIPTS table", sFuncName)
 
+                            sQuery = String.Empty
+
                             sQuery = "INSERT INTO AB_RECEIPTS (Entity ,receipt_no ,updated_datetime ,receipt_amount,prepaid_acct_no ,account_no ,CustomerName ,InvoiceNumber) " & _
-                              "VALUES ('" & p_oDICompany.CompanyDB & "', '" & sPayDocEntry & "','" & dtPostDate.ToString("yyyy-MM-dd") & "'," & dCustSelAmount & ", " & _
-                              " '" & oIncomingPayment.CardCode & "','" & oGrid.DataTable.GetValue("Account Code", iLine) & "','" & oIncomingPayment.CardName & "', '') "
+                                     " VALUES ('" & p_oDICompany.CompanyDB & "', '" & sPayDocEntry & "','" & dtPostDate.ToString("yyyy-MM-dd") & "'," & dCustSelAmount & ", " & _
+                                     " '" & oIncomingPayment.CardCode & "','" & oGrid.DataTable.GetValue("Account Code", iLine) & "','" & oIncomingPayment.CardName & "', ''); "
 
-                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
-                            If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                            'If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
+                            'If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
 
-                            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Updating AB_SELECTEDCUSTOMER table", sFuncName)
+                            'If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Updating AB_SELECTEDCUSTOMER table", sFuncName)
 
-                            sQuery = "UPDATE AB_SELECTEDCUSTOMER  SET PaymentDocnum = '" & sPayDocEntry & "'  WHERE DOCNUM = '" & sCustSelDocNo & "' AND ID = '" & sId & "' " & _
-                                     " AND INVREFNO = '" & sInvRefNo & "' AND LINE = '" & iLine & "' AND RANDOMNO = '" & iRandomNo & "' AND CUSTCODE = '" & sCardCode & "' "
+                            sQuery = sQuery & " UPDATE AB_SELECTEDCUSTOMER  SET PaymentDocnum = '" & sPayDocEntry & "'  WHERE DOCNUM = '" & sCustSelDocNo & "' AND ID = '" & sId & "' " & _
+                                     " AND INVREFNO = '" & sInvRefNo & "' AND LINE = '" & iLine & "' AND RANDOMNO = '" & iRandomNo & "' AND CUSTCODE = '" & sCardCode & "'; "
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
                             If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
 
@@ -991,111 +1028,123 @@ Module modExceptionList
         Dim sQuery As String = String.Empty
         Dim oRecordSet As SAPbobsCOM.Recordset = Nothing
         Dim sPref As String = String.Empty
+        Dim sID As String = String.Empty
 
-        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting Function", sFuncName)
+        Try
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting Function", sFuncName)
 
-        oIncomingPayment = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oIncomingPayments)
-        oARInvoice = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oInvoices)
+            oIncomingPayment = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oIncomingPayments)
+            oARInvoice = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oInvoices)
 
-        oRecordSet = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+            oRecordSet = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
 
-        Dim dtDocDate As Date
-        oGrid = objForm.Items.Item("19").Specific
-        sNumAtCard = oGrid.DataTable.GetValue("Merchant Id", iLine)
-        sPref = oGrid.DataTable.GetValue("Pref", iLine)
+            Dim dtDocDate As Date
+            oGrid = objForm.Items.Item("19").Specific
+            sID = oGrid.DataTable.GetValue("ID", iLine)
+            sNumAtCard = oGrid.DataTable.GetValue("Merchant Id", iLine)
+            sPref = oGrid.DataTable.GetValue("Pref", iLine)
 
-        Dim sDocDate As String
-        sDocDate = oGrid.DataTable.GetValue("Due Date", iLine)
-        Dim format() = {"dd/MM/yyyy", "dd/MM/yy", "d/M/yyyy", "M/d/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", "yyyyMMdd", "MMddYYYY", "M/dd/yyyy", "MM/dd/YYYY", "d-M-yyyy", "d.M.yyyy"}
-        Date.TryParseExact(sDocDate, format, System.Globalization.DateTimeFormatInfo.InvariantInfo, Globalization.DateTimeStyles.None, dtDocDate)
-        'dtDocDate = GetDateTimeValue(oMatrix.Columns.Item("V_12").Cells.Item(iLine).Specific.string)
+            Dim sDocDate As String
+            sDocDate = oGrid.DataTable.GetValue("Due Date", iLine)
+            Dim format() = {"dd/MM/yyyy", "dd/MM/yy", "d/M/yyyy", "M/d/yyyy", "dd-MM-yyyy", "dd.MM.yyyy", "yyyyMMdd", "MMddYYYY", "M/dd/yyyy", "MM/dd/YYYY", "d-M-yyyy", "d.M.yyyy"}
+            Date.TryParseExact(sDocDate, format, System.Globalization.DateTimeFormatInfo.InvariantInfo, Globalization.DateTimeStyles.None, dtDocDate)
+            'dtDocDate = GetDateTimeValue(oMatrix.Columns.Item("V_12").Cells.Item(iLine).Specific.string)
 
-        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("DocDate is " & dtDocDate.ToString("yyyy-MM-dd"), sFuncName)
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("DocDate is " & dtDocDate.ToString("yyyy-MM-dd"), sFuncName)
 
-        sQuery = "SELECT ""DocNum"",""DocEntry"",""NumAtCard"" FROM ""OINV"" WHERE ""NumAtCard"" = '" & sNumAtCard & "'"
-        oRecordSet.DoQuery(sQuery)
-        If oRecordSet.RecordCount > 0 Then
-            sARDocEntry = oRecordSet.Fields.Item("DocEntry").Value
+            sQuery = "SELECT ""DocNum"",""DocEntry"",""NumAtCard"" FROM ""OINV"" WHERE ""NumAtCard"" = '" & sNumAtCard & "'"
+            oRecordSet.DoQuery(sQuery)
+            If oRecordSet.RecordCount > 0 Then
+                sARDocEntry = oRecordSet.Fields.Item("DocEntry").Value
 
-            If oARInvoice.GetByKey(sARDocEntry) Then
-                oIncomingPayment.DocType = SAPbobsCOM.BoRcptTypes.rCustomer
-                oIncomingPayment.CardCode = oARInvoice.CardCode
-                oIncomingPayment.DocDate = dtDocDate.ToString("dd/MM/yyyy")
-                oIncomingPayment.DueDate = dtDocDate.ToString("dd/MM/yyyy")
-                oIncomingPayment.TaxDate = dtDocDate.ToString("dd/MM/yyyy")
-                'oIncomingPayment.JournalRemarks = sNumAtCard
-                If sPref <> "" And sNumAtCard <> "" Then
-                    oIncomingPayment.JournalRemarks = sNumAtCard & "-" & sPref
-                ElseIf sPref <> "" And sNumAtCard = "" Then
-                    oIncomingPayment.JournalRemarks = sPref
-                ElseIf sPref = "" And sNumAtCard <> "" Then
-                    oIncomingPayment.JournalRemarks = sNumAtCard
-                End If
-                oIncomingPayment.Remarks = "Based on Upload id " & oGrid.DataTable.GetValue("ID", iLine)
-
-                'oIncomingPayment.UserFields.Fields.Item("U_AB_STNO").Value = oMatrix.Columns.Item("V_4").Cells.Item(iLine).Specific.value
-                oIncomingPayment.UserFields.Fields.Item("U_AB_TIME").Value = oGrid.DataTable.GetValue("Time", iLine)
-                oIncomingPayment.UserFields.Fields.Item("U_AB_SOURCE").Value = oGrid.DataTable.GetValue("Source", iLine)
-                oIncomingPayment.UserFields.Fields.Item("U_AB_BRANCHCODE").Value = oGrid.DataTable.GetValue("Branch", iLine)
-
-                oIncomingPayment.Invoices.DocEntry = oARInvoice.DocEntry
-                oIncomingPayment.Invoices.InvoiceType = SAPbobsCOM.BoRcptInvTypes.it_Invoice
-                oIncomingPayment.Invoices.SumApplied = CDbl(oGrid.DataTable.GetValue("Amount", iLine))
-                oIncomingPayment.Invoices.Add()
-
-                'Bank Transfer
-                oIncomingPayment.TransferAccount = oGrid.DataTable.GetValue("Account Code", iLine)
-                oIncomingPayment.TransferDate = dtDocDate.ToString("dd/MM/yyyy")
-                oIncomingPayment.TransferSum = CDbl(oGrid.DataTable.GetValue("Amount", iLine))
-                oIncomingPayment.CashSum = 0
-
-                oIncomingPayment.Remarks = oGrid.DataTable.GetValue("Memo", iLine)
-                ''oIncomingPayment.JournalRemarks = oGrid.DataTable.GetValue("Pref", iLine)
-
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Attempting to Add  ", sFuncName)
-                lRetCode = oIncomingPayment.Add()
-
-                If lRetCode <> 0 Then
-                    sErrDesc = p_oDICompany.GetLastErrorDescription
-                    Call WriteToLogFile(sErrDesc, sFuncName)
-                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
-                    bCheck = False
-                Else
-                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS.", sFuncName)
-                    p_oDICompany.GetNewObjectCode(sPayDocEntry)
-                    If oIncomingPayment.GetByKey(sPayDocEntry) Then
-                        sPayDocEntry = oIncomingPayment.DocNum
+                If oARInvoice.GetByKey(sARDocEntry) Then
+                    oIncomingPayment.DocType = SAPbobsCOM.BoRcptTypes.rCustomer
+                    oIncomingPayment.CardCode = oARInvoice.CardCode
+                    oIncomingPayment.DocDate = dtDocDate.ToString("dd/MM/yyyy")
+                    oIncomingPayment.DueDate = dtDocDate.ToString("dd/MM/yyyy")
+                    oIncomingPayment.TaxDate = dtDocDate.ToString("dd/MM/yyyy")
+                    'oIncomingPayment.JournalRemarks = sNumAtCard
+                    If sPref <> "" And sNumAtCard <> "" Then
+                        oIncomingPayment.JournalRemarks = sNumAtCard & "-" & sPref
+                    ElseIf sPref <> "" And sNumAtCard = "" Then
+                        oIncomingPayment.JournalRemarks = sPref
+                    ElseIf sPref = "" And sNumAtCard <> "" Then
+                        oIncomingPayment.JournalRemarks = sNumAtCard
                     End If
+                    oIncomingPayment.Remarks = "Based on Upload id " & oGrid.DataTable.GetValue("ID", iLine)
 
-                    oGrid.Columns.Item("Payment DocNo").Editable = True
-                    oGrid.DataTable.SetValue("Payment DocNo", iLine, sPayDocEntry)
-                    oGrid.DataTable.SetValue("Status", iLine, "SUCCESS")
-                    objForm.Items.Item("5").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
-                    oGrid.Columns.Item("Payment DocNo").Editable = False
+                    'oIncomingPayment.UserFields.Fields.Item("U_AB_STNO").Value = oMatrix.Columns.Item("V_4").Cells.Item(iLine).Specific.value
+                    oIncomingPayment.UserFields.Fields.Item("U_AB_TIME").Value = oGrid.DataTable.GetValue("Time", iLine)
+                    oIncomingPayment.UserFields.Fields.Item("U_AB_SOURCE").Value = oGrid.DataTable.GetValue("Source", iLine)
+                    oIncomingPayment.UserFields.Fields.Item("U_AB_BRANCHCODE").Value = oGrid.DataTable.GetValue("Branch", iLine)
 
-                    oARInvoice.NumAtCard = oGrid.DataTable.GetValue("Merchant Id", iLine)
-                    oARInvoice.Update()
+                    oIncomingPayment.Invoices.DocEntry = oARInvoice.DocEntry
+                    oIncomingPayment.Invoices.InvoiceType = SAPbobsCOM.BoRcptInvTypes.it_Invoice
+                    oIncomingPayment.Invoices.SumApplied = CDbl(oGrid.DataTable.GetValue("Amount", iLine))
+                    oIncomingPayment.Invoices.Add()
 
-                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS.", sFuncName)
-                    bCheck = True
+                    'Bank Transfer
+                    oIncomingPayment.TransferAccount = oGrid.DataTable.GetValue("Account Code", iLine)
+                    oIncomingPayment.TransferDate = dtDocDate.ToString("dd/MM/yyyy")
+                    oIncomingPayment.TransferSum = CDbl(oGrid.DataTable.GetValue("Amount", iLine))
+                    oIncomingPayment.CashSum = 0
+
+                    oIncomingPayment.Remarks = oGrid.DataTable.GetValue("Memo", iLine)
+                    ''oIncomingPayment.JournalRemarks = oGrid.DataTable.GetValue("Pref", iLine)
+
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Attempting to Add  ", sFuncName)
+                    lRetCode = oIncomingPayment.Add()
+
+                    If lRetCode <> 0 Then
+                        sErrDesc = p_oDICompany.GetLastErrorDescription
+                        Call WriteToLogFile(sErrDesc, sFuncName)
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with ERROR", sFuncName)
+                        bCheck = False
+                    Else
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS.", sFuncName)
+                        p_oDICompany.GetNewObjectCode(sPayDocEntry)
+                        If oIncomingPayment.GetByKey(sPayDocEntry) Then
+                            sPayDocEntry = oIncomingPayment.DocNum
+                        End If
+
+                        oGrid.Columns.Item("Payment DocNo").Editable = True
+                        oGrid.DataTable.SetValue("Payment DocNo", iLine, sPayDocEntry)
+                        oGrid.DataTable.SetValue("Status", iLine, "SUCCESS")
+                        objForm.Items.Item("5").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
+                        oGrid.Columns.Item("Payment DocNo").Editable = False
+
+                        oARInvoice.NumAtCard = oGrid.DataTable.GetValue("Merchant Id", iLine)
+                        oARInvoice.Update()
+
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Completed with SUCCESS.", sFuncName)
+                        bCheck = True
+                    End If
                 End If
+            Else
+                sErrDesc = "Invoice Not Found"
+                Call WriteToLogFile(sErrDesc, sFuncName)
+                bCheck = False
+                Return bCheck
+                Exit Function
             End If
-        Else
-            sErrDesc = "Invoice Not Found"
-            Call WriteToLogFile(sErrDesc, sFuncName)
-            bCheck = False
-            Return bCheck
-            Exit Function
-        End If
-        System.Runtime.InteropServices.Marshal.ReleaseComObject(oRecordSet)
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(oRecordSet)
 
-        Return bCheck
+            Return bCheck
+        Catch ex As Exception
+            sErrDesc = ex.Message
+            Call WriteToLogFile(sErrDesc, sFuncName)
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Error while creating payment. check id " & sID, sFuncName)
+            Return False
+        End Try
+
     End Function
 #End Region
 
 #Region "Function for On Account based Button Based on Grid"
     Private Sub OnAccountFunction_Grid(ByVal objForm As SAPbouiCOM.Form)
         Dim sPostDate As String = String.Empty
+        Dim sRcptQuery As String = String.Empty
+        Dim sRcptFullQuery As String = String.Empty
         oGrid = objForm.Items.Item("19").Specific
 
         For i As Integer = 0 To oGrid.DataTable.Rows.Count - 1
@@ -1116,12 +1165,17 @@ Module modExceptionList
 
                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ArIncomingPayment_onAccount()", sFuncName)
 
-                If ArIncomingPayment_onAccount_Grid(objForm, i, sErrDesc) = False Then
+                If ArIncomingPayment_onAccount_Grid(objForm, i, sRcptQuery, sErrDesc) = False Then
                     oGrid.DataTable.SetValue("Status", i, "FAIL")
                     oGrid.DataTable.SetValue("Error message", i, sErrDesc)
                 Else
                     oGrid.DataTable.SetValue("Status", i, "SUCCESS")
                     oGrid.DataTable.SetValue("Error message", i, "")
+                    If sRcptFullQuery = "" Then
+                        sRcptFullQuery = sRcptQuery
+                    Else
+                        sRcptFullQuery = sRcptFullQuery & sRcptQuery
+                    End If
                 End If
 
             End If
@@ -1137,22 +1191,40 @@ Module modExceptionList
                 sPayDocNo = oGrid.DataTable.GetValue("Payment DocNo", i)
 
                 If oGrid.DataTable.GetValue("Status", i) = "SUCCESS" Then
-                    sQuery = "UPDATE AB_STATEMENTUPLOAD  SET InvoiceRef = '" & sInvRef & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',Status = 'SUCCESS', " & _
+                    If sQuery = "" Then
+                        sQuery = " UPDATE AB_STATEMENTUPLOAD  SET InvoiceRef = '" & sInvRef & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',Status = 'SUCCESS', " & _
                              " ErrMsg = '', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '0' " & _
-                             " WHERE ID = '" & sID & "'"
+                             " WHERE ID = '" & sID & "'; "
+                    Else
+                        sQuery = sQuery & " UPDATE AB_STATEMENTUPLOAD  SET InvoiceRef = '" & sInvRef & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',Status = 'SUCCESS', " & _
+                             " ErrMsg = '', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '0' " & _
+                             " WHERE ID = '" & sID & "'; "
+                    End If
                 Else
-                    sQuery = "UPDATE AB_STATEMENTUPLOAD SET InvoiceRef = '" & sInvRef & "' ,Status = '" & sStatus & "',ErrMsg = '" & sErrorMessage.Replace("'", "") & "', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "' " & _
-                             " WHERE ID = '" & sID & "' "
+                    If sQuery = "" Then
+                        sQuery = " UPDATE AB_STATEMENTUPLOAD SET InvoiceRef = '" & sInvRef & "' ,Status = '" & sStatus & "',ErrMsg = '" & sErrorMessage.Replace("'", "") & "', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "' " & _
+                            " WHERE ID = '" & sID & "'; "
+                    Else
+                        sQuery = sQuery & " UPDATE AB_STATEMENTUPLOAD SET InvoiceRef = '" & sInvRef & "' ,Status = '" & sStatus & "',ErrMsg = '" & sErrorMessage.Replace("'", "") & "', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "' " & _
+                             " WHERE ID = '" & sID & "'; "
+                    End If
                 End If
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
-                If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
-
             End If
         Next
+
+        If sQuery <> "" Then
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
+            If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+        End If
+        If sRcptFullQuery = "" Then
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sRcptFullQuery, sFuncName)
+            If ExecuteSQLNonQuery(sRcptFullQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+        End If
+
     End Sub
 #End Region
 #Region "AR incoming payment on Account based- Based on grid"
-    Private Function ArIncomingPayment_onAccount_Grid(ByVal objForm As SAPbouiCOM.Form, ByVal iLine As Integer, ByRef sErrDesc As String) As Boolean
+    Private Function ArIncomingPayment_onAccount_Grid(ByVal objForm As SAPbouiCOM.Form, ByVal iLine As Integer, ByRef sRcptQuery As String, ByRef sErrDesc As String) As Boolean
         Dim bCheck As Boolean
         bCheck = True
 
@@ -1193,7 +1265,6 @@ Module modExceptionList
             oIncomingPayment.JournalRemarks = sInvRefNo
         End If
 
-
         'oIncomingPayment.UserFields.Fields.Item("U_AB_STNO").Value = oMatrix.Columns.Item("V_4").Cells.Item(iLine).Specific.value
         oIncomingPayment.UserFields.Fields.Item("U_AB_TIME").Value = oGrid.DataTable.GetValue("Time", iLine)
         oIncomingPayment.UserFields.Fields.Item("U_AB_SOURCE").Value = oGrid.DataTable.GetValue("Source", iLine)
@@ -1227,13 +1298,12 @@ Module modExceptionList
             objForm.Items.Item("5").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
             oGrid.Columns.Item("Payment DocNo").Editable = False
 
-            Dim sQuery As String
-            sQuery = "INSERT INTO AB_RECEIPTS (Entity ,receipt_no ,updated_datetime ,receipt_amount,prepaid_acct_no ,account_no ,CustomerName ,InvoiceNumber) " & _
-              "VALUES ('" & p_oDICompany.CompanyDB & "', '" & sPayDocEntry & "','" & dtPostDate.ToString("yyyy-MM-dd") & "'," & CDbl(oGrid.DataTable.GetValue("Amount", iLine)) & ", " & _
+            sRcptQuery = "INSERT INTO AB_RECEIPTS (Entity ,receipt_no ,updated_datetime ,receipt_amount,prepaid_acct_no ,account_no ,CustomerName ,InvoiceNumber) " & _
+              " VALUES ('" & p_oDICompany.CompanyDB & "', '" & sPayDocEntry & "','" & dtPostDate.ToString("yyyy-MM-dd") & "'," & CDbl(oGrid.DataTable.GetValue("Amount", iLine)) & ", " & _
               " '" & oIncomingPayment.CardCode & "','" & oGrid.DataTable.GetValue("Account Code", iLine) & "','" & oIncomingPayment.CardName & "', '') "
 
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
-            If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+            'If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
+            'If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
 
             bCheck = True
         End If
@@ -1281,18 +1351,31 @@ Module modExceptionList
                 sPayDocNo = oGrid.DataTable.GetValue("Payment DocNo", i)
 
                 If oGrid.DataTable.GetValue("Status", i) = "SUCCESS" Then
-                    sQuery = "UPDATE AB_STATEMENTUPLOAD  SET InvoiceRef = '" & sInvRef & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',Status = 'SUCCESS', " & _
+                    If sQuery = "" Then
+                        sQuery = " UPDATE AB_STATEMENTUPLOAD  SET InvoiceRef = '" & sInvRef & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',Status = 'SUCCESS', " & _
                              " ErrMsg = '', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '0' " & _
-                             " WHERE ID = '" & sID & "'"
+                             " WHERE ID = '" & sID & "'; "
+                    Else
+                        sQuery = sQuery & " UPDATE AB_STATEMENTUPLOAD  SET InvoiceRef = '" & sInvRef & "',SAPSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',Status = 'SUCCESS', " & _
+                             " ErrMsg = '', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "',PaymentDocnum = '" & sPayDocNo & "',BalanceAmt = '0' " & _
+                             " WHERE ID = '" & sID & "'; "
+                    End If
                 Else
-                    sQuery = "UPDATE AB_STATEMENTUPLOAD SET InvoiceRef = '" & sInvRef & "' ,Status = '" & sStatus & "',ErrMsg = '" & sErrorMessage.Replace("'", "") & "', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "' " & _
-                             " WHERE ID = '" & sID & "' "
+                    If sQuery = "" Then
+                        sQuery = " UPDATE AB_STATEMENTUPLOAD SET InvoiceRef = '" & sInvRef & "' ,Status = '" & sStatus & "',ErrMsg = '" & sErrorMessage.Replace("'", "") & "', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "' " & _
+                            " WHERE ID = '" & sID & "'; "
+                    Else
+                        sQuery = sQuery & " UPDATE AB_STATEMENTUPLOAD SET InvoiceRef = '" & sInvRef & "' ,Status = '" & sStatus & "',ErrMsg = '" & sErrorMessage.Replace("'", "") & "', LastSyncDate = '" & Date.Now.Date.ToString("yyyy-MM-dd") & "' " & _
+                             " WHERE ID = '" & sID & "'; "
+                    End If
                 End If
-                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
-                If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
-
             End If
         Next
+
+        If sQuery <> "" Then
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
+            If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+        End If
     End Sub
 #End Region
 #Region "AR incoming payment on Account based - Unaccounted receipts - Based on Grid"

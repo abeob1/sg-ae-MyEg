@@ -40,3 +40,100 @@
 [05/30/2017 02:58:58][                          ExecuteQuery()] Completed with ERROR
 [05/30/2017 02:58:58][                        RP_SBO_ItemEvent] Completed with ERROR
 [05/30/2017 02:58:58][             SBO_Application_ItemEvent()] Completed with ERROR
+[07/17/2017 20:36:46][                                  Main()] Starting function
+[07/17/2017 20:36:46][                                  Main()] Initializing public SBO Application object
+[07/17/2017 20:36:46][                                  Main()] Retriving SBO application company handle
+[07/17/2017 20:36:48][                                  Main()] Connecting Company
+[07/17/2017 20:36:48][                                  Main()] Calling ConnectDICompSSO()
+[07/17/2017 20:36:48][                      ConnectDICompSSO()] Starting function
+[07/17/2017 20:36:55][                      ConnectDICompSSO()] Completed with SUCCESS
+[07/17/2017 20:36:55][                                  Main()] Creating Event handler class
+[07/17/2017 20:36:55][                      Class_Initialize()] Starting function
+[07/17/2017 20:36:55][                      Class_Initialize()] Retriving SBO Application handle
+[07/17/2017 20:36:55][                      Class_Initialize()] Completed with SUCCESS
+[07/17/2017 20:36:55][                                  Main()] Calling AddMenuItems()
+[07/17/2017 20:36:55][                                  Main()] Calling LoadFromXML()
+[07/17/2017 20:36:55][                                  Main()] System Initialization
+[07/17/2017 20:36:55][              Get Company Initialization] Company Initialization
+[07/17/2017 20:36:55][              Get Company Initialization] Completed with Success
+[07/17/2017 20:36:55][                                  Main()] Addon started successfully
+[07/17/2017 20:37:18][             SBO_Application_MenuEvent()] Starting function
+[07/17/2017 20:37:18][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[07/17/2017 20:37:18][             SBO_Application_MenuEvent()] Starting function
+[07/17/2017 20:37:19][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[07/17/2017 20:37:59][                          ExecuteQuery()] Starting Function
+[07/17/2017 20:38:15][                          ExecuteQuery()] Completed with ERROR
+[07/17/2017 20:38:15][                        RP_SBO_ItemEvent] Completed with ERROR
+[07/17/2017 20:38:15][             SBO_Application_ItemEvent()] Completed with ERROR
+[07/17/2017 20:40:01][                                  Main()] Starting function
+[07/17/2017 20:40:01][                                  Main()] Initializing public SBO Application object
+[07/17/2017 20:40:01][                                  Main()] Retriving SBO application company handle
+[07/17/2017 20:40:02][                                  Main()] Connecting Company
+[07/17/2017 20:40:02][                                  Main()] Calling ConnectDICompSSO()
+[07/17/2017 20:40:02][                      ConnectDICompSSO()] Starting function
+[07/17/2017 20:40:04][                      ConnectDICompSSO()] Completed with SUCCESS
+[07/17/2017 20:40:04][                                  Main()] Creating Event handler class
+[07/17/2017 20:40:04][                      Class_Initialize()] Starting function
+[07/17/2017 20:40:04][                      Class_Initialize()] Retriving SBO Application handle
+[07/17/2017 20:40:04][                      Class_Initialize()] Completed with SUCCESS
+[07/17/2017 20:40:04][                                  Main()] Calling AddMenuItems()
+[07/17/2017 20:40:04][                                  Main()] Calling LoadFromXML()
+[07/17/2017 20:40:04][                                  Main()] System Initialization
+[07/17/2017 20:40:04][              Get Company Initialization] Company Initialization
+[07/17/2017 20:40:04][              Get Company Initialization] Completed with Success
+[07/17/2017 20:40:04][                                  Main()] Addon started successfully
+[07/17/2017 20:40:07][             SBO_Application_MenuEvent()] Starting function
+[07/17/2017 20:40:07][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[07/17/2017 20:40:07][             SBO_Application_MenuEvent()] Starting function
+[07/17/2017 20:40:08][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[07/17/2017 20:40:42][                          ExecuteQuery()] Starting Function
+[07/17/2017 20:40:56][                          ExecuteQuery()] Completed with SUCCESS
+[07/17/2017 20:41:02][                                  Main()] Calling GetDataTableFromExcel()
+[07/19/2017 22:19:03][                                  Main()] Starting function
+[07/19/2017 22:19:03][                                  Main()] Initializing public SBO Application object
+[07/19/2017 22:19:03][                                  Main()] Retriving SBO application company handle
+[07/19/2017 22:19:06][                                  Main()] Connecting Company
+[07/19/2017 22:19:06][                                  Main()] Calling ConnectDICompSSO()
+[07/19/2017 22:19:06][                      ConnectDICompSSO()] Starting function
+[07/19/2017 22:19:13][                      ConnectDICompSSO()] Completed with SUCCESS
+[07/19/2017 22:19:13][                                  Main()] Creating Event handler class
+[07/19/2017 22:19:13][                      Class_Initialize()] Starting function
+[07/19/2017 22:19:13][                      Class_Initialize()] Retriving SBO Application handle
+[07/19/2017 22:19:13][                      Class_Initialize()] Completed with SUCCESS
+[07/19/2017 22:19:13][                                  Main()] Calling AddMenuItems()
+[07/19/2017 22:19:13][                                  Main()] Calling LoadFromXML()
+[07/19/2017 22:19:13][                                  Main()] System Initialization
+[07/19/2017 22:19:13][              Get Company Initialization] Company Initialization
+[07/19/2017 22:19:13][              Get Company Initialization] Completed with Success
+[07/19/2017 22:19:13][                                  Main()] Addon started successfully
+[07/19/2017 22:25:32][             SBO_Application_MenuEvent()] Starting function
+[07/19/2017 22:25:32][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[07/19/2017 22:25:32][             SBO_Application_MenuEvent()] Starting function
+[07/19/2017 22:25:33][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[07/19/2017 22:25:50][                          ExecuteQuery()] Starting Function
+[07/19/2017 22:25:52][                          ExecuteQuery()] Completed with SUCCESS
+[07/19/2017 22:25:57][                                  Main()] Calling GetDataTableFromExcel()
+[07/19/2017 22:44:17][                                  Main()] Starting function
+[07/19/2017 22:44:17][                                  Main()] Initializing public SBO Application object
+[07/19/2017 22:44:17][                                  Main()] Retriving SBO application company handle
+[07/19/2017 22:44:18][                                  Main()] Connecting Company
+[07/19/2017 22:44:18][                                  Main()] Calling ConnectDICompSSO()
+[07/19/2017 22:44:18][                      ConnectDICompSSO()] Starting function
+[07/19/2017 22:44:20][                      ConnectDICompSSO()] Completed with SUCCESS
+[07/19/2017 22:44:20][                                  Main()] Creating Event handler class
+[07/19/2017 22:44:20][                      Class_Initialize()] Starting function
+[07/19/2017 22:44:20][                      Class_Initialize()] Retriving SBO Application handle
+[07/19/2017 22:44:20][                      Class_Initialize()] Completed with SUCCESS
+[07/19/2017 22:44:20][                                  Main()] Calling AddMenuItems()
+[07/19/2017 22:44:20][                                  Main()] Calling LoadFromXML()
+[07/19/2017 22:44:20][                                  Main()] System Initialization
+[07/19/2017 22:44:20][              Get Company Initialization] Company Initialization
+[07/19/2017 22:44:20][              Get Company Initialization] Completed with Success
+[07/19/2017 22:44:20][                                  Main()] Addon started successfully
+[07/19/2017 22:44:28][             SBO_Application_MenuEvent()] Starting function
+[07/19/2017 22:44:28][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[07/19/2017 22:44:28][             SBO_Application_MenuEvent()] Starting function
+[07/19/2017 22:44:29][             SBO_Application_MenuEvent()] Completed with SUCCESS
+[07/19/2017 22:44:40][                          ExecuteQuery()] Starting Function
+[07/19/2017 22:44:40][                          ExecuteQuery()] Completed with SUCCESS
+[07/19/2017 22:44:48][                                  Main()] Calling GetDataTableFromExcel()
