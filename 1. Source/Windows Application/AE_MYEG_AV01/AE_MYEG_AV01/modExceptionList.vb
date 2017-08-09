@@ -660,6 +660,9 @@ Module modExceptionList
             oARInvoice = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oInvoices)
 
             If sInvRefNo = "" Then
+                Dim sCardCode As String = String.Empty
+                Dim sBPGroup As String = String.Empty
+
                 If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Invoice Ref No is empty", sFuncName)
                 oIncomingPayment.DocType = SAPbobsCOM.BoRcptTypes.rCustomer
 
@@ -673,6 +676,20 @@ Module modExceptionList
                 ElseIf sPref = "" And sInvRefNo <> "" Then
                     oIncomingPayment.JournalRemarks = sInvRefNo
                 End If
+
+                Dim oRs As SAPbobsCOM.recordset 
+                sCardCode = oGrid.DataTable.GetValue("Customer", iLine)
+                Dim sSQL As String = String.Empty
+                sSQL = "SELECT ""GroupName"" FROM ""OCRD"" A INNER JOIN ""OCRG"" B ON B.""GroupCode"" = A.""GroupCode"" WHERE A.""CardCode"" = '" & sCardCode & "'"
+                If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+                oRs = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+                oRs.DoQuery(sSQL)
+                If oRs.RecordCount > 0 Then
+                    sBPGroup = oRs.Fields.Item("GroupName").Value
+                Else
+                    sBPGroup = ""
+                End If
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(oRs)
 
                 'oIncomingPayment.UserFields.Fields.Item("U_AB_STNO").Value = oMatrix.Columns.Item("V_4").Cells.Item(iLine).Specific.value
                 oIncomingPayment.UserFields.Fields.Item("U_AB_TIME").Value = oGrid.DataTable.GetValue("Time", iLine)
@@ -710,8 +727,8 @@ Module modExceptionList
 
                     If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Updating receipts table", sFuncName)
 
-                    sRcptQuery = " INSERT INTO AB_RECEIPTS (Entity ,receipt_no ,updated_datetime ,receipt_amount,prepaid_acct_no ,account_no ,CustomerName ,InvoiceNumber) " & _
-                      "VALUES ('" & p_oDICompany.CompanyDB & "', '" & sPayDocEntry & "','" & dtPostDate.ToString("yyyy-MM-dd") & "'," & oGrid.DataTable.GetValue("PayAmount", iLine) & ", " & _
+                    sRcptQuery = " INSERT INTO AB_RECEIPTS (Entity ,servicetype,receipt_no ,updated_datetime ,receipt_amount,prepaid_acct_no ,account_no ,CustomerName ,InvoiceNumber) " & _
+                      "VALUES ('" & p_oDICompany.CompanyDB & "','" & sBPGroup & "', '" & sPayDocEntry & "','" & dtPostDate.ToString("yyyy-MM-dd") & "'," & oGrid.DataTable.GetValue("PayAmount", iLine) & ", " & _
                       " '" & oGrid.DataTable.GetValue("Customer", iLine) & "','" & oGrid.DataTable.GetValue("Account Code", iLine) & "','" & oIncomingPayment.CardName & "', ''); "
 
                     'If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
@@ -861,6 +878,7 @@ Module modExceptionList
                     oARInvoice = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oInvoices)
 
                     If sInvDocEntry = "" Then
+                        Dim sBPGroup As String = String.Empty
                         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Invoice Docentry is empty", sFuncName)
 
                         oIncomingPayment.DocType = SAPbobsCOM.BoRcptTypes.rCustomer
@@ -874,6 +892,19 @@ Module modExceptionList
                         ElseIf sPref = "" And sInvRefNo <> "" Then
                             oIncomingPayment.JournalRemarks = sInvRefNo
                         End If
+
+                        Dim oRs As SAPbobsCOM.Recordset
+                        Dim strSQL As String = String.Empty
+                        sSQL = "SELECT ""GroupName"" FROM ""OCRD"" A INNER JOIN ""OCRG"" B ON B.""GroupCode"" = A.""GroupCode"" WHERE A.""CardCode"" = '" & sCardCode & "'"
+                        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & strSQL, sFuncName)
+                        oRs = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+                        oRs.DoQuery(sSQL)
+                        If oRs.RecordCount > 0 Then
+                            sBPGroup = oRs.Fields.Item("GroupName").Value
+                        Else
+                            sBPGroup = ""
+                        End If
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(oRs)
 
                         'oIncomingPayment.UserFields.Fields.Item("U_AB_STNO").Value = oMatrix.Columns.Item("V_4").Cells.Item(iLine).Specific.value
                         oIncomingPayment.UserFields.Fields.Item("U_AB_TIME").Value = oGrid.DataTable.GetValue("Time", iLine)
@@ -915,8 +946,8 @@ Module modExceptionList
 
                             sQuery = String.Empty
 
-                            sQuery = "INSERT INTO AB_RECEIPTS (Entity ,receipt_no ,updated_datetime ,receipt_amount,prepaid_acct_no ,account_no ,CustomerName ,InvoiceNumber) " & _
-                                     " VALUES ('" & p_oDICompany.CompanyDB & "', '" & sPayDocEntry & "','" & dtPostDate.ToString("yyyy-MM-dd") & "'," & dCustSelAmount & ", " & _
+                            sQuery = "INSERT INTO AB_RECEIPTS (Entity,servicetype ,receipt_no ,updated_datetime ,receipt_amount,prepaid_acct_no ,account_no ,CustomerName ,InvoiceNumber) " & _
+                                     " VALUES ('" & p_oDICompany.CompanyDB & "','" & sBPGroup & "', '" & sPayDocEntry & "','" & dtPostDate.ToString("yyyy-MM-dd") & "'," & dCustSelAmount & ", " & _
                                      " '" & oIncomingPayment.CardCode & "','" & oGrid.DataTable.GetValue("Account Code", iLine) & "','" & oIncomingPayment.CardName & "', ''); "
 
                             'If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
@@ -1237,6 +1268,8 @@ Module modExceptionList
         Dim sPref As String = String.Empty
 
         If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Starting Function", sFuncName)
+        Dim sCardCode As String = String.Empty
+        Dim sBPGroup As String = String.Empty
 
         oGrid = objForm.Items.Item("19").Specific
         sInvRefNo = oGrid.DataTable.GetValue("Merchant Id", iLine)
@@ -1264,6 +1297,21 @@ Module modExceptionList
         ElseIf sPref = "" And sInvRefNo <> "" Then
             oIncomingPayment.JournalRemarks = sInvRefNo
         End If
+
+
+        Dim oRs As SAPbobsCOM.Recordset
+        sCardCode = oGrid.DataTable.GetValue("Customer", iLine)
+        Dim sSQL As String = String.Empty
+        sSQL = "SELECT ""GroupName"" FROM ""OCRD"" A INNER JOIN ""OCRG"" B ON B.""GroupCode"" = A.""GroupCode"" WHERE A.""CardCode"" = '" & sCardCode & "'"
+        If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Executing SQL " & sSQL, sFuncName)
+        oRs = p_oDICompany.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+        oRs.DoQuery(sSQL)
+        If oRs.RecordCount > 0 Then
+            sBPGroup = oRs.Fields.Item("GroupName").Value
+        Else
+            sBPGroup = ""
+        End If
+        System.Runtime.InteropServices.Marshal.ReleaseComObject(oRs)
 
         'oIncomingPayment.UserFields.Fields.Item("U_AB_STNO").Value = oMatrix.Columns.Item("V_4").Cells.Item(iLine).Specific.value
         oIncomingPayment.UserFields.Fields.Item("U_AB_TIME").Value = oGrid.DataTable.GetValue("Time", iLine)
@@ -1298,8 +1346,8 @@ Module modExceptionList
             objForm.Items.Item("5").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
             oGrid.Columns.Item("Payment DocNo").Editable = False
 
-            sRcptQuery = "INSERT INTO AB_RECEIPTS (Entity ,receipt_no ,updated_datetime ,receipt_amount,prepaid_acct_no ,account_no ,CustomerName ,InvoiceNumber) " & _
-              " VALUES ('" & p_oDICompany.CompanyDB & "', '" & sPayDocEntry & "','" & dtPostDate.ToString("yyyy-MM-dd") & "'," & CDbl(oGrid.DataTable.GetValue("Amount", iLine)) & ", " & _
+            sRcptQuery = "INSERT INTO AB_RECEIPTS (Entity,servicetype ,receipt_no ,updated_datetime ,receipt_amount,prepaid_acct_no ,account_no ,CustomerName ,InvoiceNumber) " & _
+              " VALUES ('" & p_oDICompany.CompanyDB & "','" & sBPGroup & "', '" & sPayDocEntry & "','" & dtPostDate.ToString("yyyy-MM-dd") & "'," & CDbl(oGrid.DataTable.GetValue("Amount", iLine)) & ", " & _
               " '" & oIncomingPayment.CardCode & "','" & oGrid.DataTable.GetValue("Account Code", iLine) & "','" & oIncomingPayment.CardName & "', '') "
 
             'If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
