@@ -505,11 +505,11 @@ Module modExceptionList
                     Else
                         oGrid.DataTable.SetValue("Status", i, "SUCCESS")
                         oGrid.DataTable.SetValue("Error message", i, "")
-                        If sFullRcptQry = "" Then
-                            sFullRcptQry = sRcptQry
-                        Else
-                            sFullRcptQry = sFullRcptQry & sRcptQry
-                        End If
+                        'If sFullRcptQry = "" Then
+                        '    sFullRcptQry = sRcptQry
+                        'Else
+                        '    sFullRcptQry = sFullRcptQry & sRcptQry
+                        'End If
                     End If
                 ElseIf oGrid.DataTable.GetValue("PartialReceipt", i) = "" And oGrid.DataTable.GetValue("MultipleCustomer", i) = "Y" Then
                     If oGrid.DataTable.GetValue("SelectedCustomer", i) = "" Then
@@ -610,10 +610,10 @@ Module modExceptionList
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
             If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
         End If
-        If sFullRcptQry <> "" Then
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sFullRcptQry, sFuncName)
-            If ExecuteSQLNonQuery(sFullRcptQry, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
-        End If
+        'If sFullRcptQry <> "" Then
+        '    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sFullRcptQry, sFuncName)
+        '    If ExecuteSQLNonQuery(sFullRcptQry, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+        'End If
     End Sub
 #End Region
 #Region "AR incoming payment on Account based for Partial Receipt - Based on Grid"
@@ -731,8 +731,8 @@ Module modExceptionList
                       "VALUES ('" & p_oDICompany.CompanyDB & "','" & sBPGroup & "', '" & sPayDocEntry & "','" & dtPostDate.ToString("yyyy-MM-dd") & "'," & oGrid.DataTable.GetValue("PayAmount", iLine) & ", " & _
                       " '" & oGrid.DataTable.GetValue("Customer", iLine) & "','" & oGrid.DataTable.GetValue("Account Code", iLine) & "','" & oIncomingPayment.CardName & "', ''); "
 
-                    'If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
-                    'If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+                    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sRcptQuery, sFuncName)
+                    If ExecuteSQLNonQuery(sRcptQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
 
                     bCheck = True
                 End If
@@ -957,6 +957,7 @@ Module modExceptionList
 
                             sQuery = sQuery & " UPDATE AB_SELECTEDCUSTOMER  SET PaymentDocnum = '" & sPayDocEntry & "'  WHERE DOCNUM = '" & sCustSelDocNo & "' AND ID = '" & sId & "' " & _
                                      " AND INVREFNO = '" & sInvRefNo & "' AND LINE = '" & iLine & "' AND RANDOMNO = '" & iRandomNo & "' AND CUSTCODE = '" & sCardCode & "'; "
+
                             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
                             If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
 
@@ -1202,11 +1203,11 @@ Module modExceptionList
                 Else
                     oGrid.DataTable.SetValue("Status", i, "SUCCESS")
                     oGrid.DataTable.SetValue("Error message", i, "")
-                    If sRcptFullQuery = "" Then
-                        sRcptFullQuery = sRcptQuery
-                    Else
-                        sRcptFullQuery = sRcptFullQuery & sRcptQuery
-                    End If
+                    'If sRcptFullQuery = "" Then
+                    '    sRcptFullQuery = sRcptQuery
+                    'Else
+                    '    sRcptFullQuery = sRcptFullQuery & sRcptQuery
+                    'End If
                 End If
 
             End If
@@ -1247,10 +1248,10 @@ Module modExceptionList
             If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
             If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
         End If
-        If sRcptFullQuery = "" Then
-            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sRcptFullQuery, sFuncName)
-            If ExecuteSQLNonQuery(sRcptFullQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
-        End If
+        'If sRcptFullQuery = "" Then
+        '    If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sRcptFullQuery, sFuncName)
+        '    If ExecuteSQLNonQuery(sRcptFullQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+        'End If
 
     End Sub
 #End Region
@@ -1350,8 +1351,8 @@ Module modExceptionList
               " VALUES ('" & p_oDICompany.CompanyDB & "','" & sBPGroup & "', '" & sPayDocEntry & "','" & dtPostDate.ToString("yyyy-MM-dd") & "'," & CDbl(oGrid.DataTable.GetValue("Amount", iLine)) & ", " & _
               " '" & oIncomingPayment.CardCode & "','" & oGrid.DataTable.GetValue("Account Code", iLine) & "','" & oIncomingPayment.CardName & "', '') "
 
-            'If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sQuery, sFuncName)
-            'If ExecuteSQLNonQuery(sQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
+            If p_iDebugMode = DEBUG_ON Then Call WriteToLogFile_Debug("Calling ExecuteSQLNonQuery()" & sRcptQuery, sFuncName)
+            If ExecuteSQLNonQuery(sRcptQuery, sErrDesc) <> RTN_SUCCESS Then Throw New ArgumentException(sErrDesc)
 
             bCheck = True
         End If

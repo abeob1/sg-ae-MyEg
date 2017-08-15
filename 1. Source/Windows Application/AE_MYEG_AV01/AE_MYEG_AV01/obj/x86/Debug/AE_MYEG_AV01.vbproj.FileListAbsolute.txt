@@ -54,3 +54,13 @@ E:\SVN\MYEG\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\bin\Debug\AE
 E:\SVN\MYEG\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\bin\Debug\AE_MYEG_AV01.pdb
 E:\SVN\MYEG\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.frmOpenFileDialog.resources
 E:\SVN\MYEG\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.vbproj.GenerateResource.Cache
+D:\Jeeva\Abeo Projects\SVN\MYEG\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\bin\Debug\AE_MYEG_AV01.exe.config
+D:\Jeeva\Abeo Projects\SVN\MYEG\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\Interop.SAPbobsCOM.dll
+D:\Jeeva\Abeo Projects\SVN\MYEG\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\Interop.SAPbouiCOM.dll
+D:\Jeeva\Abeo Projects\SVN\MYEG\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.vbproj.ResolveComReference.cache
+D:\Jeeva\Abeo Projects\SVN\MYEG\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.exe
+D:\Jeeva\Abeo Projects\SVN\MYEG\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.pdb
+D:\Jeeva\Abeo Projects\SVN\MYEG\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\bin\Debug\AE_MYEG_AV01.exe
+D:\Jeeva\Abeo Projects\SVN\MYEG\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\bin\Debug\AE_MYEG_AV01.pdb
+D:\Jeeva\Abeo Projects\SVN\MYEG\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.frmOpenFileDialog.resources
+D:\Jeeva\Abeo Projects\SVN\MYEG\1. Source\Windows Application\AE_MYEG_AV01\AE_MYEG_AV01\obj\x86\Debug\AE_MYEG_AV01.vbproj.GenerateResource.Cache
